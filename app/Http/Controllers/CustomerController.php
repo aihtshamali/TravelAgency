@@ -15,7 +15,8 @@ class CustomerController extends Controller
      */
     public function index()
     {
-        //
+        $customers=Customer::all();
+        return view('Customer.index',compact('customers'));
     }
 
     /**
@@ -38,9 +39,11 @@ class CustomerController extends Controller
     public function store(Request $request)
     {
         $customer = new Customer();
+        $customer->CustomerID = 1;
         $customer->CustomerName = $request->name;
         $customer->PhoneNumber = $request->phone_no;
         $customer->gender = $request->gender;
+        $customer->CustomerType = 'M'; 
         $customer->customer_type_id = $request->customer_type;
         
         if(CustomerType::find($request->customer_type)->name == "Individual"){
@@ -55,6 +58,18 @@ class CustomerController extends Controller
         return redirect()->back();
     }
     
+    /**
+     * Display the specified resource.
+     *
+     * @param  Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function search(Request $request)
+    {
+        $customers = Customer::get();
+        dd($customers);
+    }
+
     /**
      * Display the specified resource.
      *

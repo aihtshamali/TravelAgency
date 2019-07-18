@@ -15,7 +15,7 @@ Route::get('/', function () {
     return view('home');
 });
 Route::resource('/Customer','CustomerController');
-
+Route::post('/Customer/search','CustomerController@search')->name('customer-search');
 Auth::routes();
 
 Route::get('/dashboard/home', 'DashboardController@versionone')->name('home');
