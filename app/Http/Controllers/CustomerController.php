@@ -54,7 +54,7 @@ class CustomerController extends Controller
 
         return redirect()->back();
     }
-
+    
     /**
      * Display the specified resource.
      *
@@ -75,6 +75,11 @@ class CustomerController extends Controller
     public function edit($id)
     {
         //
+        $customer=Customer::where('CustomerID',$id)
+                ->first();
+        $customer_types=CustomerType::where('status',1)->get();
+        return view('Customer.add',['customer_types'=>$customer_types,'customer'=>$customer]);
+        // dd($customer);
     }
 
     /**

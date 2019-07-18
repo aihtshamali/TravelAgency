@@ -3,7 +3,11 @@
 <div class="container">
     <div class="content-wrapper" style="margin-top:2%;">
         <div class="">
-            <h1 class="title">Add Customer</h1>
+            @if($customer)
+                <h1 class="title">Edit Customer</h1>
+            @else
+                <h1 class="title">Add Customer</h1>
+            @endif
         </div>
         <div class="card card-primary">
             <form role="form" action="{{route('Customer.store')}}" method="POST">
@@ -11,11 +15,11 @@
             <div class="card-body">
                 <div class="form-group">
                     <label for="phone_no">Phone Number</label>
-                    <input type="text" id="phone_no" name="phone_no" class="form-control" autocomplete="off" placeholder="03xxxxxxxxx">
+                    <input type="text" value="<?php if($customer) { echo $customer->PhoneNumber;} ?>" id="phone_no" name="phone_no" class="form-control" autocomplete="off" placeholder="03xxxxxxxxx">
                 </div>
                 <div class="form-group">
                     <label for="name">Name</label>
-                    <input type="text" class="form-control" name="name" id="name" placeholder="Full Name ...">
+                    <input type="text" value="<?php if($customer) { echo $customer->CustomerName;} ?>" class="form-control" name="name" id="name" placeholder="Full Name ...">
                 </div>
                 <div class="form-group">
                     <label for="customer_type">Customer Type</label>
@@ -43,13 +47,13 @@
                 <div class="form-group " >
                     <label for="remarks">Email Optional</label>
                     <div class="input-group">
-                        <input type="text" class="form-control" placeholder="Optional Email..." name="customer_email" >
+                        <input value="<?php if($customer) { echo $customer->EmailAddress;} ?>" type="text" class="form-control" placeholder="Optional Email..." name="customer_email" >
                     </div>
                 </div>
                 <div class="form-group " >
                     <label for="remarks">Remarks Optional</label>
                     <div class="input-group">
-                        <input type="text" class="form-control" placeholder="Optional Remarks..." name="remarks" >
+                        <input value="<?php if($customer) { echo $customer->Remarks;} ?>" type="text" class="form-control" placeholder="Optional Remarks..." name="remarks" >
                     </div>
                 </div>
             </div>
