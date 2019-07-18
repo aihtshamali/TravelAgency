@@ -26,21 +26,21 @@
                     <a href="{!! route('home') !!}" class="nav-link {!! classActiveSegment(1, 'dashboard') !!}">
                 <i class="nav-icon fas fa-tachometer-alt"></i>
                 <p>
-                  Dashboard
+                  Customer
                   <i class="right fa fa-angle-left"></i>
                 </p>
               </a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
-                            <a href="{{ route('home') }}" class="nav-link {!! classActiveSegment(2, 'home') !!}">
+                            <a href="{{ route('Customer.index') }}" class="nav-link {!! classActiveSegment(2, 'home') !!}">
                     <i class="fas fa-circle"></i>
-                    <p>Dashboard v1</p>
+                    <p>Search Customer</p>
                   </a>
                         </li>
                         <li class="nav-item">
-                            <a href="{{ route('v2') }}" class="nav-link {!! classActiveSegment(2, 'v2') !!}">
-                    <i class="fas fa-circle"></i>
-                    <p>Dashboard v2</p>
+                            <a href="{{ route('Customer.create') }}" class="nav-link {!! classActiveSegment(2, 'v2') !!}">
+                    <i class="fas fa-user"></i>
+                    <p>Add New Customer</p>
                   </a>
                         </li>
                         <li class="nav-item">

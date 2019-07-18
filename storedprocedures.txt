@@ -1,0 +1,954 @@
+USE WAC
+GO
+SET ANSI_NULLS, QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROCEDURE [dbo].[CashBook_Add]
+(
+@AmountIn INT,
+@AmountOut INT,
+@Detail VARCHAR(100),
+@PageRef BIGINT,
+@UserRef VARCHAR(30)
+)
+
+AS
+
+DECLARE @DayStatus BIT
+SELECT @DayStatus=[DayStatus] FROM [CashBook_Index] WHERE [PageNumber]=@PageRef
+IF @DayStatus=0
+BEGIN
+	RETURN 0
+END
+
+INSERT INTO [CashBook_Data]
+VALUES
+(@PageRef, NEXT VALUE FOR [CashBook_Data_ID], GETUTCDATE(), 0, @Detail, @AmountIn, @AmountOut, 'CASH', @UserRef)
+RETURN 1
+
+GO
+
+-------------------------------------------
+
+
+USE WAC
+GO
+SET ANSI_NULLS, QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[CashBook_Close]
+(
+@PageNum BIGINT,
+@ClosedBy VARCHAR(30)
+)
+
+AS
+
+DECLARE @DayStatus BIT
+DECLARE @OB INT
+DECLARE @BranchRef VARCHAR(20)
+DECLARE @Day DATE
+
+SELECT @Day=[Day], @BranchRef=[BranchRef], @OB=[OB], @DayStatus=[DayStatus] FROM [CashBook_Index] WHERE [PageNumber]=@PageNum
+IF @DayStatus=1
+BEGIN
+	DECLARE @TotalIn INT
+	DECLARE @TotalOut INT
+	DECLARE @CB INT
+	SELECT @TotalIn=SUM([AmountIn]) FROM [CashBook_Data] WHERE [PageRef]=@PageNum AND [FOP]='CASH'
+	SELECT @TotalOut=SUM([AmountOut]) FROM [CashBook_Data] WHERE [PageRef]=@PageNum
+
+	IF @TotalIn IS NULL
+	BEGIN
+		SET @TotalIn=0
+	END
+
+	IF @TotalOut IS NULL
+	BEGIN
+		SET @TotalOut=0
+	END
+
+	SET @CB=@OB+@TotalIn-@TotalOut
+	BEGIN TRANSACTION
+		BEGIN TRY
+			UPDATE [CashBook_Index] SET [CB]=@CB, [DayStatus]=0, [ClosedBy]=@ClosedBy, [ClosedOn]=GETUTCDATE() WHERE [PageNumber]=@PageNum
+			INSERT INTO [CashBook_Index]
+			VALUES
+			(DATEADD(DAY,1,@Day), @BranchRef, @CB, 0, 1, NULL, NULL, NEXT VALUE FOR [CashBook_Index_ID])
+			COMMIT TRANSACTION
+			RETURN 1
+		END TRY
+		BEGIN CATCH
+			ROLLBACK TRANSACTION
+			RETURN 0
+		END CATCH
+END
+GO
+
+
+-------------------------------------------
+
+
+USE WAC
+GO
+SET ANSI_NULLS, QUOTED_IDENTIFIER ON
+GO
+
+-----------------------------------------------------------------------------
+
+CREATE PROCEDURE [dbo].[CashBook_Delete]
+(
+@RecordID BIGINT
+)
+
+AS
+
+DECLARE @PageRef BIGINT
+DECLARE @PageStatus BIT
+
+SELECT @PageRef=[PageRef] FROM [CashBook_Data] WHERE [RecordID]=@RecordID
+IF @PageRef IS NULL
+BEGIN
+	RETURN 0
+END
+
+SELECT @PageStatus=[DayStatus] FROM [CashBook_Index] WHERE [PageNumber]=@PageRef
+IF @PageStatus=1
+BEGIN
+	DELETE FROM [CashBook_Data] WHERE [RecordID]=@RecordID
+	RETURN 1
+END
+GO
+
+
+
+---------------------------
+
+
+USE WAC
+GO
+SET ANSI_NULLS, QUOTED_IDENTIFIER ON
+GO
+----------------------------------------------------------------------
+CREATE PROCEDURE [dbo].[CRM_AccountStatement]
+(
+@CustomerID BIGINT
+)
+
+AS
+SELECT [SaleID] AS [TransactionID], [IssueDate] AS [DOI], [ProductType] AS [ItemType], [ProductNum] AS [Detail], [ProductDetail] AS [MoreText], [Amount] AS [Amount] FROM [CRM_Sale]
+WHERE [CustomerIDRef]=@CustomerID AND [SaleStatus]='Approved'
+UNION
+SELECT [PaymentID] AS [TransactionID], [PostedOn] AS [DOI], 'PAYMENT' AS [ItemType], [FOP] AS [Detail], [FOPText] AS [MoreText], [Amount] AS [Amount] FROM [CRM_Payments]
+WHERE [CustomerIDRef]=@CustomerID AND [StatusCode]='Approved'
+ORDER BY [DOI] ASC
+GO
+
+
+--------------------------------------------
+
+
+USE WAC
+GO
+SET ANSI_NULLS, QUOTED_IDENTIFIER ON
+GO
+
+-------------------------------------------------------------------------------
+CREATE PROCEDURE [dbo].[CRM_AddLead]
+(
+@CustomerID BIGINT,
+@UserRef VARCHAR(30),
+@LeadType VARCHAR(30),
+@LeadSubject VARCHAR(100),
+@ServiceDate DATE,
+@Remarks VARCHAR(1000),
+@TakeOver BIT,
+@BranchRestrict VARCHAR(20)
+)
+
+AS
+
+	BEGIN TRANSACTION
+		
+	BEGIN TRY
+
+		DECLARE @TakenOverBy VARCHAR(30)
+		DECLARE @TakenOverOn DATETIME
+		DECLARE @LeadStatus VARCHAR(30)
+
+		SET @TakenOverBy=NULL
+		SET @TakenOverOn=NULL
+		SET @LeadStatus='Open'
+
+		IF @TakeOver=1
+		BEGIN
+			SET @TakenOverBy=@UserRef
+			SET @TakenOverOn=GETUTCDATE()
+			SET @LeadStatus='Working'
+		END
+
+
+		DECLARE @LeadID BIGINT
+		SET @LeadID=NEXT VALUE FOR [CRM_Leads_ID]
+
+		INSERT INTO [CRM_Leads]
+		([LeadID], [CustomerIDRef], [LeadType], [LeadSubject], [ServiceDate],[LeadStatus], [CreatedBy], [TakenOverBy], [TakenOverOn], [BranchRestrict])
+		VALUES
+		(@LeadID, @CustomerID, @LeadType, @LeadSubject, @ServiceDate, @LeadStatus, @UserRef, @TakenOverBy, @TakenOverOn, @BranchRestrict)
+
+		INSERT INTO [CRM_Leads_Text]
+		VALUES
+		(@LeadID, @Remarks, '<?xml version="1.0" encoding="UTF-8"?><comments></comments>')
+
+		COMMIT TRANSACTION
+		RETURN @LeadID
+
+	END TRY
+	BEGIN CATCH
+
+		ROLLBACK TRANSACTION
+		RETURN 0
+
+	END CATCH				
+GO
+
+
+---------------------------------------------
+
+
+USE WAC
+GO
+SET ANSI_NULLS, QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[CRM_Approval]
+(
+@ItemType VARCHAR(30),
+@ItemID BIGINT,
+@ActionCode VARCHAR(30),
+@AuthBy VARCHAR(30)
+)
+
+AS
+
+BEGIN TRANSACTION
+
+BEGIN TRY
+
+DECLARE @StatusCode VARCHAR(30)
+DECLARE @CustomerID BIGINT
+DECLARE @SPO VARCHAR(30)
+
+IF @ItemType='sale'
+BEGIN
+		SELECT @CustomerID=[CustomerIDRef], @SPO=[SaleBy], @StatusCode=[SaleStatus] FROM [CRM_Sale] WHERE [SaleID]=@ItemID
+		IF (@ActionCode='Approved' AND @StatusCode='Pending')
+		OR (@ActionCode='Rejected' AND @StatusCode='Pending')
+		OR (@ActionCode='Deleted' AND @StatusCode='Approved')
+		BEGIN
+			UPDATE [CRM_Sale] SET [ActionBy]=@AuthBy, [ActionOn]=GETUTCDATE(), [SaleStatus]=@ActionCode WHERE [SaleID]=@ItemID
+		END
+		ELSE
+		BEGIN
+			ROLLBACK TRANSACTION
+			RETURN 0
+		END
+END
+
+IF @ItemType='payment'
+BEGIN
+		SELECT @CustomerID=[CustomerIDRef], @SPO=[SaleBy], @StatusCode=[StatusCode] FROM [CRM_Payments] WHERE [PaymentID]=@ItemID
+		IF (@ActionCode='Approved' AND @StatusCode='Pending')
+		OR (@ActionCode='Rejected' AND @StatusCode='Pending')
+		OR (@ActionCode='Deleted' AND @StatusCode='Approved')
+		BEGIN
+			UPDATE [CRM_Payments] SET [AuthBy]=@AuthBy, [AuthOn]=GETUTCDATE(), [StatusCode]=@ActionCode WHERE [PaymentID]=@ItemID
+				END
+		ELSE
+		BEGIN
+			ROLLBACK TRANSACTION
+			RETURN 0
+		END
+END
+
+DECLARE @SaleCount BIGINT
+DECLARE @PaymentCount BIGINT
+DECLARE @BalanceAmount BIGINT
+
+SELECT @SaleCount=SUM([Amount]) FROM [CRM_Sale] WHERE [SaleStatus]='Approved' AND [CustomerIDRef]=@CustomerID
+SELECT @PaymentCount=SUM([Amount]) FROM [CRM_Payments] WHERE [StatusCode]='Approved' AND [CustomerIDRef]=@CustomerID
+
+IF @SaleCount IS NULL
+BEGIN
+SET @SaleCount=0
+END
+
+IF @PaymentCount IS NULL
+BEGIN
+SET @PaymentCount=0
+END
+
+SET @BalanceAmount=@SaleCount-@PaymentCount
+
+IF @BalanceAmount=0
+BEGIN
+	DELETE FROM [CRM_Ledger] WHERE [CustomerIDRef]=@CustomerID
+END
+ELSE
+BEGIN
+
+	IF EXISTS (SELECT [CustomerIDRef] FROM [CRM_Ledger] WHERE [CustomerIDRef]=@CustomerID)
+	BEGIN
+		UPDATE [CRM_Ledger] SET [BalanceAmount]=@BalanceAmount, [UserRef]=@SPO, [LastUpdated]=GETUTCDATE() WHERE [CustomerIDRef]=@CustomerID
+	END
+	ELSE
+	BEGIN
+		INSERT INTO [CRM_Ledger] VALUES (@CustomerID, @BalanceAmount, @SPO, GETUTCDATE())
+	END 
+
+END
+COMMIT TRANSACTION
+RETURN 1
+END TRY
+BEGIN CATCH
+ROLLBACK TRANSACTION
+RETURN 0
+END CATCH
+
+GO
+
+
+--------------------------------------
+
+
+USE WAC
+GO
+SET ANSI_NULLS, QUOTED_IDENTIFIER ON
+GO
+-------------------------------------------------------------------------------
+
+CREATE PROCEDURE [dbo].[CRM_CreateCustomer]
+(
+@CustomerName VARCHAR(100),
+@CustomerType VARCHAR(1),
+@PhoneNumber VARCHAR(20),
+@EmailAddress VARCHAR(100),
+@Remarks VARCHAR(500),
+@CreatedBy VARCHAR (30),
+@CustID BIGINT output
+)
+
+AS
+
+-- RESPONSE CODE --
+-- 1: SUCCESS
+-- 2: PHONE EXISTS
+
+	IF EXISTS (SELECT [PhoneNumber] FROM [CRM_Customers] WHERE [PhoneNumber]=@PhoneNumber)
+	BEGIN
+		RETURN 2 -- PHONE EXISTS
+	END
+
+			
+			DECLARE @CustomerID BIGINT
+			SELECT @CustomerID=NEXT VALUE FOR [CRM_Customers_ID]
+			
+			INSERT INTO [CRM_Customers]
+			([CustomerID], [CustomerName], [CustomerType], [PhoneNumber], [EmailAddress], [Remarks], [CreatedBy], [CreatedOn])
+			VALUES
+			(@CustomerID, @CustomerName, @CustomerType, @PhoneNumber, @EmailAddress, @Remarks, @CreatedBy, GETUTCDATE())
+
+			
+			SET @CustID=@CustomerID
+			RETURN 1
+GO
+
+
+----------------------------------------
+
+USE WAC
+GO
+SET ANSI_NULLS, QUOTED_IDENTIFIER ON
+GO
+-------------------------------------------------------------------------------
+CREATE PROCEDURE [dbo].[CRM_GetLead]
+(
+@LeadID BIGINT
+)
+
+AS
+SELECT
+[CRM_Leads].[LeadType], [CRM_Leads].[LeadSubject], [CRM_Leads].[ServiceDate], [CRM_Leads].[LeadStatus], [CRM_Leads].[CreatedBy], [CRM_Leads].[TakenOverBy], [CRM_Leads].[ClosedBy], [CRM_Leads].[CreatedOn], [CRM_Leads].[TakenOverOn], [CRM_Leads].[ClosedOn], [CRM_Leads].[LastUpdateBy], [CRM_Leads].[LastUpdatedOn],
+[CRM_Customers].[CustomerID], [CRM_Customers].[CustomerName], [CRM_Customers].[CustomerType], [CRM_Customers].[PhoneNumber], [CRM_Customers].[EmailAddress],
+ [CRM_Leads_Text].[NotePad], [CRM_Leads_Text].Comments
+FROM [CRM_Leads]
+JOIN [CRM_Customers] ON [CRM_Leads].[CustomerIDRef]=[CRM_Customers].[CustomerID]
+JOIN [CRM_Leads_Text] ON [CRM_Leads].[LeadID]=[CRM_Leads_Text].[LeadRef]
+WHERE [CRM_Leads].[LeadID]=@LeadID
+GO
+
+
+--------------------------------------
+
+USE WAC
+GO
+SET ANSI_NULLS, QUOTED_IDENTIFIER ON
+GO
+
+------------------------------------------------------------------------------
+CREATE PROCEDURE [dbo].[CRM_LeadUpdate]
+(
+@LeadID BIGINT,
+@ActionCode VARCHAR(30),
+@UserRef VARCHAR(30)
+)
+
+AS
+
+-- STATUS CODES
+-- 0: ERROR
+-- 1: SUCCESS
+-- 2: NOT YOUR LEAD
+
+IF @ActionCode='takeover'
+BEGIN
+	DECLARE @Stat VARCHAR(30)
+	SELECT @Stat=[LeadStatus] FROM [CRM_Leads] WHERE [LeadID]=@LeadID
+	IF @Stat='Open'
+	BEGIN
+		UPDATE [CRM_Leads] SET [LeadStatus]='Working', [TakenOverBy]=@UserRef, [TakenOverOn]=GETUTCDATE() WHERE [LeadID]=@LeadID
+		RETURN 1
+	END
+END
+
+
+IF @ActionCode='complete' OR @ActionCode='close'
+BEGIN
+	DECLARE @NewStat VARCHAR(30)
+	
+	IF @ActionCode='complete'
+	BEGIN
+	SET @NewStat='Completed'
+	END
+
+	IF @ActionCode='close'
+	BEGIN
+	SET @NewStat='Closed'
+	END
+
+	DECLARE @Statu VARCHAR(30)
+	DECLARE @TakenOverBy VARCHAR(30)
+
+	SELECT @Statu=[LeadStatus], @TakenOverBy=[TakenOverBy] FROM [CRM_Leads] WHERE [LeadID]=@LeadID
+		IF NOT @Statu='Working'
+		BEGIN
+			RETURN 0
+		END
+		IF NOT @UserRef=@TakenOverBy
+		BEGIN
+			RETURN 2
+		END
+		UPDATE [CRM_Leads] SET [LeadStatus]=@NewStat, [ClosedBy]=@UserRef, [ClosedOn]=GETUTCDATE() WHERE [LeadID]=@LeadID
+		RETURN 1
+END
+
+IF @ActionCode='reopen'
+
+BEGIN
+	DECLARE @TheStat VARCHAR(30)
+	SELECT @TheStat=[LeadStatus] FROM [CRM_Leads] WHERE [LeadID]=@LeadID
+	IF @TheStat='Completed' OR @TheStat='Closed'
+	BEGIN
+		UPDATE [CRM_Leads] SET [LeadStatus]='Working' WHERE [LeadID]=@LeadID
+		RETURN 1
+	END
+END
+
+RETURN 0
+GO
+
+
+--------------------------------------
+
+USE WAC
+GO
+SET ANSI_NULLS, QUOTED_IDENTIFIER ON
+GO
+-------------------------------------------------------------------------------
+CREATE PROCEDURE [dbo].[CRM_NewLead]
+(
+@PhoneNumber VARCHAR(20)
+)
+
+AS
+DECLARE @CustomerID BIGINT
+SELECT @CustomerID=[CustomerID] FROM [CRM_Customers] WHERE [PhoneNumber]=@PhoneNumber
+IF @CustomerID IS NULL
+	BEGIN
+		SELECT 'NO' AS [ResultCode], 0 AS [CustomerID]
+	END
+ELSE
+	BEGIN
+		SELECT 'OK' AS [ResultCode], @CustomerID AS [CustomerID]
+	END
+GO
+
+
+--------------------------------
+
+USE WAC
+GO
+SET ANSI_NULLS, QUOTED_IDENTIFIER ON
+GO
+----------------------------------------------------------------------
+CREATE PROCEDURE [dbo].[CRM_UserReport]
+(
+@StartDate DATETIME,
+@EndDate DATETIME
+)
+
+AS
+SELECT DISTINCT([Login_RoleData].[UserRef]), [CRM_UserBranch].[BranchCode],
+(SELECT COUNT([LeadID]) FROM [CRM_Leads] WHERE [CreatedBy]=[Login_RoleData].[UserRef] AND [CreatedOn]>=@StartDate AND [CreatedOn]<=@EndDate) AS [CreatedLeads],
+(SELECT COUNT([LeadID]) FROM [CRM_Leads] WHERE [TakenOverBy]=[Login_RoleData].[UserRef] AND [LeadStatus]='Completed' AND [ClosedOn]>=@StartDate AND [ClosedOn]<=@EndDate) AS [CompletedLeads],
+(SELECT COUNT([LeadID]) FROM [CRM_Leads] WHERE [TakenOverBy]=[Login_RoleData].[UserRef] AND [LeadStatus]='Closed' AND [ClosedOn]>=@StartDate AND [ClosedOn]<=@EndDate) AS [ClosedLeads],
+(SELECT SUM([ProfitAmount]) FROM [CRM_Sale] WHERE [SaleBy]=[Login_RoleData].[UserRef] AND [SaleStatus]='Approved' AND [IssueDate]>=@StartDate AND [IssueDate]<=@EndDate) AS [NetProfit]
+FROM [Login_RoleData]
+JOIN [CRM_UserBranch] ON [Login_RoleData].[UserRef]=[CRM_UserBranch].[UserIDRef]
+WHERE
+[Login_RoleData].[RoleRef] IN ('Administrator','CRM_Manager','CRM_User')
+ORDER BY [BranchCode] ASC, [NetProfit] DESC
+GO
+
+
+-------------------------------------
+
+USE WAC
+GO
+SET ANSI_NULLS, QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[sp_DB_Backup]
+(
+@RequestedBy VARCHAR(50)
+)
+
+AS
+BACKUP DATABASE [WAC]
+TO DISK = 'E:\Dropbox\Dropbox\Server\DB-Backup.Bak'
+   WITH FORMAT,
+   NAME = 'Full DB Backup'
+
+UPDATE [DB_Backup_Log] SET [DateLog]=GETUTCDATE(), [RequestedBy]=@RequestedBy
+GO
+
+
+--------------------------
+
+USE WAC
+GO
+SET ANSI_NULLS, QUOTED_IDENTIFIER ON
+GO
+
+--------------------------- STORED PROCEDURES -----------------------------
+
+CREATE PROCEDURE [dbo].[sp_Login_ChangePassword]
+(
+@UserID VARCHAR (30),
+@OldPassword VARCHAR(255),
+@NewPassword VARCHAR(255)
+)
+
+AS
+
+DECLARE @CurrentPassword VARCHAR(255)
+
+SELECT @CurrentPassword=[Password] FROM [Login_Users] WHERE [UserID]=@UserID
+
+IF @CurrentPassword IS NULL
+BEGIN
+	RETURN 101 -- NO USER
+END
+
+IF NOT @OldPassword=@CurrentPassword
+BEGIN
+	RETURN 102 -- OLD PASSWORD NOT MATCHED
+END
+
+UPDATE [Login_Users] SET [Password]=@NewPassword WHERE [UserID]=@UserID
+RETURN 100 -- CHANGED
+GO
+
+
+-------------------------------------
+
+
+USE WAC
+GO
+SET ANSI_NULLS, QUOTED_IDENTIFIER ON
+GO
+
+--------------------------- STORED PROCEDURES -----------------------------
+
+CREATE PROCEDURE [dbo].[sp_Login_Check]
+(
+@UserID varchar(100),
+@SessionKey varchar(255),
+@BrowserID varchar(100),
+@ResponseCode int output
+)
+
+AS
+
+--	100:	SUCCESS
+--	101:	NO USER
+--	102:	SESSION TIMEOUT
+--	103:	USER DISABLED
+
+	DECLARE @SessionTimeOut int
+	SET @SessionTimeOut = 30
+	
+	DECLARE @SKey varchar(255)
+	DECLARE @BID varchar (100)
+	DECLARE @LoginTime datetime
+	DECLARE @LoginStatus bit
+	DECLARE @IsActive bit
+	
+	SELECT @SKey=[SessionKey], @BID=[BrowserID], @LoginTime=[LoginTimeStamp], @LoginStatus=[LoginStatus], @IsActive=[IsActive] FROM [Login_Users]
+	WHERE [UserID]=@UserID
+	
+	IF @IsActive IS NULL
+	BEGIN
+		SET @ResponseCode=101 -- USER NOT FOUND
+		RETURN 0
+	END
+	
+	IF (NOT @SKey=@SessionKey) OR (NOT @BrowserID=@BID) OR (@LoginStatus=0) OR (DATEDIFF(MINUTE,@LoginTime,GetUtcDate()) > @SessionTimeOut)
+	BEGIN
+		SET @ResponseCode=102 -- SESSION TIMEOUT
+		RETURN 0
+	END
+
+	IF (@IsActive=0)
+	BEGIN
+		SET @ResponseCode=103 -- USER DISABLED
+		RETURN 0
+	END
+
+
+	DECLARE @RoleName VARCHAR(30)
+	DECLARE @AllRoles VARCHAR(500)
+	SET @AllRoles=''
+
+	DECLARE Cursor_Roles CURSOR FOR SELECT [RoleRef] FROM [Login_RoleData] WHERE [UserRef]=@UserID ORDER BY [RoleRef] ASC
+	OPEN Cursor_Roles
+
+	FETCH NEXT FROM Cursor_Roles INTO @RoleName
+
+	WHILE @@FETCH_STATUS=0
+	BEGIN
+		SET @AllRoles=@AllRoles+@RoleName+','
+		FETCH NEXT FROM Cursor_Roles INTO @RoleName		
+	END
+
+	CLOSE Cursor_Roles
+	DEALLOCATE Cursor_Roles
+
+	UPDATE [Login_Users] SET [LoginTimeStamp]=GetUtcDate() WHERE [UserID]=@UserID
+	SELECT [UserID], [Email], [FullName], [AccountCreated], [LoginCount], @AllRoles AS [Roles] FROM [Login_Users] WHERE [UserID]=@UserID
+	
+	SET @ResponseCode=100
+	RETURN 1
+
+GO
+
+-------------------------------------
+
+USE WAC
+GO
+SET ANSI_NULLS, QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[sp_Login_Checkin] 
+(
+@UserID varchar(100),
+@Password varchar(255),
+@IPAddr varchar(50), 
+@BrowserID varchar(100),
+@SessionKey varchar(255),
+@ResponseCode int output
+)
+
+AS
+
+--	100:	LOGIN SUCCESSFULL
+--	101:	USER NOT FOUND
+--	102:	USER NOT ACTIVE
+--	103:	PASSWORD NOT CORRECT
+	
+	DECLARE @LogToKeep int
+	SET @LogToKeep = 10
+
+	DECLARE @IsActive bit
+	DECLARE @UserPass varchar(255)
+
+
+	-- STEP1: QUERY IF USER EXISTS
+	SELECT @IsActive=[IsActive], @UserPass=[Password] FROM [Login_Users] WHERE [UserID]=@UserID
+	IF @IsActive IS NULL
+		BEGIN
+		SET @ResponseCode=101 -- USER NOT FOUND
+		RETURN 0
+	END
+	
+	--STEP2: CHECK IF USER ACCOUNT IS ACTIVE
+	IF @IsActive=0
+		BEGIN
+		SET @ResponseCode=102 -- USER NOT ACTIVE
+		RETURN 0
+	END
+	
+	--STEP3: CHECK PASSWORD
+	IF NOT @Password=@UserPass
+	BEGIN
+		SET @ResponseCode=103 -- PASSWORD NOT CORRECT
+		RETURN 0
+	END
+
+
+DELETE FROM [Login_Log] WHERE [UserRef]=@UserID AND [RecordID] IN (SELECT [RecordID] FROM [Login_Log] WHERE [UserRef]=@UserID ORDER BY [LogTime] DESC OFFSET (@LogToKeep-1) ROWS)
+INSERT INTO [Login_Log] ([RecordID],[UserRef],[LogTime],[BrowserID],[IPAddress]) VALUES (NEXT VALUE FOR [Login_Log_ID],@UserID,GetUTCDate(),@BrowserID,@IPAddr)
+UPDATE [Login_Users] SET [SessionKey]=@SessionKey, [BrowserID]=@BrowserID, [LoginStatus]=1, [LoginTimeStamp]=GetUTCDate(), [LoginCount]=[LoginCount]+1 WHERE [UserID]=@UserID
+
+SET @ResponseCode=100	-- LOGIN SUCCESSFUL
+RETURN 1
+GO
+
+-------------------------------------------
+
+USE WAC
+GO
+SET ANSI_NULLS, QUOTED_IDENTIFIER ON
+GO
+
+--------------------------- STORED PROCEDURES -----------------------------
+
+CREATE PROCEDURE [dbo].[sp_Login_Checkout]
+(
+@UserID varchar(100)
+)
+
+AS
+UPDATE [Login_Users]
+SET [SessionKey]='', [LoginStatus]=0, [BrowserID]=''
+WHERE [UserID]=@UserID
+RETURN 1
+GO
+
+
+
+------------------------------
+
+
+USE WAC
+GO
+SET ANSI_NULLS, QUOTED_IDENTIFIER ON
+GO
+
+--------------------------- STORED PROCEDURES -----------------------------
+
+CREATE PROCEDURE [dbo].[sp_Login_CreateUser]
+(
+ @UserID VARCHAR(100),
+ @Email VARCHAR(100),
+ @FullName VARCHAR(100),
+ @PWD VARCHAR(255),
+ @CreatedBy VARCHAR(100)
+ )
+ 
+ AS
+
+IF EXISTS (SELECT [UserID] FROM [Login_Users] WHERE [UserID]=@UserID)
+BEGIN
+RETURN '1' -- USER EXISTS
+END
+
+INSERT INTO [Login_Users] ([UserID],[Email],[FullName],[Password])
+VALUES
+(@UserID, @Email, @FullName, @PWD)
+
+INSERT INTO [Login_Audit] VALUES
+(NEXT VALUE FOR [Login_Audit_ID], @UserID, @CreatedBy, GETUTCDATE(), 'New User', 'Created New User')
+
+RETURN '0' -- SUCCESS
+
+GO
+
+
+----------------------------------------
+
+
+USE WAC
+GO
+SET ANSI_NULLS, QUOTED_IDENTIFIER ON
+GO
+--------------------------- STORED PROCEDURES -----------------------------
+
+CREATE PROCEDURE [dbo].[sp_Login_GetActivityLog]
+(
+@CurrentPage INT,
+@PageSize INT,
+@ListType VARCHAR(50),
+@QueryData VARCHAR(100),
+@PageCount INT output
+)
+
+AS
+
+IF @CurrentPage<1
+BEGIN
+SET @CurrentPage=1
+END
+
+DECLARE @TotalRecords INT
+
+	IF @ListType='Full-List'
+		BEGIN
+
+		SELECT * FROM [Login_Audit] ORDER BY [RecordID] DESC
+		OFFSET (@CurrentPage*@PageSize)-@PageSize ROWS
+		FETCH NEXT @PageSize ROWS ONLY
+
+		SELECT @TotalRecords=COUNT(*) FROM [Login_Audit]
+
+	END
+
+
+	IF @ListType='Action-On'
+		BEGIN
+
+		SELECT * FROM [Login_Audit] WHERE [ActionOn]=@QueryData ORDER BY [RecordID] DESC
+		OFFSET (@CurrentPage*@PageSize)-@PageSize ROWS
+		FETCH NEXT @PageSize ROWS ONLY
+
+		SELECT @TotalRecords=COUNT(*) FROM [Login_Audit] WHERE [ActionOn]=@QueryData
+
+		END
+
+
+DECLARE @TotalPages INT
+SET @TotalPages=1
+
+IF @TotalRecords<=@PageSize
+	BEGIN
+		SET @TotalPages=1
+	END
+	ELSE
+	BEGIN
+		SET @TotalPages=@TotalRecords/@PageSize
+		IF @TotalRecords-(@PageSize*@TotalPages)>0
+			BEGIN
+			SET @TotalPages=@TotalPages+1
+			END
+	END
+	SET @PageCount=@TotalPages
+
+GO
+
+----------------------------------
+
+USE WAC
+GO
+SET ANSI_NULLS, QUOTED_IDENTIFIER ON
+GO
+
+--------------------------- STORED PROCEDURES -----------------------------
+CREATE PROCEDURE [dbo].[sp_Login_UserList]
+(
+@CurrentPage INT,
+@PageSize INT,
+@ActiveUsers BIT,
+@PageCount INT output
+)
+
+AS
+
+IF @CurrentPage<1
+BEGIN
+SET @CurrentPage=1
+END
+
+SELECT [UserID], [FullName], [AccountCreated], [LoginCount], [IsActive], [LoginTimeStamp], [LoginStatus] FROM [Login_Users]
+WHERE [IsActive]=@ActiveUsers
+ORDER BY [UserID] ASC
+OFFSET (@CurrentPage*@PageSize)-@PageSize ROWS
+FETCH NEXT @PageSize ROWS ONLY
+
+DECLARE @TotalRecords INT
+SELECT @TotalRecords=COUNT(*) FROM [Login_Users] WHERE [IsActive]=@ActiveUsers
+
+DECLARE @TotalPages INT
+SET @TotalPages=1
+
+IF @TotalRecords<=@PageSize
+	BEGIN
+		SET @TotalPages=1
+	END
+	ELSE
+	BEGIN
+		SET @TotalPages=@TotalRecords/@PageSize
+		IF @TotalRecords-(@PageSize*@TotalPages)>0
+			BEGIN
+			SET @TotalPages=@TotalPages+1
+			END
+	END
+	SET @PageCount=@TotalPages
+GO
+
+
+--------------------------------------------------------
+
+-- ================================================
+-- Template generated from Template Explorer using:
+-- Create Procedure (New Menu).SQL
+--
+-- Use the Specify Values for Template Parameters 
+-- command (Ctrl-Shift-M) to fill in the parameter 
+-- values below.
+--
+-- This block of comments will not be included in
+-- the definition of the procedure.
+-- ================================================
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		<Author,,Name>
+-- Create date: <Create Date,,>
+-- Description:	<Description,,>
+-- =============================================
+alter PROCEDURE SearchCustomer
+	-- Add the parameters for the stored procedure here
+	@Phone varchar (13) = NULL,
+	@Name varchar(50) = NULL,
+	@ID varchar(10) = NULL
+	
+AS
+BEGIN
+
+	SET NOCOUNT ON;
+	Declare @stmt varchar(max)='',
+	@where nvarchar(max)='';
+    -- Insert statements for procedure here
+	 set @stmt='SELECT * from CRM_Customers ';
+
+	 if(@Phone is not null)
+		 set @where = @where +' PhoneNumber like ''%' +@Phone + '%'''
+	 if(@Name is not null )
+		 set @where = @where + ' and CustomerName like ''%' +@Name + '%'''
+	 if(@ID is not null )
+		set @where = @where + ' and CustomerID = '+@ID+' '
+	 if(@where <> '')
+		set @where = ' where' +@where ;
+	 print (@stmt + @where);
+	 EXEC (@stmt + @where);
+	  
+END
+GO
