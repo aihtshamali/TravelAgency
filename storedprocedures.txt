@@ -959,56 +959,61 @@ GO
 
 
 
-
-
-USE [hr_attendance]
+USE [WAC]
 GO
-/****** Object:  StoredProcedure [dbo].[getUserMonthlyAttendance]    Script Date: 7/18/2019 10:28:22 PM ******/
+/****** Object:  StoredProcedure [dbo].[SearchCustomer]    Script Date: 7/19/2019 1:16:40 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-
-
-
-
-
 -- =============================================
--- Author:        <Author,,Name>
+-- Author:		<Author,,Name>
 -- Create date: <Create Date,,>
--- Description:    <Description,,>
+-- Description:	<Description,,>
 -- =============================================
-ALTER PROCEDURE [dbo].[getUserMonthlyAttendance]
-  @fromdate varchar(10) = NULL,
-  @todate varchar(10) = NULL,
-  @user_id varchar(6) ,
-  @tableNo varchar(6)
-  AS
-	SET @fromdate = ISNULL(@fromdate, DATEADD(month, DATEDIFF(month, 0, GETDATE()), 0))
-	SET @todate = ISNULL(@todate, GETDATE())
+ALTER PROCEDURE [dbo].[SearchCustomer]
+	-- Add the parameters for the stored procedure here
+	@Phone nvarchar (13) = NULL,
+	@Name nvarchar(50) = NULL,
+	@ID nvarchar(10) = NULL
+	
+AS
 BEGIN
 
-	IF (@tableNo = 4)  -- Machine num 4
-	BEGIN
-		SET NOCOUNT ON;
+	SET NOCOUNT ON;
+	Declare @stmt varchar(max)='',
+	@flag bit = 0;
+    -- Insert statements for procedure here
+	 set @stmt='SELECT * from CRM_Customers ';
 
-		SELECT  attendance_log_machine1.user_id, attendance_users_machine1.name , attendance_log_machine1.time,
-		attendance_log_machine1.type 
-		from attendance_users_machine1
-		left join attendance_log_machine1 on (attendance_log_machine1.user_id = attendance_users_machine1.attendance_id)
-		where attendance_users_machine1.status = 1 and time >= @fromdate and convert(varchar, time, 23) < dateadd(day,1,@todate) and user_id = @user_id
-		order by time ASC;
+	 if(@Phone is not null)
+		begin
+		 set @stmt = @stmt +' where PhoneNumber like ''%' +@Phone + '%''';
+		set @flag = 1;	 
+		end
+	 if(@Name is not null )
+	 begin
+		if(@flag = 1)
+			set @stmt = @stmt + ' AND ';
+		else
+			set @stmt = @stmt + ' WHERE ';
+			
+		set @stmt = @stmt + '  CustomerName like ''%' +@Name + '%''';
+		set @flag = 1;	 
 
-	END
-	ELSE --Machine num 5
-	BEGIN
-		SELECT  attendance_log_machine2.user_id, attendance_users_machine2.name , attendance_log_machine2.time,
-		attendance_log_machine2.type 
-		from attendance_users_machine2
-		left join attendance_log_machine2 on (attendance_log_machine2.user_id = attendance_users_machine2.attendance_id)
-		where attendance_users_machine2.status = 1 and time >= @fromdate and convert(varchar, time, 23) < dateadd(day,1,@todate) and user_id = @user_id
-		order by time ASC;
-	END
-    
-	
+	end				
+
+	 if(@ID is not null )
+	 begin
+	 	if(@flag = 1)
+			set @stmt = @stmt + ' AND ';
+		else
+			set @stmt = @stmt + ' WHERE ';
+
+		set @stmt = @stmt + ' CustomerID = '+@ID+' '
+		set @flag = 1;	 
+
+	 end
+	 EXEC (@stmt);
+	  
 END
