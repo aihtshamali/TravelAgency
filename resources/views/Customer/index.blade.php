@@ -1,4 +1,7 @@
 @extends('layouts.master')
+@section('styleTags')
+    <link rel="stylesheet" type="text/css" href="{{asset('DataTables/datatables.min.css')}}"/>
+@endsection
 @section('content')
     <div class="content-wrapper">
         {{-- Header Start --}}
@@ -21,7 +24,7 @@
             </div>
         </div>
         {{-- Header End --}}
-        <form action="{{route('customer-search')}}" method="POST">
+        <form action="{{route('Customer.index')}}" method="GET">
             @csrf
             <div class="row">
                 <div class="col-md-5">
@@ -30,7 +33,7 @@
                         <div class="card-body">
                             <div class="form-group">
                                 <label for="search-name">Customer Name</label>
-                                <input type="text" name="name" id="search-name" class="form-control">
+                                <input type="text" style="text-transform:uppercase" name="name" id="search-name" class="form-control">
                             </div>
                                 <input type="submit" value="Search" class="btn btn-primary pull-right">
                         </div> 
@@ -62,5 +65,47 @@
                 </div>
             </div>
         </form>
+        {{-- Form END --}}
+        <div class="box">
+            <div class="box-header">
+              <h3 class="box-title">Data Table With Full Features</h3>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body">
+                <table class="table-hover table" id="CustomerTable">
+                    <thead>
+                        <th>Customer ID</th>
+                        <th>Customer Name</th>
+                        <th>Phone</th>
+                        <th>Created On</th>
+                        <th>Created By</th>
+                        <th>Actions</th>
+                    </thead>
+                    <tbody>
+                        @foreach ($customers as $customer)
+                            <tr>
+                                <td>{{$customer->CustomerID}}</td>
+                                <td>{{$customer->CustomerName}}</td>
+                                <td>{{$customer->PhoneNumber}}</td>
+                                <td>{{date('Y-M-d',strtotime($customer->CreatedOn))}}</td>
+                                <td>{{$customer->CreatedBy}}</td>
+                                <td>EDIT / ARCHIVE</td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+            <!-- /.box-body -->
+          </div>
     </div>
+@endsection
+
+@section('javascript')
+ 
+    <script type="text/javascript" src="{{asset('DataTables/datatables.min.js')}}"></script>
+    <script>
+        $(document).ready(function() {
+            $('#CustomerTable').DataTable();
+        } );
+    </script>
 @endsection
