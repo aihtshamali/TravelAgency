@@ -955,6 +955,9 @@ GO
 -------------------------------------------------------------
 
 
+
+
+
 USE [WAC]
 GO
 /****** Object:  StoredProcedure [dbo].[CRM_CreateCustomer]    Script Date: 7/19/2019 7:18:05 PM ******/
@@ -962,16 +965,8 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
--------------------------------------------------------------------------------
 
-USE [WAC]
-GO
-/****** Object:  StoredProcedure [dbo].[CRM_CreateCustomer]    Script Date: 7/19/2019 7:34:53 PM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
--------------------------------------------------------------------------------
+----------------------------------------------------------
 
 ALTER PROCEDURE [dbo].[CRM_CreateCustomer]
 (
