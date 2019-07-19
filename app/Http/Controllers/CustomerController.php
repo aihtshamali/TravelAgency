@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use DB;
 use Illuminate\Http\Request;
 use App\CustomerType;
 use App\Customer;
@@ -39,22 +39,27 @@ class CustomerController extends Controller
     public function store(Request $request)
     {
         $customer = new Customer();
-        $customer->CustomerID = 1;
-        $customer->CustomerName = $request->name;
-        $customer->PhoneNumber = $request->phone_no;
-        $customer->gender = $request->gender;
-        $customer->CustomerType = 'M'; 
-        $customer->customer_type_id = $request->customer_type;
+        // $customer->CustomerID = 1;
+        // $customer->CustomerName = $request->name;
+        // $customer->PhoneNumber = $request->phone_no;
+        // $customer->gender = $request->gender;
+        // $customer->CustomerType = 'M'; 
+        // $customer->customer_type_id = $request->customer_type;
         
         if(CustomerType::find($request->customer_type)->name == "Individual"){
-            $customer->gender = $request->gender;
+            $asd=DB::select('exec CRM_CreateCustomer "'.$request->name.'", "'.$request->customer_type.'","'.$request->phone_no.'","'.$request->customer_email.'","'.$request->remarks.'","'.$request->gender.'","'.Auth::user()->name.'", 1000');
+        }
+        else
+        {
+            $asd=DB::select('exec CRM_CreateCustomer "'.$request->name.'", "'.$request->customer_type.'","'.$request->phone_no.'","'.$request->customer_email.'","'.$request->remarks.'","NULL","'.Auth::user()->name.'", 1000');
         }
         
-        $customer->Remarks = $request->remarks;
-        $customer->CreatedBy = Auth::user()->name;
-        $customer->EmailAddress = $request->customer_email;
-        $customer->save();
-
+        // $customer->Remarks = $request->remarks;
+        // $customer->CreatedBy = Auth::user()->name;
+        // $customer->EmailAddress = $request->customer_email;
+        // $customer->save();
+        
+        // dd($asd);
         return redirect()->back();
     }
     
@@ -104,8 +109,27 @@ class CustomerController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request,$id)
     {
+        $customer=Customer::where('CustomerID',$id)
+                ->first();
+        // dd($id);        
+        $customer->CustomerName = $request->name;
+        $customer->PhoneNumber = $request->phone_no;
+        // $customer->gender = $request->gender;
+        // $customer->CustomerType = 'M'; 
+        $customer->customer_type_id = $request->customer_type;
+                
+        if(CustomerType::find($request->customer_type)->name == "Individual"){
+            $customer->gender = $request->gender;
+        }
+                
+        $customer->Remarks = $request->remarks;
+        $customer->CreatedBy = Auth::user()->name;
+        $customer->EmailAddress = $request->customer_email;
+        $customer->save();
+        return redirect()->back();
+        // dd($id);
         //
     }
 

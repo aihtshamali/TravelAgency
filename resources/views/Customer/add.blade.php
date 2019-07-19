@@ -1,25 +1,36 @@
 @extends('layouts.master') 
 @section('content')
+@php
+ $show ='display:none';   //USING FOR UPDATION
+@endphp
+
+
 <div class="container">
     <div class="content-wrapper" style="margin-top:2%;">
         <div class="">
-            @if($customer)
+            @if(isset($customer))
                 <h1 class="title">Edit Customer</h1>
             @else
                 <h1 class="title">Add Customer</h1>
             @endif
         </div>
         <div class="card card-primary">
-            <form role="form" action="{{route('Customer.store')}}" method="POST">
-                @csrf
+            @if(isset($customer))
+                <form role="form" action="{{route('Customer.update',$customer->CustomerID)}}" method="POST">
+                        @method('PUT')
+            @else
+                <form role="form" action="{{route('Customer.store')}}" method="POST">
+            @endif
+            
+            @csrf
             <div class="card-body">
                 <div class="form-group">
                     <label for="phone_no">Phone Number</label>
-                    <input type="text" value="<?php if($customer) { echo $customer->PhoneNumber;} ?>" id="phone_no" name="phone_no" class="form-control" autocomplete="off" placeholder="03xxxxxxxxx">
+                    <input type="text" value="<?php if(isset($customer)) { echo $customer->PhoneNumber;} ?>" id="phone_no" name="phone_no" class="form-control" autocomplete="off" placeholder="03xxxxxxxxx">
                 </div>
                 <div class="form-group">
                     <label for="name">Name</label>
-                    <input type="text" value="<?php if($customer) { echo $customer->CustomerName;} ?>" class="form-control" name="name" id="name" placeholder="Full Name ...">
+                    <input type="text" value="<?php if(isset($customer)) { echo $customer->CustomerName;} ?>" class="form-control" name="name" id="name" placeholder="Full Name ...">
                 </div>
                 <div class="form-group">
                     <label for="customer_type">Customer Type</label>
@@ -27,33 +38,37 @@
                         <select class="form-control" name="customer_type">
                             <option value="">Select Customer Type</option>
                             @forelse ($customer_types as $customer_type)
-                                <option value="{{$customer_type->id}}">{{$customer_type->name}}</option>   
+                            @if(isset($customer) && isset($customer->customer_type_id))    
+                                <option <?php if($customer_type->id  == $customer->customer_type_id) { echo "selected='selected'";} ?> value="{{$customer_type->id}}">{{$customer_type->name}}</option>
+                            @else
+                            {{-- <option value="{{$customer_type->id}}">{{$customer_type->name}}</option> --}}
+                            @endif   
                             @empty
                                 <option value="">None</option>
                             @endforelse
                         </select>
                     </div>
                 </div>
-                <div class="form-group gender" style="display:none">
+                <div class="form-group gender" style="{{isset($customer) && $customer->gender ? '' : $show}}">
                     <label for="gender">Gender</label>
                     <div class="input-group">
                         <select name="gender" class="form-control">
                             <option value="">Select Gender</option>
-                            <option value="male">Male</option>
-                            <option value="female">Female</option>
+                            <option <?php if($customer->gender == 'male') { echo "selected='selected'";} ?> value="male">Male</option>
+                            <option <?php if($customer->gender == 'female') { echo "selected='selected'";} ?> value="female">Female</option>
                         </select>
                     </div>
                 </div>
                 <div class="form-group " >
                     <label for="remarks">Email Optional</label>
                     <div class="input-group">
-                        <input value="<?php if($customer) { echo $customer->EmailAddress;} ?>" type="text" class="form-control" placeholder="Optional Email..." name="customer_email" >
+                        <input value="<?php if(isset($customer)) { echo $customer->EmailAddress;} ?>" type="text" class="form-control" placeholder="Optional Email..." name="customer_email" >
                     </div>
                 </div>
                 <div class="form-group " >
                     <label for="remarks">Remarks Optional</label>
                     <div class="input-group">
-                        <input value="<?php if($customer) { echo $customer->Remarks;} ?>" type="text" class="form-control" placeholder="Optional Remarks..." name="remarks" >
+                        <input value="<?php if(isset($customer)) { echo $customer->Remarks;} ?>" type="text" class="form-control" placeholder="Optional Remarks..." name="remarks" >
                     </div>
                 </div>
             </div>

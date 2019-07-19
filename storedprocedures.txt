@@ -952,3 +952,64 @@ BEGIN
 	  
 END
 GO
+-------------------------------------------------------------
+
+
+USE [WAC]
+GO
+/****** Object:  StoredProcedure [dbo].[CRM_CreateCustomer]    Script Date: 7/19/2019 7:18:05 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-------------------------------------------------------------------------------
+
+USE [WAC]
+GO
+/****** Object:  StoredProcedure [dbo].[CRM_CreateCustomer]    Script Date: 7/19/2019 7:34:53 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-------------------------------------------------------------------------------
+
+ALTER PROCEDURE [dbo].[CRM_CreateCustomer]
+(
+@CustomerName VARCHAR(100),
+@customer_type_id VARCHAR(1),
+@PhoneNumber VARCHAR(20),
+@EmailAddress VARCHAR(100),
+@Remarks VARCHAR(500),
+@gender VARCHAR(191),
+@CreatedBy VARCHAR (30),
+@CustID BIGINT output
+)
+
+AS
+
+-- RESPONSE CODE --
+-- 1: SUCCESS
+-- 2: PHONE EXISTS
+SET NOCOUNT ON ;
+	IF EXISTS (SELECT [PhoneNumber] FROM [CRM_Customers] WHERE [PhoneNumber]=@PhoneNumber)
+	BEGIN
+			select 2
+	   
+		RETURN 2 -- PHONE EXISTS
+	END
+
+			
+			DECLARE @CustomerID BIGINT
+			SELECT @CustomerID=NEXT VALUE FOR [CRM_Customers_ID]
+			
+			INSERT INTO [CRM_Customers]
+			([CustomerID], [CustomerName], [customer_type_id], [PhoneNumber], [EmailAddress], [Remarks],[gender], [CreatedBy], [CreatedOn])
+			VALUES
+			(@CustomerID, @CustomerName, @customer_type_id, @PhoneNumber, @EmailAddress, @Remarks,@gender, @CreatedBy, GETUTCDATE())
+
+			
+			SET  @CustID=@CustomerID 
+		    
+			select  1
+			RETURN 1
+
