@@ -10,4 +10,20 @@ class Customer extends Model
     protected $primaryKey = 'CustomerID';
     const CREATED_AT = 'CreatedOn';
     const UPDATED_AT = 'UpdatedOn';
+
+    public static function boot() {
+        parent::boot();
+
+        static::creating(function($model){
+            foreach ($model->attributes as $key => $value) {
+                $model->{$key} = empty($value) ? NULL : $value;
+            }
+        });
+
+        static::updating(function($model){
+            foreach ($model->attributes as $key => $value) {
+                $model->{$key} = empty($value) ? NULL : $value;
+            }
+        });
+    }
 }

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\CustomerType;
 use App\Customer;
 use Auth;
+use DB;
 class CustomerController extends Controller
 {
     /**
@@ -13,9 +14,18 @@ class CustomerController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $customers=Customer::all();
+        $stmt = 'exec SearchCustomer';
+        // dd($request->all());
+        if(!$request->all()){
+            $customers = collect(DB::select($stmt));
+        }else{
+            // $stmt = $request->phone ? $stmt . $request->phone .  
+            $customers = collect(DB::select('exec SearchCustomer '.($request->phone ?? "NULL").' , '.($request->name ?? "NULL").','.($request->account ?? "NULL").''));
+        }
+        // dd('exec SearchCustomer "'.($request->/phone ?? "NULL").'" , "'.(strtoupper($request->name) ?? "NULL").'",'.($request->account ?? "NULL").'');
+
         return view('Customer.index',compact('customers'));
     }
 
