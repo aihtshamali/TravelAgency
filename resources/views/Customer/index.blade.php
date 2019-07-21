@@ -4,6 +4,7 @@
 @endsection
 @section('content')
     <div class="content-wrapper">
+
         {{-- Header Start --}}
         <div class="content-header">
             <div class="container-fluid">
@@ -68,7 +69,7 @@
         {{-- Form END --}}
         <div class="box">
             <div class="box-header">
-              <h3 class="box-title">Data Table With Full Features</h3>
+              <h3 class="box-title">Customer's Details</h3>
             </div>
             <!-- /.box-header -->
             <div class="box-body">
@@ -89,7 +90,7 @@
                                 <td>{{$customer->PhoneNumber}}</td>
                                 <td>{{date('Y-M-d',strtotime($customer->CreatedOn))}}</td>
                                 <td>{{$customer->CreatedBy}}</td>
-                                <td>EDIT / ARCHIVE</td>
+                                <td><a href="{{ route('Customer.edit',$customer->CustomerID) }}"><i class="fas fa-edit"></i></a><a href="{{ route('Customer.destroy', $customer->CustomerID) }}" data-method="delete" class="jquery-postback"><i class="fas fa-archive"></i></a></td>
                             </tr>
                         @endforeach
                     </tbody>
@@ -108,4 +109,26 @@
             $('#CustomerTable').DataTable();
         } );
     </script>
+    <script>
+            $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    }
+            });
+            $(document).on('click', 'a.jquery-postback', function(e) {
+                e.preventDefault(); // does not go through with the link.
+            
+                var $this = $(this);
+                // alert($this.attr('href'));
+                $.post({
+                    type: $this.data('method'),
+                    url: $this.attr('href')
+                }).done(function (data) {
+                
+                    location.reload();   
+                    // alert('success');
+                    // alert(data);
+                });
+            });
+            </script>
 @endsection

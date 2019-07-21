@@ -1008,3 +1008,51 @@ SET NOCOUNT ON ;
 			select  1
 			RETURN 1
 
+
+------------------------------------------------------------------------------------
+
+
+
+
+
+USE [WAC]
+GO
+/****** Object:  StoredProcedure [dbo].[SearchCustomer]    Script Date: 7/19/2019 10:32:00 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+/****** Object:  StoredProcedure [dbo].[SearchCustomer]    Script Date: 7/19/2019 1:16:40 AM ******/
+
+
+-- =============================================
+-- Author:		<Author,,Name>
+-- Create date: <Create Date,,>
+-- Description:	<Description,,>
+-- =============================================
+ALTER PROCEDURE [dbo].[SearchCustomer]
+	-- Add the parameters for the stored procedure here
+	@Phone nvarchar (13) = NULL,
+	@Name nvarchar(50) = NULL,
+	@ID nvarchar(10) = NULL
+	
+AS
+BEGIN
+
+	SET NOCOUNT ON;
+	Declare @stmt varchar(max)='',
+	@flag bit = 0;
+    -- Insert statements for procedure here
+	 set @stmt='SELECT * from CRM_Customers where status = 1';
+
+	 if(@Phone is not null)
+		 set @stmt = @stmt +' and PhoneNumber like ''%' +@Phone + '%''';
+	 if(@Name is not null )
+			
+		set @stmt = @stmt + ' AND  CustomerName like ''%' +@Name + '%''';
+	 if(@ID is not null )
+		set @stmt = @stmt + ' AND CustomerID = '+@ID+' '
+		
+	 EXEC (@stmt);
+	  
+END

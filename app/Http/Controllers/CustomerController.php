@@ -48,28 +48,19 @@ class CustomerController extends Controller
      */
     public function store(Request $request)
     {
-        $customer = new Customer();
-        // $customer->CustomerID = 1;
-        // $customer->CustomerName = $request->name;
-        // $customer->PhoneNumber = $request->phone_no;
-        // $customer->gender = $request->gender;
-        // $customer->CustomerType = 'M'; 
-        // $customer->customer_type_id = $request->customer_type;
-        
+        $request->validate([
+            'PhoneNumber' => 'required|unique:CRM_Customers',
+            'EmailAddress' => 'required|unique:CRM_Customers|email'
+        ]);
+       
         if(CustomerType::find($request->customer_type)->name == "Individual"){
-            $asd=DB::select('exec CRM_CreateCustomer "'.$request->name.'", "'.$request->customer_type.'","'.$request->phone_no.'","'.$request->customer_email.'","'.$request->remarks.'","'.$request->gender.'","'.Auth::user()->name.'", 1000');
+            $asd=DB::select('exec CRM_CreateCustomer "'.$request->name.'", "'.$request->customer_type.'","'.$request->PhoneNumber.'","'.$request->EmailAddress.'","'.$request->remarks.'","'.$request->gender.'","'.Auth::user()->name.'", 1000');
         }
         else
         {
             $asd=DB::select('exec CRM_CreateCustomer "'.$request->name.'", "'.$request->customer_type.'","'.$request->phone_no.'","'.$request->customer_email.'","'.$request->remarks.'","NULL","'.Auth::user()->name.'", 1000');
         }
         
-        // $customer->Remarks = $request->remarks;
-        // $customer->CreatedBy = Auth::user()->name;
-        // $customer->EmailAddress = $request->customer_email;
-        // $customer->save();
-        
-        // dd($asd);
         return redirect()->back();
     }
     
@@ -151,6 +142,14 @@ class CustomerController extends Controller
      */
     public function destroy($id)
     {
+        $customer=Customer::where('CustomerID',$id)
+                ->first();
+                
+                $customer->status = "FALSE";
+                $customer->save();
+                // dd($customer);        
+        return $id;
+        // dd("hey");
         //
     }
 }

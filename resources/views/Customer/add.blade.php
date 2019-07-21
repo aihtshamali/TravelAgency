@@ -7,6 +7,15 @@
 
 <div class="container">
     <div class="content-wrapper" style="margin-top:2%;">
+        @if ($errors->any())
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
         <div class="">
             @if(isset($customer))
                 <h1 class="title">Edit Customer</h1>
@@ -25,23 +34,23 @@
             @csrf
             <div class="card-body">
                 <div class="form-group">
-                    <label for="phone_no">Phone Number</label>
-                    <input type="text" value="<?php if(isset($customer)) { echo $customer->PhoneNumber;} ?>" id="phone_no" name="phone_no" class="form-control" autocomplete="off" placeholder="03xxxxxxxxx">
+                    <label for="phone">Phone Number</label>
+                    <input type="text" value="<?php if(isset($customer)) { echo $customer->PhoneNumber;} ?>" required id="phone" name="PhoneNumber" class="form-control" autocomplete="off" placeholder="03xxxxxxxxx">
                 </div>
                 <div class="form-group">
                     <label for="name">Name</label>
-                    <input type="text" value="<?php if(isset($customer)) { echo $customer->CustomerName;} ?>" class="form-control" name="name" id="name" placeholder="Full Name ...">
+                    <input type="text" value="<?php if(isset($customer)) { echo $customer->CustomerName;} ?>" required class="form-control" name="name" id="name" placeholder="Full Name ...">
                 </div>
                 <div class="form-group">
                     <label for="customer_type">Customer Type</label>
                     <div class="input-group">
-                        <select class="form-control" name="customer_type">
+                        <select class="form-control" name="customer_type" required>
                             <option value="">Select Customer Type</option>
                             @forelse ($customer_types as $customer_type)
                             @if(isset($customer) && isset($customer->customer_type_id))    
                                 <option <?php if($customer_type->id  == $customer->customer_type_id) { echo "selected='selected'";} ?> value="{{$customer_type->id}}">{{$customer_type->name}}</option>
                             @else
-                            {{-- <option value="{{$customer_type->id}}">{{$customer_type->name}}</option> --}}
+                            <option value="{{$customer_type->id}}">{{$customer_type->name}}</option>
                             @endif   
                             @empty
                                 <option value="">None</option>
@@ -54,15 +63,15 @@
                     <div class="input-group">
                         <select name="gender" class="form-control">
                             <option value="">Select Gender</option>
-                            <option <?php if($customer->gender == 'male') { echo "selected='selected'";} ?> value="male">Male</option>
-                            <option <?php if($customer->gender == 'female') { echo "selected='selected'";} ?> value="female">Female</option>
+                            <option <?php if( isset($customer) && $customer->gender == 'male') { echo "selected='selected'";} ?> value="male">Male</option>
+                            <option <?php if( isset($customer) && $customer->gender == 'female') { echo "selected='selected'";} ?> value="female">Female</option>
                         </select>
                     </div>
                 </div>
                 <div class="form-group " >
                     <label for="remarks">Email Optional</label>
                     <div class="input-group">
-                        <input value="<?php if(isset($customer)) { echo $customer->EmailAddress;} ?>" type="text" class="form-control" placeholder="Optional Email..." name="customer_email" >
+                        <input value="<?php if(isset($customer)) { echo $customer->EmailAddress;} ?>" type="email" class="form-control" placeholder="Optional Email..." name="EmailAddress" >
                     </div>
                 </div>
                 <div class="form-group " >
