@@ -16,13 +16,13 @@ class CustomerController extends Controller
      */
     public function index(Request $request)
     {
-        $stmt = 'exec SearchCustomer';
+        $stmt = 'exec SearchCustomer ';
         // dd($request->all());
         if(!$request->all()){
             $customers = collect(DB::select($stmt));
         }else{
             // $stmt = $request->phone ? $stmt . $request->phone .  
-            $customers = collect(DB::select('exec SearchCustomer '.($request->phone ?? "NULL").' , '.($request->name ?? "NULL").','.($request->account ?? "NULL").''));
+            $customers = collect(DB::select($stmt.($request->phone ?? "NULL").' , '.($request->name ?? "NULL").','.($request->account ?? "NULL").''));
         }
         // dd('exec SearchCustomer "'.($request->/phone ?? "NULL").'" , "'.(strtoupper($request->name) ?? "NULL").'",'.($request->account ?? "NULL").'');
 
@@ -72,8 +72,8 @@ class CustomerController extends Controller
      */
     public function search(Request $request)
     {
-        $customers = Customer::get();
-        dd($customers);
+        // $customers = Customer::get();
+        // dd($customers);
     }
 
     /**
@@ -84,7 +84,7 @@ class CustomerController extends Controller
      */
     public function show($id)
     {
-        //
+        return view('Customer.show',['customer'=>Customer::find($id)]);
     }
 
     /**
@@ -114,11 +114,9 @@ class CustomerController extends Controller
     {
         $customer=Customer::where('CustomerID',$id)
                 ->first();
-        // dd($id);        
+
         $customer->CustomerName = $request->name;
         $customer->PhoneNumber = $request->phone_no;
-        // $customer->gender = $request->gender;
-        // $customer->CustomerType = 'M'; 
         $customer->customer_type_id = $request->customer_type;
                 
         if(CustomerType::find($request->customer_type)->name == "Individual"){

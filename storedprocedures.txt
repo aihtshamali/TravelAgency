@@ -1056,3 +1056,26 @@ BEGIN
 	 EXEC (@stmt);
 	  
 END
+
+
+
+
+---------------------
+
+---New
+
+USE [WAC]
+GO
+/****** Object:  StoredProcedure [dbo].[CRM_NewLead]    Script Date: 7/21/2019 4:54:56 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-------------------------------------------------------------------------------
+ALTER PROCEDURE [dbo].[CRM_NewLead]
+(
+@PhoneNumber VARCHAR(20)
+)
+
+AS
+SELECT * FROM [CRM_Customers] WHERE [PhoneNumber]=@PhoneNumber and status = 1 
