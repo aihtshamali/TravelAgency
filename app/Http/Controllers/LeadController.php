@@ -6,6 +6,7 @@ use App\Lead;
 use Illuminate\Http\Request;
 use DB;
 use Redirect;
+use App\Customer;
 class LeadController extends Controller
 {
     /**
@@ -23,9 +24,10 @@ class LeadController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
-        //
+        $customer = Customer::find($request->account);
+        return view('Leads.create',['customer'=>$customer]);
     }
 
     /**

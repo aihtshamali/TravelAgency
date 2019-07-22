@@ -3,6 +3,7 @@
     <style>
         .header-btn{
             font-size: 25px;
+            color:white !important;
         }
         table{
             width:100%;
@@ -14,9 +15,9 @@
 
         {{-- Header Start --}}
         <div class="content-header">
-            <div class="container-fluid">
+            <div class="container-fluid pl-0">
                 <div class="row mb-2">
-                    <div class="col-sm-6">
+                    <div class="col-sm-6 pl-0">
                         <h1 class="m-0 text-dark">{{$customer->CustomerName}}</h1>
                     </div> 
                     <div class="col-sm-6">
@@ -39,11 +40,11 @@
         {{-- Button Section --}}
         <div class="row">
             <div class="col-md-12">
-                <span><button class="btn btn-primary header-btn"> Create New Lead</button></span>
-                <span><button class="btn btn-primary header-btn">Add Sale</button></span>
-                <span><button class="btn btn-primary header-btn">Add Refund</button></span>
-                <span><button class="btn btn-success header-btn"> New Payment</button></span>  
-                <span><button class="btn btn-info header-btn"> Print Statement</button></span>
+                <span><a href="{{route('leads.create',['account'=>$customer->CustomerID])}}" class="btn btn-primary header-btn"> Create New Lead</a></span>
+                <span><a href="#" class="btn btn-primary header-btn">Add Sale</a></span>
+                <span><a href="#" class="btn btn-primary header-btn">Add Refund</a></span>
+                <span><a href="#" class="btn btn-success header-btn"> New Payment</a></span>  
+                <span><a href="#" class="btn btn-info header-btn"> Print Statement</a></span>
             </div>
         </div>
         <div class="row mt-3">
