@@ -11,9 +11,6 @@
 |
 */
 
-Route::get('/', function () {
-    return view('home');
-});
 Route::resource('/Customer','CustomerController');
 Route::get('leads/searchPhone','LeadController@phoneSearch')->name('leads.searchPhone');
 Route::post('leads/searchPhone','LeadController@customerLead')->name('customerLead');

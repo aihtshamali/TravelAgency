@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Lead;
+use App\LeadType;
 use Illuminate\Http\Request;
 use DB;
 use Redirect;
@@ -26,8 +27,10 @@ class LeadController extends Controller
      */
     public function create(Request $request)
     {
+        $lead_types  = LeadType::where('status','1')->get();
+
         $customer = Customer::find($request->account);
-        return view('Leads.create',['customer'=>$customer]);
+        return view('Leads.create',['customer'=>$customer,'lead_types'=>$lead_types]);
     }
 
     /**
@@ -60,7 +63,7 @@ class LeadController extends Controller
     {
        
         $customer =  collect(DB::select('exec CRM_NewLead '.$request->PhoneNumber));
-        if($customer) {
+        if(count($customer)) {
             return redirect()->route('Customer.show',$customer->first()->CustomerID);
         }
         return Redirect::back()->withErrors(['Wrong Number' => 'Enter a valid Number']);        

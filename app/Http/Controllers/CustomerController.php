@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\CustomerType;
 use App\Customer;
 use Auth;
+use App\Lead;
 use DB;
 class CustomerController extends Controller
 {
