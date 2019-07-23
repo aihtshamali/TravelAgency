@@ -23,8 +23,8 @@
         <nav class="mt-2">
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                 <li class="nav-item has-treeview {!! classActivePath(1,'dashboard') !!}">
-                    <a href="{!! route('home') !!}" class="nav-link {!! classActiveSegment(1, 'dashboard') !!}">
-                <i class="nav-icon fas fa-tachometer-alt"></i>
+                    <a  class="nav-link {!! classActiveSegment(1, 'dashboard') !!}">
+                <i class="nav-icon fas fa-user"></i>
                 <p>
                   Customer
                   <i class="right fa fa-angle-left"></i>
@@ -33,290 +33,192 @@
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
                             <a href="{{ route('Customer.index') }}" class="nav-link {!! classActiveSegment(2, 'home') !!}">
-                    <i class="fas fa-circle"></i>
+                  
                     <p>Search Customer</p>
                   </a>
                         </li>
                         <li class="nav-item">
                             <a href="{{ route('Customer.create') }}" class="nav-link {!! classActiveSegment(2, 'v2') !!}">
-                    <i class="fas fa-user"></i>
+                   
                     <p>Add New Customer</p>
                   </a>
                         </li>
-                        <li class="nav-item">
-                            <a href="{{ route('v3') }}" class="nav-link {!! classActiveSegment(2, 'v3') !!}">
-                    <i class="fas fa-circle"></i>
-                    <p>Dashboard v3</p>
-                  </a>
-                        </li>
+                        
                     </ul>
                 </li>
-                <li class="nav-item">
-                    <a href="pages/widgets.html" class="nav-link">
-                <i class="nav-icon fa fa-th"></i>
-                <p>
-                  Widgets
-                  <span class="right badge badge-danger">New</span>
-                </p>
-              </a>
-                </li>
+                
                 <li class="nav-item has-treeview">
                     <a href="#" class="nav-link">
-                <i class="nav-icon fas fa-chart-pie"></i>
+                <i class="nav-icon fas fa-coins"></i>
                 <p>
-                  Charts
+                  Leads
                   <i class="right fa fa-angle-left"></i>
                 </p>
               </a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
                             <a href="pages/charts/chartjs.html" class="nav-link">
-                    <i class="fa fa-circle-o nav-icon"></i>
-                    <p>ChartJS</p>
+                    
+                    <p>My Leads</p>
                   </a>
                         </li>
                         <li class="nav-item">
                             <a href="pages/charts/flot.html" class="nav-link">
-                    <i class="fa fa-circle-o nav-icon"></i>
-                    <p>Flot</p>
+                    
+                    <p>Available Leads</p>
                   </a>
                         </li>
                         <li class="nav-item">
                             <a href="pages/charts/inline.html" class="nav-link">
-                    <i class="fa fa-circle-o nav-icon"></i>
-                    <p>Inline</p>
+                    
+                    <p>View Lead by ID</p>
+                  </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="pages/charts/inline.html" class="nav-link">
+                    
+                    <p>Create New Lead</p>
                   </a>
                         </li>
                     </ul>
                 </li>
                 <li class="nav-item has-treeview">
                     <a href="#" class="nav-link">
-                <i class="nav-icon fa fa-tree"></i>
+                <i class="nav-icon fas fa-search"></i>
                 <p>
-                  UI Elements
+                  Transaction Seach
                   <i class="fa fa-angle-left right"></i>
                 </p>
               </a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
                             <a href="pages/UI/general.html" class="nav-link">
-                    <i class="fa fa-circle-o nav-icon"></i>
-                    <p>General</p>
+                    
+                    <p>Posting ID</p>
                   </a>
                         </li>
                         <li class="nav-item">
                             <a href="pages/UI/icons.html" class="nav-link">
-                    <i class="fa fa-circle-o nav-icon"></i>
-                    <p>Icons</p>
+                    
+                    <p>Payment ID</p>
                   </a>
                         </li>
                         <li class="nav-item">
                             <a href="pages/UI/buttons.html" class="nav-link">
-                    <i class="fa fa-circle-o nav-icon"></i>
-                    <p>Buttons</p>
-                  </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="pages/UI/sliders.html" class="nav-link">
-                    <i class="fa fa-circle-o nav-icon"></i>
-                    <p>Sliders</p>
+                    
+                    <p>Document Number</p>
                   </a>
                         </li>
                     </ul>
-                </li>
-                <li class="nav-item has-treeview">
-                    <a href="#" class="nav-link">
-                <i class="nav-icon fa fa-edit"></i>
-                <p>
-                  Forms
-                  <i class="fa fa-angle-left right"></i>
-                </p>
+                  </li>
+                     
+                  <li class="nav-item has-treeview">
+                      <a href="#" class="nav-link">
+                          <i class="nav-icon fas fa-chart-pie"></i>
+                  <p>
+                    My Reports
+                    <i class="fa fa-angle-left right"></i>
+                  </p>
+                </a>
+                      <ul class="nav nav-treeview">
+                          <li class="nav-item">
+                              <a href="pages/tables/simple.html" class="nav-link">
+                      
+                      <p>My Transactions</p>
+                    </a>
+                          </li>
+                          <li class="nav-item">
+                              <a href="pages/tables/data.html" class="nav-link">
+                      
+                      <p>My Finalized Leads</p>
+                    </a>
+                          </li>
+                      
+                  <li class="nav-item">
+                      <a href="pages/tables/data.html" class="nav-link">
+              
+              <p>My Sale Report</p>
+            </a>
+                  </li>
+                  
+                  
+              </ul>
+              </li>
+            <li class="nav-item has-treeview">
+                <a href="#" class="nav-link">
+                    <i class="nav-icon fas fa-chart-line"></i>
+            <p>
+              Manager Reports
+              <i class="fa fa-angle-left right"></i>
+            </p>
+          </a>
+                <ul class="nav nav-treeview">
+                    <li class="nav-item">
+                        <a href="pages/tables/simple.html" class="nav-link">
+                
+                <p>All Working Leads</p>
               </a>
-                    <ul class="nav nav-treeview">
-                        <li class="nav-item">
-                            <a href="pages/forms/general.html" class="nav-link">
-                    <i class="fa fa-circle-o nav-icon"></i>
-                    <p>General Elements</p>
-                  </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="pages/forms/advanced.html" class="nav-link">
-                    <i class="fa fa-circle-o nav-icon"></i>
-                    <p>Advanced Elements</p>
-                  </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="pages/forms/editors.html" class="nav-link">
-                    <i class="fa fa-circle-o nav-icon"></i>
-                    <p>Editors</p>
-                  </a>
-                        </li>
-                    </ul>
-                </li>
-                <li class="nav-item has-treeview">
-                    <a href="#" class="nav-link">
-                <i class="nav-icon fa fa-table"></i>
-                <p>
-                  Tables
-                  <i class="fa fa-angle-left right"></i>
-                </p>
+                    </li>
+                    <li class="nav-item">
+                        <a href="pages/tables/data.html" class="nav-link">
+                
+                <p>Pending Payments</p>
               </a>
-                    <ul class="nav nav-treeview">
-                        <li class="nav-item">
-                            <a href="pages/tables/simple.html" class="nav-link">
-                    <i class="fa fa-circle-o nav-icon"></i>
-                    <p>Simple Tables</p>
-                  </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="pages/tables/data.html" class="nav-link">
-                    <i class="fa fa-circle-o nav-icon"></i>
-                    <p>Data Tables</p>
-                  </a>
-                        </li>
-                    </ul>
-                </li>
-                <li class="nav-header">EXAMPLES</li>
+                    </li>
+                
+            <li class="nav-item">
+                <a href="pages/tables/data.html" class="nav-link">
+        
+        <p>User Performance</p>
+      </a>
+            </li>
+            <li class="nav-item">
+                <a href="pages/tables/data.html" class="nav-link">
+        
+        <p>Lead Report</p>
+      </a>
+            </li>
+            <li class="nav-item">
+                <a href="pages/tables/data.html" class="nav-link">
+        
+        <p>Sale Report</p>
+      </a>
+            </li>
+        </ul>
+        </li>
+        <li class="nav-item has-treeview">
+            <a href="#" class="nav-link">
+                <i class="nav-icon fas fa-coins"></i>
+        <p>
+          Authorize Transactions
+          
+        </p>
+      </a>
+        </li>
+        <li class="nav-item has-treeview {!! classActivePath(1,'dashboard') !!}">
+            <a  class="nav-link {!! classActiveSegment(1, 'dashboard') !!}">
+        <i class="nav-icon fas fa-cog"></i>
+        <p>
+          Settings
+          <i class="right fa fa-angle-left"></i>
+        </p>
+      </a>
+            <ul class="nav nav-treeview">
                 <li class="nav-item">
-                    <a href="pages/calendar.html" class="nav-link">
-                <i class="nav-icon fa fa-calendar"></i>
-                <p>
-                  Calendar
-                  <span class="badge badge-info right">2</span>
-                </p>
-              </a>
-                </li>
-                <li class="nav-item has-treeview">
-                    <a href="#" class="nav-link">
-                <i class="nav-icon fas fa-envelope-open"></i>
-                <p>
-                  Mailbox
-                  <i class="fa fa-angle-left right"></i>
-                </p>
-              </a>
-                    <ul class="nav nav-treeview">
-                        <li class="nav-item">
-                            <a href="pages/mailbox/mailbox.html" class="nav-link">
-                    <i class="fa fa-circle-o nav-icon"></i>
-                    <p>Inbox</p>
-                  </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="pages/mailbox/compose.html" class="nav-link">
-                    <i class="fa fa-circle-o nav-icon"></i>
-                    <p>Compose</p>
-                  </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="pages/mailbox/read-mail.html" class="nav-link">
-                    <i class="fa fa-circle-o nav-icon"></i>
-                    <p>Read</p>
-                  </a>
-                        </li>
-                    </ul>
-                </li>
-                <li class="nav-item has-treeview">
-                    <a href="#" class="nav-link">
-                <i class="nav-icon fa fa-book"></i>
-                <p>
-                  Pages
-                  <i class="fa fa-angle-left right"></i>
-                </p>
-              </a>
-                    <ul class="nav nav-treeview">
-                        <li class="nav-item">
-                            <a href="pages/examples/invoice.html" class="nav-link">
-                    <i class="fa fa-circle-o nav-icon"></i>
-                    <p>Invoice</p>
-                  </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="pages/examples/profile.html" class="nav-link">
-                    <i class="fa fa-circle-o nav-icon"></i>
-                    <p>Profile</p>
-                  </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="pages/examples/login.html" class="nav-link">
-                    <i class="fa fa-circle-o nav-icon"></i>
-                    <p>Login</p>
-                  </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="pages/examples/register.html" class="nav-link">
-                    <i class="fa fa-circle-o nav-icon"></i>
-                    <p>Register</p>
-                  </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="pages/examples/lockscreen.html" class="nav-link">
-                    <i class="fa fa-circle-o nav-icon"></i>
-                    <p>Lockscreen</p>
-                  </a>
-                        </li>
-                    </ul>
-                </li>
-                <li class="nav-item has-treeview">
-                    <a href="#" class="nav-link">
-                <i class="nav-icon fas fa-plus-square"></i>
-                <p>
-                  Extras
-                  <i class="fa fa-angle-left right"></i>
-                </p>
-              </a>
-                    <ul class="nav nav-treeview">
-                        <li class="nav-item">
-                            <a href="pages/examples/404.html" class="nav-link">
-                    <i class="fa fa-circle-o nav-icon"></i>
-                    <p>Error 404</p>
-                  </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="pages/examples/500.html" class="nav-link">
-                    <i class="fa fa-circle-o nav-icon"></i>
-                    <p>Error 500</p>
-                  </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="pages/examples/blank.html" class="nav-link">
-                    <i class="fa fa-circle-o nav-icon"></i>
-                    <p>Blank Page</p>
-                  </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="starter.html" class="nav-link">
-                    <i class="fa fa-circle-o nav-icon"></i>
-                    <p>Starter Page</p>
-                  </a>
-                        </li>
-                    </ul>
-                </li>
-                <li class="nav-header">MISCELLANEOUS</li>
-                <li class="nav-item">
-                    <a href="https://adminlte.io/docs" class="nav-link">
-                <i class="nav-icon fa fa-file"></i>
-                <p>Documentation</p>
-              </a>
-                </li>
-                <li class="nav-header">LABELS</li>
-                <li class="nav-item">
-                    <a href="#" class="nav-link">
-                <i class="nav-icon fa fas fa-circle-notch text-danger"></i>
-                <p class="text">Important</p>
-              </a>
+                    <a href="{{ route('Customer.index') }}" class="nav-link {!! classActiveSegment(2, 'home') !!}">
+            
+            <p>Users & Branches</p>
+          </a>
                 </li>
                 <li class="nav-item">
-                    <a href="#" class="nav-link">
-                <i class="nav-icon fa fas fa-circle-notch text-warning"></i>
-                <p>Warning</p>
-              </a>
+                    <a href="{{ route('Customer.create') }}" class="nav-link {!! classActiveSegment(2, 'v2') !!}">
+            
+            <p>Notifications</p>
+          </a>
                 </li>
-                <li class="nav-item">
-                    <a href="#" class="nav-link">
-                <i class="nav-icon fa fas fa-circle-notch text-info"></i>
-                <p>Informational</p>
-              </a>
-                </li>
+                
+            </ul>
+        </li>    
             </ul>
         </nav>
         <!-- /.sidebar-menu -->
