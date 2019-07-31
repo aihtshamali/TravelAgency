@@ -2,7 +2,7 @@
 @section('content')
 <div class="login-box">
     <div class="login-logo">
-        Laravel Starter
+        {{env('APP_NAME')}}
     </div>
     <div class="card">
         <div class="card-body login-card-body">

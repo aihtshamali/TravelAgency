@@ -1,7 +1,7 @@
 <!-- Main Sidebar Container -->
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
-    <a href="index3.html" class="brand-link">
+    <a href="{{route('welcome')}}" class="brand-link">
     <img src="/img/logo.png" alt="{{env('APP_NAME')}}" class="brand-image img-circle elevation-3"
    style="opacity: .8">
 <span class="brand-text font-weight-light">{{env('APP_NAME')}}</span>
@@ -69,13 +69,13 @@
                   </a>
                         </li>
                         <li class="nav-item">
-                            <a href="pages/charts/inline.html" class="nav-link">
+                            <a href="#" class="nav-link">
                     
                     <p>View Lead by ID</p>
                   </a>
                         </li>
                         <li class="nav-item">
-                            <a href="pages/charts/inline.html" class="nav-link">
+                            <a href="{{route('leads.searchPhone')}}" class="nav-link">
                     
                     <p>Create New Lead</p>
                   </a>

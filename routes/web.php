@@ -25,10 +25,10 @@ Route::resource('/leads','LeadController');
 // Route::get('/dashboard/v3', 'DashboardController@versionthree')->name('v3');
 Route::resource('/Customer','CustomerController');
 Route::get('logout', '\App\Http\Controllers\Auth\LoginController@logout');
+Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/', function () {
-    return view('home');
-});
-// Route::get('/home', 'HomeController@index')->name('home');
+    return view('welcome');
+})->name('welcome');
 });
 
 

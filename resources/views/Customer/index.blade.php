@@ -85,7 +85,7 @@
                     <tbody>
                         @foreach ($customers as $customer)
                             <tr>
-                                <td>{{$customer->CustomerID}}</td>
+                                <td> <a href="{{route('Customer.show',$customer->CustomerID)}}">{{$customer->CustomerID}}</a></td>
                                 <td>{{$customer->CustomerName}}</td>
                                 <td>{{$customer->PhoneNumber}}</td>
                                 <td>{{date('Y-M-d',strtotime($customer->CreatedOn))}}</td>

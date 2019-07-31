@@ -11,7 +11,7 @@
 <div class="container">
   
     <div class="row justify-content-center">
-      <a href="#">
+      <a href="{{route('home')}}">
       <div class="card mr-3" style="width: 12rem; text-align:center"> 
         <div class="card-body" style="align:center;">
           <img style="width:60%" src="{{url('/images/crm.png')}}">

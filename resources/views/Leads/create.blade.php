@@ -87,10 +87,10 @@ CLASS:
                             </div>
                             <div class="form-group">
                                 <select name="branch_id" id="" class="select2 form-control">
-                                    <option value="">Select Branch</option>
-                                    @foreach ($branches as $branch)
+                                    <option value="">Select Branch (TODO)</option>
+                                    {{-- @foreach ($branches as $branch)
                                         <option value="{{$branch->id}}">{{$branch->name}}</option>
-                                    @endforeach
+                                    @endforeach --}}
                                 </select>
                             </div>
                             <input type="submit" class="btn btn-success pull-right" value="Create & Take Over">
