@@ -35,7 +35,7 @@
             <div class="card-body">
                 <div class="form-group">
                     <label for="phone">Phone Number</label>
-                    <input type="text" value="<?php if(isset($customer)) { echo $customer->PhoneNumber;} ?>" required id="phone" name="PhoneNumber" class="form-control" autocomplete="off" placeholder="03xxxxxxxxx">
+                    <input type="text" value="<?php if(isset($customer)) { echo $customer->PhoneNumber;}else if($phoneNumber) {echo $phoneNumber;} ?>" required id="phone" name="PhoneNumber" class="form-control" autocomplete="off" placeholder="03xxxxxxxxx">
                 </div>
                 <div class="form-group">
                     <label for="name">Name</label>

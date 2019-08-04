@@ -35,10 +35,14 @@ class CustomerController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
+        $phoneNumber = "";
+        if(isset($request->PhoneNumber)){
+            $phoneNumber = $request->PhoneNumber;
+        }
         $customer_types=CustomerType::where('status',1)->get();
-        return view('Customer.add',['customer_types'=>$customer_types]);
+        return view('Customer.add',['customer_types'=>$customer_types,'phoneNumber'=>$phoneNumber]);
     }
 
     /**

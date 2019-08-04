@@ -22,13 +22,15 @@
                
             </div>
         </div>
-         @if ($errors->has('Wrong Number'))
-                <div class="alert alert-danger alert-dismissible">
-                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                    <h5><i class="icon fa fa-ban"></i> Alert!</h5>
-                    {{ $errors->first('Wrong Number') }}
+            @if ($errors->any())
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
                 </div>
-        @endif
+            @endif
         {{-- Header End --}}
         <form action="{{route('customerLead')}}" method="POST">
             @csrf
