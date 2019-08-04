@@ -34,5 +34,9 @@ class User extends Authenticatable
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
+    public function UserBranch()
+    {
+        return $this->hasMany('App\UserBranch');
+    }
     
 }

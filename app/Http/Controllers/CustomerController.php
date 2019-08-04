@@ -155,4 +155,10 @@ class CustomerController extends Controller
         // dd("hey");
         //
     }
+    public function addSale($customer)
+    {
+        // $id = Auth::id();
+        // dd($id);
+        return view('Customer.addsale');
+    }
 }
