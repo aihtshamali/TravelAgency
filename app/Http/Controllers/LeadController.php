@@ -63,10 +63,16 @@ class LeadController extends Controller
     {
        
         $customer =  collect(DB::select('exec CRM_NewLead '.$request->PhoneNumber));
+        $request->validate([
+            'PhoneNumber' => 'numeric|regex:/^03\d{2}\d{7}$/|required',
+        ]
+        );
         if(count($customer)) {
             return redirect()->route('Customer.show',$customer->first()->CustomerID);
+        }else{
+            return redirect()->action('CustomerController@create',$request->PhoneNumber);
         }
-        return Redirect::back()->withErrors(['Wrong Number' => 'Enter a valid Number']);        
+
     }
 
     /**
