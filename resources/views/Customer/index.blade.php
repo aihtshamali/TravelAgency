@@ -83,16 +83,28 @@
                         <th>Actions</th>
                     </thead>
                     <tbody>
-                        @foreach ($customers as $customer)
+                        @forelse ($customers as $customer)
                             <tr>
                                 <td> <a href="{{route('Customer.show',$customer->CustomerID)}}">{{$customer->CustomerID}}</a></td>
                                 <td>{{$customer->CustomerName}}</td>
                                 <td>{{$customer->PhoneNumber}}</td>
                                 <td>{{date('Y-M-d',strtotime($customer->CreatedOn))}}</td>
                                 <td>{{$customer->CreatedBy}}</td>
-                                <td><a href="{{ route('Customer.edit',$customer->CustomerID) }}"><i class="fas fa-edit"></i></a><a href="{{ route('Customer.destroy', $customer->CustomerID) }}" data-method="delete" class="jquery-postback"><i class="fas fa-archive"></i></a></td>
+                                <td>
+                                    <a href="{{ route('Customer.edit',$customer->CustomerID) }}">
+                                        <i class="fas fa-edit"></i>
+                                    </a>/
+                                    <a href="{{ route('Customer.destroy', $customer->CustomerID) }}" data-method="delete" class="jquery-postback">
+                                        <i class="fas fa-archive"></i>
+                                    </a>
+                                </td>
                             </tr>
-                        @endforeach
+                        @empty
+                            <tr>
+                                <td colspan="6" class="text-centered">No Data Found</td>
+                            </tr>
+                        @endforelse
+                        
                     </tbody>
                 </table>
             </div>

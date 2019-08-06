@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\CustomerType;
 use App\Customer;
 use Auth;
+use Session;
 use App\Lead;
 use DB;
 class CustomerController extends Controller
@@ -18,15 +19,11 @@ class CustomerController extends Controller
     public function index(Request $request)
     {
         $stmt = 'exec SearchCustomer ';
-        // dd($request->all());
-        if(!$request->all()){
-            $customers = collect(DB::select($stmt));
-        }else{
-            // $stmt = $request->phone ? $stmt . $request->phone .  
-            $customers = collect(DB::select($stmt.($request->phone ?? "NULL").' , '.($request->name ?? "NULL").','.($request->account ?? "NULL").''));
+        $customers =array();
+        if($request->all()){
+            $customers = collect(DB::select($stmt.($request->phone ?? "NULL").' , "'.($request->name ?? NULL).'",'.($request->account ?? "NULL").''));
+            // $customers = collect(DB::select($stmt));
         }
-        // dd('exec SearchCustomer "'.($request->/phone ?? "NULL").'" , "'.(strtoupper($request->name) ?? "NULL").'",'.($request->account ?? "NULL").'');
-
         return view('Customer.index',compact('customers'));
     }
 
@@ -55,15 +52,14 @@ class CustomerController extends Controller
     {
         $request->validate([
             'PhoneNumber' => 'required|unique:CRM_Customers',
-            'EmailAddress' => 'required|unique:CRM_Customers|email'
+            // 'EmailAddress' => 'required|unique:CRM_Customers|email'
         ]);
-       
         if(CustomerType::find($request->customer_type)->name == "Individual"){
-            $asd=DB::select('exec CRM_CreateCustomer "'.$request->name.'", "'.$request->customer_type.'","'.$request->PhoneNumber.'","'.$request->EmailAddress.'","'.$request->remarks.'","'.$request->gender.'","'.Auth::user()->name.'", 1000');
+            DB::select('exec CRM_CreateCustomer "'.$request->name.'", "'.$request->customer_type.'","'.$request->PhoneNumber.'","'.($request->EmailAddress ?? "NULL").'","'.($request->remarks ?? "NULL").'","'.$request->gender.'","'.Auth::user()->name.'","'.Session::get('userbranch')->branch_id.'", 1000');
         }
         else
         {
-            $asd=DB::select('exec CRM_CreateCustomer "'.$request->name.'", "'.$request->customer_type.'","'.$request->phone_no.'","'.$request->customer_email.'","'.$request->remarks.'","NULL","'.Auth::user()->name.'", 1000');
+            DB::select('exec CRM_CreateCustomer "'.$request->name.'", "'.$request->customer_type.'","'.$request->phone_no.'","'.($request->customer_email ?? "NULL").'","'.$request->remarks.'","NULL","'.Auth::user()->name.'","'.Session::get('userbranch')->branch_id.'",1000');
         }
         
         return redirect()->back();
