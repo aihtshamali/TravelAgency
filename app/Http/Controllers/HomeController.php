@@ -63,7 +63,7 @@ class HomeController extends Controller
     public function index()
     {
         // 
-        // $this->replaceLeadType();
+        $this->replaceLeadType();
         return view('home');
     }
 }

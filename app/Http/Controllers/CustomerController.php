@@ -7,6 +7,7 @@ use App\CustomerType;
 use App\Customer;
 use Auth;
 use App\Lead;
+use App\LeadType;
 use DB;
 class CustomerController extends Controller
 {
@@ -151,10 +152,19 @@ class CustomerController extends Controller
         // dd("hey");
         //
     }
-    public function addSale($customer)
+    public function addSale($id)
     {
         // $id = Auth::id();
         // dd($id);
-        return view('Customer.addsale');
+        $customer=Customer::where('CustomerID',$id)
+                ->first();
+            $leads = Lead::all();
+            dd($leads[0]->Leadtype);
+        $leads=Lead::where('CustomerIDRef',$id)
+                ->where('LeadStatus','!=','Closed')
+                ->get();
+                // dd($leads);
+        $lead_types  = LeadType::where('status','1')->get();
+        return view('Customer.addsale',['lead_types'=>$lead_types,'customer'=>$customer,'leads'=>$leads]);
     }
 }

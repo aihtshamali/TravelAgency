@@ -12,7 +12,7 @@ class Lead extends Model
     const UPDATED_AT = 'LastUpdatedOn';
 
     public function Leadtype(){
-        return $this->hasOne('App\LeadType','id');
+        return $this->belongsTo('App\LeadType');
     }
     // public function Customer(){
     //     return $this->hasMany('App\Customer','CustomerID');

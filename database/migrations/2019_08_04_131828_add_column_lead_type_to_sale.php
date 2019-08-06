@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddLeadTypeColumnLeads extends Migration
+class AddColumnLeadTypeToSale extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,9 @@ class AddLeadTypeColumnLeads extends Migration
      */
     public function up()
     {
-        Schema::table('CRM_Leads', function (Blueprint $table) {
+        Schema::table('CRM_Sale', function (Blueprint $table) {
             $table->integer('lead_type_id')->unsigned()->index()->nullable();
             $table->foreign('lead_type_id')->references('id')->on('lead_types')->onDelete('cascade');
-            $table->boolean('status')->default(1);
         });
     }
 
@@ -27,9 +26,9 @@ class AddLeadTypeColumnLeads extends Migration
      */
     public function down()
     {
-       Schema::table('CRM_Leads', function (Blueprint $table) {
+       Schema::table('CRM_Sale', function (Blueprint $table) {
             $table->dropIndex('lead_type_id');	
-            $table->dropColumn('status');	
         });
     }
+    
 }
