@@ -30,6 +30,7 @@ Route::get('/', function () {
     return view('welcome');
 })->name('welcome');
 Route::get('/Customer/addsale/{customer}', 'CustomerController@addSale')->name('addSale');
+Route::post('/Customer/savesale', 'CustomerController@saveSale')->name('saveSale');
 });
 
 
