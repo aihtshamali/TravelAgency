@@ -19,7 +19,7 @@ Route::resource('/Customer','CustomerController');
 Route::get('leads/searchPhone','LeadController@phoneSearch')->name('leads.searchPhone');
 Route::post('leads/searchPhone','LeadController@customerLead')->name('customerLead');
 Route::resource('/leads','LeadController');
-
+Route::get('/leads/searchByID','LeadController@searchByID')->name('lead_searchByID');
 // Route::get('/dashboard/home', 'DashboardController@versionone')->name('home');
 // Route::get('/dashboard/v2', 'DashboardController@versiontwo')->name('v2');
 // Route::get('/dashboard/v3', 'DashboardController@versionthree')->name('v3');

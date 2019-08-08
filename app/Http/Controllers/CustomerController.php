@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 use App\CustomerType;
 use App\Customer;
-use Auth;
-use Session;
 use App\Lead;
+use App\User;
+use Session;
+use Auth;
 use DB;
 class CustomerController extends Controller
 {
@@ -34,6 +36,7 @@ class CustomerController extends Controller
      */
     public function create(Request $request)
     {
+        // dd($request->all());
         $phoneNumber = "";
         if(isset($request->PhoneNumber)){
             $phoneNumber = $request->PhoneNumber;
@@ -51,9 +54,20 @@ class CustomerController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'PhoneNumber' => 'required|unique:CRM_Customers',
-            // 'EmailAddress' => 'required|unique:CRM_Customers|email'
+            'PhoneNumber' => 'numeric|regex:/^03\d{2}\d{7}$/|required|unique:CRM_Customers',
         ]);
+        // $request->validate([
+        //     'PhoneNumber' => 'required|unique:CRM_Customers',
+        //     // 'EmailAddress' => 'required|unique:CRM_Customers|email'
+        // ]);
+        if($request->EmailAddress){
+            $customer = new User();
+            $customer->name = $request->name;
+            $customer->user_name = $request->PhoneNumber;
+            $customer->email = $request->EmailAddress;
+            $customer->password = Hash::make($request->PhoneNumber);
+            $customer->save();
+        }
         if(CustomerType::find($request->customer_type)->name == "Individual"){
             DB::select('exec CRM_CreateCustomer "'.$request->name.'", "'.$request->customer_type.'","'.$request->PhoneNumber.'","'.($request->EmailAddress ?? "NULL").'","'.($request->remarks ?? "NULL").'","'.$request->gender.'","'.Auth::user()->name.'","'.Session::get('userbranch')->branch_id.'", 1000');
         }
@@ -85,7 +99,8 @@ class CustomerController extends Controller
      */
     public function show($id)
     {
-        return view('Customer.show',['customer'=>Customer::find($id)]);
+        $customer = Customer::find($id);
+        return view('Customer.show',['customer'=>$customer]);
     }
 
     /**
