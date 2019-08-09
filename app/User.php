@@ -2,11 +2,15 @@
 
 namespace App;
 
-use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
+    use HasRoles;
+    protected $guard_name = 'web'; // or whatever guard you want to use
+
     use Notifiable;
     protected $table = "Login_Users";
 

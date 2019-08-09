@@ -62,15 +62,14 @@ class LeadController extends Controller
     public function customerLead(Request $request)
     {
        
-        $customer =  collect(DB::select('exec CRM_NewLead '.$request->PhoneNumber));
         $request->validate([
             'PhoneNumber' => 'numeric|regex:/^03\d{2}\d{7}$/|required',
-        ]
-        );
+        ]);
+        $customer =  collect(DB::select('exec CRM_NewLead "'.$request->PhoneNumber.'"'));
         if(count($customer)) {
             return redirect()->route('Customer.show',$customer->first()->CustomerID);
         }else{
-            return redirect()->action('CustomerController@create',$request->PhoneNumber);
+            return redirect()->action('CustomerController@create',$request->all());
         }
 
     }

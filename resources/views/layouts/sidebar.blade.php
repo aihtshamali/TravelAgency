@@ -69,7 +69,7 @@
                   </a>
                         </li>
                         <li class="nav-item">
-                            <a href="#" class="nav-link">
+                            <a href="{{route('leads_searchByID')}}" class="nav-link">
                     
                     <p>View Lead by ID</p>
                   </a>

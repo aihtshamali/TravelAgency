@@ -15,7 +15,7 @@ class AddBranchidColumnToSaleTable extends Migration
     {
         Schema::table('CRM_Sale', function (Blueprint $table) {
             $table->integer('user_branch_id')->unsigned()->index()->nullable();
-            $table->foreign('user_branch_id')->references('id')->on('user_branches')->onDelete('cascade');
+            $table->foreign('user_branch_id')->references('id')->on('user_branches')->onDelete('no action');
         });
     }
 

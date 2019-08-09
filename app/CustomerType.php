@@ -7,6 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 class CustomerType extends Model
 {
     public function Customer(){
-        return $this->belongsTo('App\Customer','CustomerID');
+        return $this->hasOne('App\Customer','CustomerID');
     }
 }

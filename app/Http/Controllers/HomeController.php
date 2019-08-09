@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Lead;
+use App\Customer;
 class HomeController extends Controller
 {
     /**
@@ -45,6 +46,26 @@ class HomeController extends Controller
         dump('Leads Done');
     }
     // Copy and Replace BranchId
+    private function replaceCustomerType(){
+        $customers = Customer::all();
+        foreach ($customers as $customer) {
+            if($customer->CustomerType == "M"){
+                $customer->gender = "male";
+                $customer->customer_type_id = 1;
+            }
+            else if($customer->CustomerType == "F"){
+                $customer->gender = "female";
+                $customer->customer_type_id = 1;
+            }
+            else if($customer->CustomerType == "C"){
+                // $customer->gender = "female";
+                $customer->customer_type_id = 2;
+            }
+            $customer->save();
+        }
+        dump("Customer Type Updated!");
+    }
+    // Copy and Replace BranchId
     private function replaceBranches(){
         $branches = Branch::all();
         foreach($branches as $branch){
@@ -63,7 +84,8 @@ class HomeController extends Controller
     public function index()
     {
         // 
-        $this->replaceLeadType();
+        // $this->replaceLeadType();
+        // $this->replaceCustomerType();
         return view('home');
     }
 }
