@@ -8,6 +8,8 @@ use App\CustomerType;
 use App\LeadType;
 use App\Customer;
 use App\Lead;
+use App\Sector;
+use App\Sale;
 use App\User;
 use Session;
 use Auth;
@@ -179,16 +181,19 @@ class CustomerController extends Controller
                 ->where('LeadStatus','!=','Closed')
                 ->get();
         $users=User::all();
+        $sectors=Sector::all();
                 // dd($leads);
         $lead_types  = LeadType::where('status','1')->get();
-        return view('Customer.addsale',['lead_types'=>$lead_types,'customer'=>$customer,'leads'=>$leads,'users'=>$users]);
+        return view('Customer.addsale',['lead_types'=>$lead_types,'customer'=>$customer,'leads'=>$leads,'users'=>$users,'sectors'=>$sectors]);
     }
     public function saveSale(Request $request)
     {
-        dd(Auth::user()->id);
+        // dd   ($request->all());
+        // dd($request->session()->get('userbranch')->id);
         $sale=new Sale();
         $sale->CustomerIDRef = $request->customer_id;
         $sale->LeadIDRef = $request->LeadId;
+        $sale->posted_by_user= $request->CreatedBy;
         $sale->Amount = $request->amount;
         $sale->NetCost = $request->cost;
         $sale->ProfitAmount = $request->profit;
@@ -197,8 +202,10 @@ class CustomerController extends Controller
         $sale->ProductNum = $request->ProductNum;
         $sale->ProductPax = $request->ProductPax;
         $sale->sector_id = $request->sector_id;
-        $sale->AccountigText = $request->AccountigText;
+        $sale->AccountingText = $request->AccountigText;
+        $sale->user_branch_id=$request->session()->get('userbranch')->id;
         $sale->save();
-        dd($request->all());
+        return redirect()->back();
+        // dd($request->all());
     }
 }

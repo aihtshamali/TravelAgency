@@ -42,5 +42,8 @@ class User extends Authenticatable
     {
         return $this->hasMany('App\UserBranch');
     }
+    public function Sale(){
+        return $this->hasOne('App\Sale','posted_by_user');
+    }
     
 }

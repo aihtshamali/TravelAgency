@@ -23,7 +23,7 @@
                         <label for="LeadId">Lead Reference</label>
                         <div class="input-group">
                             <select name="LeadId" class="form-control">
-                                <option value="">-</option>
+                                <option value="NULL">-</option>
                                 @foreach ($leads as $lead)
                                     <option value="{{$lead->LeadID}}">[Lead{{$lead->LeadID}}] </option>
                                 @endforeach
@@ -37,7 +37,7 @@
                             <select name="CreatedBy" class="form-control">
                                 
                                 @foreach ($users as $user)
-                                    <option value="{{$user->id}}">{{$user->user_name}} [{{$user->name}}] </option>
+                                    <option <?php if($user->id == Auth::user()->id) echo "selected='selected'"; ?> value="{{$user->id}}">{{$user->user_name}} [{{$user->name}}] </option>
                                 @endforeach
                             </select>
                         </div>
@@ -73,9 +73,11 @@
                     <h3>Product Sold</h3>
                        <div class="form-group">
                            <label for="lead_type">Product Type</label>
+                           {{-- {{dd(Auth::user()->id)}} --}}
                            <div class="input-group">
                                <select name="lead_type_id" id="lead_type" class="select2 form-control">
                                    <option value="">-</option>
+
                                    @foreach ($lead_types as $lead_type)
                                        <option value="{{$lead_type->id}}">{{$lead_type->name}}</option>
                                    @endforeach
@@ -84,23 +86,23 @@
                        </div>
                        <div class="form-group">
                            <label for="IssueDate">Issue Date</label>
-                           <input type="date" name="IssueDate" class="form-control" autocomplete="off" >
+                           <input required type="date" name="IssueDate" class="form-control" autocomplete="off" >
                        </div>
                        <div class="form-group">
                            <label for="ProductNum">Ticket or Product No.</label>
-                           <input type="text" name="ProductNum" class="form-control" autocomplete="off" >
+                           <input required type="text" name="ProductNum" class="form-control" autocomplete="off" >
                        </div>
                        <div class="form-group">
                            <label for="ProductPax">Passenger Name</label>
                            <input type="text" name="ProductPax" class="form-control" autocomplete="off" >
                        </div>
                        <div class="form-group">
-                        <label for="lead_type">Route or Details</label>
+                        <label for="sector_id">Route or Details</label>
                         <div class="input-group">
-                            <select name="lead_type_id" id="lead_type" class="select2 form-control">
+                            <select name="sector_id" class="select2 form-control">
                                 <option value="">-</option>
-                                @foreach ($lead_types as $lead_type)
-                                    <option value="{{$lead_type->id}}">{{$lead_type->name}}</option>
+                                @foreach ($sectors as $sector)
+                                    <option value="{{$sector->id}}">{{$sector->name}}</option>
                                 @endforeach
                             </select>
                         </div>
