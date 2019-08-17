@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Lead;
 use App\Customer;
+use Illuminate\Support\Facades\Hash;
+
 class HomeController extends Controller
 {
     /**
@@ -76,6 +78,53 @@ class HomeController extends Controller
         }
         dump('Leads Done');
     }
+    // Copy all Users
+    private function copyAllUsers(){
+        $oldUsers= \App\Login_UserOLD::all();
+        foreach ($oldUsers as $Olduser) {
+            $user = new \App\User();
+            $user->name =  $Olduser->FullName;
+            $user->user_name =  $Olduser->UserID;
+            $user->login_count =  $Olduser->LoginCount;
+            $user->email =  $Olduser->Email;
+            $user->created_at =  $Olduser->AccountCreated;
+            $user->status = $Olduser->IsActive;
+            // dd($Olduser->IsActive);
+            $user->password =  Hash::make("123456");
+            $user->save();
+            
+        }
+        dump('User Updated');
+    }
+
+    // Update CreatedBy,TakenBy,ClosedBy in CRM_Leads
+    private function UpdatedallUsersInLeads(){
+        $leads = \App\Lead::all();
+        foreach ($leads as $lead) {
+            $createdBy = \App\User::where('user_name',$lead->CreatedBy)->first();
+            $takenOverBy = \App\User::where('user_name',$lead->TakenOverBy)->first();
+            $ClosedBy = \App\User::where('user_name',$lead->ClosedBy)->first();
+            $LastUpdatedBy = \App\User::where('user_name',$lead->LastUpdateBy)->first();
+
+            $branch = \App\Branch::where('name',$lead->BranchRestrict)->first();
+
+            if($createdBy)
+                $lead->user_id = $createdBy->id;
+            if($takenOverBy)
+                $lead->taken_over_by = $takenOverBy->id;
+            if($ClosedBy)
+                $lead->closed_by = $ClosedBy->id;
+            if($LastUpdatedBy)
+                $lead->last_updated_by = $LastUpdatedBy->id;
+
+            if($branch)
+                $lead->branch_id = $branch->id;
+            
+                
+            $lead->save();
+        }
+        dump('UpdatedallUsersInLeads');
+    }    
     /**
      * Show the application dashboard.
      *
@@ -83,9 +132,11 @@ class HomeController extends Controller
      */
     public function index()
     {
-        // 
+        // $this->copyAllUsers();
         // $this->replaceLeadType();
         // $this->replaceCustomerType();
+        // $this->UpdatedallUsersInLeads();
+        
         return view('home');
     }
 }

@@ -58,21 +58,41 @@
                             @csrf
                             <div class="form-group">
                                 <input type="hidden" name="customer_id" value="{{$customer->CustomerID}}">
-                            <label for="lead_type">Lead Type</label>
-                            <select name="lead_type" id="lead_type" class="select2 form-control">
-                                <option value="">Select Lead Type</option>
-                                @foreach ($lead_types as $lead_type)
-                                    <option value="{{$lead_type->id}}">{{$lead_type->name}}</option>
-                                @endforeach
-                            </select>
+                                <label for="lead_type">Lead Type</label>
+                                <select name="lead_type" id="lead_type" class="select2 form-control">
+                                    <option value="">Select Lead Type</option>
+                                    @foreach ($lead_types as $lead_type)
+                                        <option value="{{$lead_type->id}}">{{$lead_type->name}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-md-6">
+                                    <label for="source_id">Source</label>
+                                    <select name="source_id" id="source_id" class="select2 form-control">
+                                        <option value="">Select Source</option>
+                                        @foreach ($sectors as $sector)
+                                            <option value="{{$sector->id}}">{{$sector->name}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="destination_id">Destination</label>
+                                    <select name="destination_id" id="destination_id" class="select2 form-control">
+                                        <option value="">Select Destination</option>
+                                        @foreach ($sectors as $sector)
+                                            <option value="{{$sector->id}}">{{$sector->name}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
                             </div>
                             <div class="form-group">
-                            <label for="subject">Subject</label>
-                            <input type="text" name="subject"  id="subject" class="form-control" placeholder="From ---- TO ---">
+                                <label for="subject">Subject</label>
+                                <input type="text" name="subject"  id="subject" class="form-control" placeholder="From ---- TO ---">
                             </div>
                             <div class="form-group">
-                            <label for="service_date">Service Date</label>
-                            <input type="text" id="service_date" name="service_date" placeholder="Service Date" class="form-control">
+                                <label for="service_date">Service Date</label>
+                                <input type="text" id="service_date" name="service_date" placeholder="Service Date" class="form-control">
                             </div>
                             <div class="form-group">
                             <label for="details">Details (Max 1000 Characters)</label>
@@ -87,10 +107,10 @@ CLASS:
                             </div>
                             <div class="form-group">
                                 <select name="branch_id" id="" class="select2 form-control">
-                                    <option value="">Select Branch (TODO)</option>
-                                    {{-- @foreach ($branches as $branch)
+                                    {{-- <option value="">Select Branch (TODO)</option> --}}
+                                    @foreach ($branches as $branch)
                                         <option value="{{$branch->id}}">{{$branch->name}}</option>
-                                    @endforeach --}}
+                                    @endforeach
                                 </select>
                             </div>
                             <input type="submit" class="btn btn-success pull-right" value="Create & Take Over">
@@ -116,7 +136,7 @@ CLASS:
             })
 
             $('select[name="lead_type"]').change(function(){
-                var text = $('option:selected').text();
+                var text = $(this).children("option:selected").text();
                  if(text == "Hotel Booking"){
                      $("#subject").attr('placeholder','Destination City...')
                      $("#details").text('ADT: \nCHD: \nINF: \nCHECKOUT \nDATE: \nHOTEL \nCATEGORY: ')

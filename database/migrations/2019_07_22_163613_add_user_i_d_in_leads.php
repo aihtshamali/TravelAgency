@@ -27,7 +27,7 @@ class AddUserIDInLeads extends Migration
     public function down()
     {
         Schema::table('CRM_Leads', function (Blueprint $table) {
-            $table->dropIndex('lead_type_id');	
+            $table->dropIndex('user_id');	
         });
     }
 }

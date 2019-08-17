@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 use DB;
 use Redirect;
 use App\Customer;
+use App\Branch;
+use App\Sector;
 class LeadController extends Controller
 {
     /**
@@ -28,9 +30,10 @@ class LeadController extends Controller
     public function create(Request $request)
     {
         $lead_types  = LeadType::where('status','1')->get();
-
+        $branches = Branch::where('status',1)->get();
+        $sectors = Sector::where('status',1)->get();
         $customer = Customer::find($request->account);
-        return view('Leads.create',['customer'=>$customer,'lead_types'=>$lead_types]);
+        return view('Leads.create',['customer'=>$customer,'lead_types'=>$lead_types,'sectors'=>$sectors,'branches'=>$branches]);
     }
 
     /**
@@ -41,7 +44,7 @@ class LeadController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        dd($request->all());
     }
     /**
      * phoneSearch search phoneNumber in storage.
@@ -80,9 +83,29 @@ class LeadController extends Controller
      * @param  \App\Lead  $lead
      * @return \Illuminate\Http\Response
      */
+    public function searchByID(Request $request)
+    {
+
+        if(isset($request->LeadId))
+        {
+            $request->validate([
+                'LeadId'=>'exists:CRM_Leads'
+            ]);
+             return redirect()->route('leads.show',$request->LeadId);
+        }   
+        else
+            return view('Leads.searchByID');
+    }
+    /**
+     * Display the specified resource.
+     *
+     * @param  \App\Lead  $lead
+     * @return \Illuminate\Http\Response
+     */
     public function show($id)
     {
-    //    return view('Leads.search');
+       $lead = Lead::findOrFail($id);
+       return view('Leads.show',['lead'=>$lead]);
     }
 
     /**

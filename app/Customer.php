@@ -14,5 +14,8 @@ class Customer extends Model
     public function CustomerType(){
         return $this->belongsTo('App\CustomerType');
     }
+    public function Leads(){
+        return $this->hasMany('App\Lead','LeadID');
+    }
 
 }

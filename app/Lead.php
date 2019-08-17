@@ -11,10 +11,25 @@ class Lead extends Model
     const CREATED_AT = 'CreatedOn';
     const UPDATED_AT = 'LastUpdatedOn';
 
-    public function Leadtype(){
-        return $this->belongsTo('App\LeadType');
+    public function Source(){
+        return $this->belongsTo('App\Sector','LeadID');
     }
-    // public function Customer(){
-    //     return $this->hasMany('App\Customer','CustomerID');
-    // }
+    public function Destination(){
+        return $this->belongsTo('App\Sector','LeadID');
+    }
+    public function LastUpdatedBy(){
+        return $this->belongsTo('App\User','LeadID');
+    }
+    public function ClosedBy(){
+        return $this->belongsTo('App\User','LeadID');
+    }
+    public function TakenOverBy(){
+        return $this->belongsTo('App\User','LeadID');
+    }
+    public function Leadtype(){
+        return $this->belongsTo('App\LeadType','LeadID');
+    }
+    public function Customer(){
+        return $this->belongsTo('App\Customer','CustomerIDRef');
+    }
 }

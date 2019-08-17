@@ -26,7 +26,11 @@ class CustomerController extends Controller
         $stmt = 'exec SearchCustomer ';
         $customers =array();
         if($request->all()){
-            $customers = collect(DB::select($stmt.($request->phone ?? "NULL").' , "'.($request->name ?? NULL).'",'.($request->account ?? "NULL").''));
+            $name= "NULL";
+            if($request->name){
+                $name='"'.$request->name.'"';
+            }
+            $customers = collect(DB::select($stmt.($request->phone ?? "NULL").' , '.$name.','.($request->account ?? "NULL").''));
             // $customers = collect(DB::select($stmt));
         }
         return view('Customer.index',compact('customers'));
@@ -102,7 +106,7 @@ class CustomerController extends Controller
      */
     public function show($id)
     {
-        $customer = Customer::find($id);
+        $customer = Customer::find($id)->where('status',1)->first();
         return view('Customer.show',['customer'=>$customer]);
     }
 
@@ -196,6 +200,46 @@ class CustomerController extends Controller
         $sale->posted_by_user= $request->CreatedBy;
         $sale->Amount = $request->amount;
         $sale->NetCost = $request->cost;
+        $sale->ProfitAmount = $request->profit;
+        $sale->lead_type_id = $request->lead_type_id;
+        $sale->IssueDate=$request->IssueDate;
+        $sale->ProductNum = $request->ProductNum;
+        $sale->ProductPax = $request->ProductPax;
+        $sale->sector_id = $request->sector_id;
+        $sale->AccountingText = $request->AccountigText;
+        $sale->user_branch_id=$request->session()->get('userbranch')->id;
+        $sale->save();
+        return redirect()->back();
+        // dd($request->all());
+    }
+
+    public function addRefund($id)
+    {
+        // $id = Auth::id();
+        // dd($id);
+        $customer=Customer::where('CustomerID',$id)
+                ->first();
+            // $leads = Lead::all();
+            // dd($data = Session::get('userbranch'));
+        $leads=Lead::where('CustomerIDRef',$id)
+                ->where('LeadStatus','!=','Closed')
+                ->get();
+        $users=User::all();
+        $sectors=Sector::all();
+                // dd($leads);
+        $lead_types  = LeadType::where('status','1')->get();
+        return view('Customer.addrefund',['lead_types'=>$lead_types,'customer'=>$customer,'leads'=>$leads,'users'=>$users,'sectors'=>$sectors]);
+    }
+    public function saveRefund(Request $request)
+    {
+        // dd   ($request->all());
+        // dd($request->session()->get('userbranch')->id);
+        $sale=new Sale();
+        $sale->CustomerIDRef = $request->customer_id;
+        $sale->LeadIDRef = $request->LeadId;
+        $sale->posted_by_user= $request->CreatedBy;
+        $sale->Amount = $request->amount;
+        // $sale->NetCost = $request->cost;
         $sale->ProfitAmount = $request->profit;
         $sale->lead_type_id = $request->lead_type_id;
         $sale->IssueDate=$request->IssueDate;

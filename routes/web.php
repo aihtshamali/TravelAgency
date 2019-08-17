@@ -18,8 +18,8 @@ Route::group(['middleware' => 'auth'], function () {
 Route::resource('/Customer','CustomerController');
 Route::get('leads/searchPhone','LeadController@phoneSearch')->name('leads.searchPhone');
 Route::post('leads/searchPhone','LeadController@customerLead')->name('customerLead');
+Route::get('/lead/searchByID/','LeadController@searchByID')->name('lead_searchByID');
 Route::resource('/leads','LeadController');
-Route::get('/leads/searchByID','LeadController@searchByID')->name('lead_searchByID');
 // Route::get('/dashboard/home', 'DashboardController@versionone')->name('home');
 // Route::get('/dashboard/v2', 'DashboardController@versiontwo')->name('v2');
 // Route::get('/dashboard/v3', 'DashboardController@versionthree')->name('v3');
@@ -31,6 +31,8 @@ Route::get('/', function () {
 })->name('welcome');
 Route::get('/Customer/addsale/{customer}', 'CustomerController@addSale')->name('addSale');
 Route::post('/Customer/savesale', 'CustomerController@saveSale')->name('saveSale');
+Route::get('/Customer/addrefund/{customer}', 'CustomerController@addRefund')->name('addRefund');
+Route::post('/Customer/saverefund', 'CustomerController@saveRefund')->name('saveRefund');
 });
 
 

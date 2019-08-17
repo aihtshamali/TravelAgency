@@ -17,7 +17,7 @@ class MakeIdAutoIncrementInSalesTable extends Migration
 
         Schema::table('CRM_Sale', function (Blueprint $table) {
         //    $table->bigInt( 'SaleID' )->nullable()->change();
-            DB::statement("ALTER TABLE [CRM_Sale] DROP COLUMN SaleID ALTER TABLE [CRM_Sale] ADD SaleID INT IDENTITY(1,1)");
+            // DB::statement("ALTER TABLE [CRM_Sale] DROP COLUMN SaleID ALTER TABLE [CRM_Sale] ADD SaleID INT IDENTITY(1,1)");
         //    $table->integer('SaleID')->primary()->change();           
         });
                 Schema::enableForeignKeyConstraints();
