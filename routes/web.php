@@ -33,6 +33,8 @@ Route::get('/Customer/addsale/{customer}', 'CustomerController@addSale')->name('
 Route::post('/Customer/savesale', 'CustomerController@saveSale')->name('saveSale');
 Route::get('/Customer/addrefund/{customer}', 'CustomerController@addRefund')->name('addRefund');
 Route::post('/Customer/saverefund', 'CustomerController@saveRefund')->name('saveRefund');
+Route::get('/Customer/addpayment/{customer}', 'CustomerController@addPayment')->name('addPayment');
+Route::post('/Customer/savepayment', 'CustomerController@savePayment')->name('savePayment');
 });
 
 
