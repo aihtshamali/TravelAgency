@@ -259,4 +259,21 @@ class CustomerController extends Controller
         return redirect()->back();
         // dd($request->all());
     }
+    public function addPayment($id)
+    {
+        // $id = Auth::id();
+        // dd($id);
+        $customer=Customer::where('CustomerID',$id)
+                ->first();
+            // $leads = Lead::all();
+            // dd($data = Session::get('userbranch'));
+        $leads=Lead::where('CustomerIDRef',$id)
+                ->where('LeadStatus','!=','Closed')
+                ->get();
+        $users=User::all();
+        $sectors=Sector::all();
+                // dd($leads);
+        $lead_types  = LeadType::where('status','1')->get();
+        return view('Customer.addpayment',['lead_types'=>$lead_types,'customer'=>$customer,'leads'=>$leads,'users'=>$users,'sectors'=>$sectors]);
+    }
 }

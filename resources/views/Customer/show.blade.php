@@ -43,7 +43,7 @@
                 <span><a href="{{route('leads.create',['account'=>$customer->CustomerID])}}" class="btn btn-primary header-btn"> Create New Lead</a></span>
                 <span><a href="{{route('addSale',$customer->CustomerID)}}" class="btn btn-primary header-btn">Add Sale</a></span>
                 <span><a href="{{route('addRefund',$customer->CustomerID)}}" class="btn btn-primary header-btn">Add Refund</a></span>
-                <span><a href="#" class="btn btn-success header-btn"> New Payment</a></span>  
+                <span><a href="{{route('addPayment',$customer->CustomerID)}}" class="btn btn-success header-btn"> New Payment</a></span>  
                 <span><a href="#" class="btn btn-info header-btn"> Print Statement</a></span>
             </div>
         </div>
