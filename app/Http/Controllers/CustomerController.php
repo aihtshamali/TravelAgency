@@ -234,12 +234,19 @@ class CustomerController extends Controller
     {
         // dd   ($request->all());
         // dd($request->session()->get('userbranch')->id);
+        $lastSale=Sale::all()->last();
+        // dd($lastSale->SaleID);
         $sale=new Sale();
+        $sale->SaleID=$lastSale->SaleID+1;
         $sale->CustomerIDRef = $request->customer_id;
-        $sale->LeadIDRef = $request->LeadId;
+        // $sale->LeadIDRef = $request->LeadId;
         $sale->posted_by_user= $request->CreatedBy;
-        $sale->Amount = $request->amount;
-        // $sale->NetCost = $request->cost;
+        $sale->Amount = "-".$request->amount;
+        $sale->BranchRef="";
+        $sale->PostedBy="";
+        $sale->ProductType = "";
+        $sale->NetCost=0;
+        $sale->SaleBy="";
         $sale->ProfitAmount = $request->profit;
         $sale->lead_type_id = $request->lead_type_id;
         $sale->IssueDate=$request->IssueDate;
