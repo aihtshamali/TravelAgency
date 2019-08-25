@@ -10,6 +10,7 @@ use App\Customer;
 use App\Lead;
 use App\Sector;
 use App\Sale;
+use App\PaymentForm;
 use App\User;
 use Session;
 use Auth;
@@ -270,10 +271,11 @@ class CustomerController extends Controller
         $leads=Lead::where('CustomerIDRef',$id)
                 ->where('LeadStatus','!=','Closed')
                 ->get();
+        $paymentForms=PaymentForm::all();
         $users=User::all();
         $sectors=Sector::all();
                 // dd($leads);
         $lead_types  = LeadType::where('status','1')->get();
-        return view('Customer.addpayment',['lead_types'=>$lead_types,'customer'=>$customer,'leads'=>$leads,'users'=>$users,'sectors'=>$sectors]);
+        return view('Customer.addpayment',['lead_types'=>$lead_types,'customer'=>$customer,'leads'=>$leads,'users'=>$users,'sectors'=>$sectors,'paymentForms'=>$paymentForms]);
     }
 }

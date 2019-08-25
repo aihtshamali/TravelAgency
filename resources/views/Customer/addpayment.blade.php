@@ -50,13 +50,24 @@
                         <div class="container">
                         <h3>Amounts</h3>
                         <div class="form-group">
-                            <label for="Amount">Refund Amount</label>
+                            <label for="Amount">Amount</label>
                             <input type="number" required id="amount" name="amount" class="form-control" autocomplete="off" >
                         </div>
-                        
                         <div class="form-group">
-                            <label for="NetCost">Profit</label>
-                            <input type="number" readonly="readonly" value="0" id="profit" name="profit" required name="ProfitAmount" class="form-control" autocomplete="off" >
+                        <label id="paymentLabel" for="paymentForm">Form of Payment</label>
+                            <div class="input-group">
+                                
+                                <select name="payment_form" id="paymentForm" class="form-control">
+                                    <option value="">-</option>
+                                    @foreach ($paymentForms as $paymentForm)
+                                        <option value="{{$paymentForm->id}}">{{$paymentForm->name}} </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="FopText" id="FopLabel">Payment Details</label>
+                            <input type="number" readonly="readonly" id="Foptext" name="profit" class="form-control" >
                         </div>
                         
                         </div>   
@@ -124,23 +135,23 @@
 @section('javascript')
     <script>
         $(document).ready(function(){
-            $('select[name="customer_type"]').on('change',function(){
+            $('select[name="payment_form"]').on('change',function(){
                 var type=$(this).children('option:selected').text()
                 console.log(type);
-                if(type == "Individual"){
-                    $(".gender").show();
-                }else{
-                    $(".gender").hide();
+                if(type == 'CASH ')
+                {
+                    alert('hey');
+                    // $("#paymentLabel").empty();
+                    document.getElementById('paymentLabel').innerHTML = 'your tip has been submitted!';
                 }
+                // if(type == "Individual"){
+                //     $(".gender").show();
+                // }else{
+                //     $(".gender").hide();
+                // }
             });
             
         });
-        function ValidateAmount()
-        {
-            var profit=$( "#amount" ).val()-$( "#cost" ).val();
-            console.log(profit);
-            $("#profit").val(profit);
-            // alert("Hey");
-        }
+        
     </script>
 @endsection
