@@ -67,7 +67,7 @@
                         </div>
                         <div class="form-group">
                             <label for="FopText" id="FopLabel">Payment Details</label>
-                            <input type="number" readonly="readonly" id="Foptext" name="profit" class="form-control" >
+                            <input type="text" readonly="readonly" id="Foptext" name="payment_detail" class="form-control" >
                         </div>
                         
                         </div>   
@@ -79,46 +79,21 @@
                 <div class="card card-primary">
                     <div class="container">
                     <h3>Details</h3>
+                       
                        <div class="form-group">
-                           <label for="lead_type">Transaction Type</label>
-                           {{-- {{dd(Auth::user()->id)}} --}}
-                           <div class="input-group">
-                               <select name="lead_type_id" id="lead_type" class="select2 form-control">
-                                   <option value="">-</option>
-
-                                   @foreach ($lead_types as $lead_type)
-                                       <option value="{{$lead_type->id}}">{{$lead_type->name}}</option>
-                                   @endforeach
-                               </select>
-                           </div>
+                           <label for="IssueDate">Received From</label>
+                           <input required type="text" name="receivedFrom" class="form-control" value="{{$customer->CustomerName}}" >
                        </div>
                        <div class="form-group">
-                           <label for="IssueDate">Transaction Date</label>
-                           <input required type="date" name="IssueDate" class="form-control" autocomplete="off" >
+                           <label for="ProductNum">Print Remarks</label>
+                           <input required type="text" name="printRemarks" class="form-control" autocomplete="off" >
                        </div>
                        <div class="form-group">
-                           <label for="ProductNum">Ticket or Product No.</label>
-                           <input required type="text" name="ProductNum" class="form-control" autocomplete="off" >
+                           <label for="ProductPax">Confidential Remarks</label>
+                           <input type="text" name="confidentialRemarks" class="form-control" autocomplete="off" placeholder="This will NOT print">
                        </div>
-                       <div class="form-group">
-                           <label for="ProductPax">Passenger Name</label>
-                           <input type="text" name="ProductPax" class="form-control" autocomplete="off" >
-                       </div>
-                       <div class="form-group">
-                        <label for="sector_id">Route or Details</label>
-                        <div class="input-group">
-                            <select name="sector_id" class="select2 form-control">
-                                <option value="">-</option>
-                                @foreach ($sectors as $sector)
-                                    <option value="{{$sector->id}}">{{$sector->name}}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="AccountigText">Accounting Remarks</label>
-                        <input type="text" placeholder="Issued from (Self or Vendor Name)" name="AccountigText" class="form-control" autocomplete="off" >
-                    </div>
+                       
+                   
                     </div>   
                 </div>
             </div>
@@ -140,9 +115,28 @@
                 console.log(type);
                 if(type == 'CASH ')
                 {
-                    alert('hey');
-                    // $("#paymentLabel").empty();
-                    document.getElementById('paymentLabel').innerHTML = 'your tip has been submitted!';
+                    $('#FopLabel').text('Details Not Required');
+                    $('#Foptext').attr("readonly",true);
+                }
+                if(type == 'CHEQUE ')
+                {
+                    $('#FopLabel').text('Cheque Number & Bank Name');
+                    $('#Foptext').attr("readonly",false);
+                }
+                if(type == 'CREDIT CARD ')
+                {
+                    $('#FopLabel').text('Last 4 Digits of CC');
+                    $('#Foptext').attr("readonly",false);
+                }
+                if(type == 'BANK TRANSFER ')
+                {
+                    $('#FopLabel').text('Bank Name & Transaction Info');
+                    $('#Foptext').attr("readonly",false);
+                }
+                if(type == 'OTHER ')
+                {
+                    $('#FopLabel').text('Payment Details');
+                    $('#Foptext').attr("readonly",false);
                 }
                 // if(type == "Individual"){
                 //     $(".gender").show();

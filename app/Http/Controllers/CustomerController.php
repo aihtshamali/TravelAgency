@@ -107,7 +107,9 @@ class CustomerController extends Controller
      */
     public function show($id)
     {
-        $customer = Customer::find($id)->where('status',1)->first();
+        // dd($id);
+        $customer = Customer::where('CustomerID',$id)->where('status',1)->first();
+        // dd($customer);
         return view('Customer.show',['customer'=>$customer]);
     }
 
@@ -264,7 +266,7 @@ class CustomerController extends Controller
     {
         // $id = Auth::id();
         // dd($id);
-        $customer=Customer::where('CustomerID',$id)
+        $customer=Customer::where('CustomerID',$id)+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
                 ->first();
             // $leads = Lead::all();
             // dd($data = Session::get('userbranch'));
@@ -277,5 +279,24 @@ class CustomerController extends Controller
                 // dd($leads);
         $lead_types  = LeadType::where('status','1')->get();
         return view('Customer.addpayment',['lead_types'=>$lead_types,'customer'=>$customer,'leads'=>$leads,'users'=>$users,'sectors'=>$sectors,'paymentForms'=>$paymentForms]);
+    }
+    public function savePayment(Request $request)
+    {
+        dd($request->all());
+        $lastPayment=Payment::all()->last();
+        $payment=new Payment();
+        $payment->CustomerIDRef=$request->customer_id;
+        $payment->LeadIDRef=$request->LeadId;
+        $payment->user_id=$request->CreatedBy;
+        $payment->Amount=$request->amount;
+        $payment->payment_form_id=$request->payment_form;
+        if(isset($request->payment_detail))
+        {
+            $payment->FOPText=$request->payment_detail;
+        }
+        $payment->RecFrom=$request->receivedFrom;
+        $payment->PrintRemark=$request->printRemarks;
+        $payment->AccountingText=$request->confidentialRemarks;
+        $payment->save();
     }
 }
