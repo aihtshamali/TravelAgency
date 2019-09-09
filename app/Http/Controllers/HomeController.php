@@ -139,4 +139,56 @@ class HomeController extends Controller
         
         return view('home');
     }
+    public function paymentForm()
+    {
+        $payments = Payment::all();
+        foreach($payments as $payment){
+            if($payment->FOP == "CASH"){
+                $lead->lead_type_id = 1; 
+            }
+            else if($payment->FOP == "CHEQUE"){
+                $lead->lead_type_id = 2; 
+            }
+            else if($payment->FOP == "CREDIT CARD"){
+                $lead->lead_type_id = 3; 
+            }
+            else if($payment->FOP == "BANK TRANSFER"){
+                $lead->lead_type_id = 4; 
+            }
+            else if($payment->FOP == "OTHER"){
+                $lead->lead_type_id = 5; 
+            }
+            
+            $payment->save();
+        }
+        dump('Form of payment done');
+    
+    }
+    private function UpdatedallUsersInPayments(){
+        $payments = \App\Payment::all();
+        foreach ($payments as $payment) {
+            $saleBy = \App\User::where('user_name',$payment->saleBy)->first();
+            $postedBy = \App\User::where('user_name',$lead->TakenOverBy)->first();
+            // $ClosedBy = \App\User::where('user_name',$lead->ClosedBy)->first();
+            // $LastUpdatedBy = \App\User::where('user_name',$lead->LastUpdateBy)->first();
+
+            $branch = \App\Branch::where('name',$lead->BranchRestrict)->first();
+
+            if($saleBy)
+                $payment->user_id = $saleBy->id;
+            if($postedBy)
+                $payment->postedBy = $postedBy->id;
+            // if($ClosedBy)
+            //     $lead->closed_by = $ClosedBy->id;
+            // if($LastUpdatedBy)
+            //     $lead->last_updated_by = $LastUpdatedBy->id;
+
+            if($branch)
+                $lead->branch_id = $branch->id;
+            
+                
+            $payment->save();
+        }
+        dump('UpdatedallUsersInPayments');
+    }
 }

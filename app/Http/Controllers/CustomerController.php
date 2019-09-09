@@ -11,6 +11,7 @@ use App\Lead;
 use App\Sector;
 use App\Sale;
 use App\PaymentForm;
+use App\Payment;
 use App\User;
 use Session;
 use Auth;
@@ -266,7 +267,7 @@ class CustomerController extends Controller
     {
         // $id = Auth::id();
         // dd($id);
-        $customer=Customer::where('CustomerID',$id)+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+        $customer=Customer::where('CustomerID',$id)
                 ->first();
             // $leads = Lead::all();
             // dd($data = Session::get('userbranch'));
@@ -282,21 +283,36 @@ class CustomerController extends Controller
     }
     public function savePayment(Request $request)
     {
-        dd($request->all());
+        // dd($request->all());
         $lastPayment=Payment::all()->last();
         $payment=new Payment();
         $payment->CustomerIDRef=$request->customer_id;
-        $payment->LeadIDRef=$request->LeadId;
+        if(isset($request->LeadId) && $request->LeadId !="")
+        {
+            echo $request->LeadId;
+            exit;
+            $payment->LeadIDRef=$request->LeadId;
+        }
         $payment->user_id=$request->CreatedBy;
         $payment->Amount=$request->amount;
         $payment->payment_form_id=$request->payment_form;
+        $payment->SaleBy=$request->CreatedBy;
+        $payment->BranchRef="";
+        $payment->FOP="";
+        $payment->PostedBy=$request->CreatedBy;
+        $payment->user_branch_id=$request->session()->get('userbranch')->id;
         if(isset($request->payment_detail))
         {
             $payment->FOPText=$request->payment_detail;
         }
         $payment->RecFrom=$request->receivedFrom;
         $payment->PrintRemark=$request->printRemarks;
-        $payment->AccountingText=$request->confidentialRemarks;
+        if(isset($request->confidentialRemarks))
+        {
+            $payment->AccountingText=$request->confidentialRemarks;
+        }
+        
         $payment->save();
+        return redirect()->back();
     }
 }

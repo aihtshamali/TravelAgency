@@ -23,7 +23,7 @@
                         <label for="LeadId">Lead Reference</label>
                         <div class="input-group">
                             <select name="LeadId" class="form-control">
-                                <option value="NULL">-</option>
+                                <option value="">-</option>
                                 @foreach ($leads as $lead)
                                     <option value="{{$lead->LeadID}}">[Lead{{$lead->LeadID}}] </option>
                                 @endforeach
