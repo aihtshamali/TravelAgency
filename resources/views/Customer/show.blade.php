@@ -120,14 +120,75 @@
                                     <th>Status</th>
                                 </thead>
                                 <tbody>
+                                    @foreach($leads as $lead)
                                     <tr>
-                                        <td>1</td>
+                                        <td>{{$lead->LeadID}}</td>
                                         <td></td>
                                         <td></td>
                                         <td></td>
                                         <td></td>
                                         <td></td>
                                     </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                </div>
+                <div class="card">
+                    <div class="card-header"><h3 class="card-title font-weight-bold">Payments</h3></div>
+                        <div class="card-body">
+                            <table class="table table-hover">
+                                <caption>List of Payments</caption>
+                                <thead class="thead-dark">
+                                    <th>Payment ID</th>
+                                    <th>Type</th>
+                                    <th>Subject</th>
+                                    <th>Created On</th>
+                                    <th>Taken Over By</th>
+                                    <th>Status</th>
+                                </thead>
+                                <tbody>
+                                    @foreach($payments as $payment)
+                                    <tr>
+                                        <td>{{$payment->PaymentID}}</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                </div>
+                <div class="card">
+                    <div class="card-header"><h3 class="card-title font-weight-bold">Sales</h3></div>
+                        <div class="card-body">
+                            <table class="table table-hover">
+                                <caption>List of Sales</caption>
+                                <thead class="thead-dark">
+                                    <th>ID</th>
+                                    <th>Issue Date</th>
+                                    <th>Type</th>
+                                    <th>Passenger</th>
+                                    <th>Document</th>
+                                    <th>Details</th>
+                                    <th>Branch</th>
+                                    <th>SPO</th>
+                                    <th>Amount</th>
+                                </thead>
+                                <tbody>
+                                    @foreach($payments as $payment)
+                                    <tr>
+                                        <td>{{$payment->PaymentID}}</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                    @endforeach
                                 </tbody>
                             </table>
                         </div>

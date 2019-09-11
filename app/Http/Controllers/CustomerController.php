@@ -110,8 +110,11 @@ class CustomerController extends Controller
     {
         // dd($id);
         $customer = Customer::where('CustomerID',$id)->where('status',1)->first();
-        // dd($customer);
-        return view('Customer.show',['customer'=>$customer]);
+        $leads= Lead::where('CustomerIDRef',$id)->get();
+        $payments= Payment::where('CustomerIDRef',$id)->get();
+        $payments= Payment::where('CustomerIDRef',$id)->get();
+        // dd($leads);
+        return view('Customer.show',['customer'=>$customer,'leads'=>$leads,'payments'=>$payments]);
     }
 
     /**
@@ -206,15 +209,18 @@ class CustomerController extends Controller
         $sale->NetCost = $request->cost;
         $sale->ProfitAmount = $request->profit;
         $sale->lead_type_id = $request->lead_type_id;
-        $sale->IssueDate=$request->IssueDate;
+        $sale->IssueDate="'".$request->IssueDate."'";
         $sale->ProductNum = $request->ProductNum;
         $sale->ProductPax = $request->ProductPax;
         $sale->sector_id = $request->sector_id;
-        $sale->AccountingText = $request->AccountigText;
+        $sale->AccountingText = "'".$request->AccountigText."'";
         $sale->user_branch_id=$request->session()->get('userbranch')->id;
+        // $sale->created_at=date('Y-m-d H:i:s');
+        // $sale->updated_at=date('Y-m-d H:i:s');
         $sale->save();
-        return redirect()->back();
-        // dd($request->all());
+        // echo $sale->id;
+        // approveSale($sale->id);
+        dd($request->all());
     }
 
     public function addRefund($id)
@@ -241,7 +247,7 @@ class CustomerController extends Controller
         $lastSale=Sale::all()->last();
         // dd($lastSale->SaleID);
         $sale=new Sale();
-        $sale->SaleID=$lastSale->SaleID+1;
+        // $sale->SaleID=$lastSale->SaleID+1;
         $sale->CustomerIDRef = $request->customer_id;
         // $sale->LeadIDRef = $request->LeadId;
         $sale->posted_by_user= $request->CreatedBy;
