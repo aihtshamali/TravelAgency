@@ -199,6 +199,8 @@ class CustomerController extends Controller
     }
     public function saveSale(Request $request)
     {
+        // echo date('Y-m-d H:i:s.u');
+        // exit;
         // dd   ($request->all());
         // dd($request->session()->get('userbranch')->id);
         $sale=new Sale();
@@ -209,18 +211,18 @@ class CustomerController extends Controller
         $sale->NetCost = $request->cost;
         $sale->ProfitAmount = $request->profit;
         $sale->lead_type_id = $request->lead_type_id;
-        $sale->IssueDate="'".$request->IssueDate."'";
+        $sale->IssueDate=$request->IssueDate;
         $sale->ProductNum = $request->ProductNum;
         $sale->ProductPax = $request->ProductPax;
         $sale->sector_id = $request->sector_id;
-        $sale->AccountingText = "'".$request->AccountigText."'";
+        $sale->AccountingText = $request->AccountigText;
         $sale->user_branch_id=$request->session()->get('userbranch')->id;
         // $sale->created_at=date('Y-m-d H:i:s');
         // $sale->updated_at=date('Y-m-d H:i:s');
         $sale->save();
         // echo $sale->id;
         // approveSale($sale->id);
-        dd($request->all());
+        // dd($request->all());
     }
 
     public function addRefund($id)
