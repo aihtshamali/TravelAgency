@@ -220,7 +220,14 @@ class CustomerController extends Controller
         // $sale->created_at=date('Y-m-d H:i:s');
         // $sale->updated_at=date('Y-m-d H:i:s');
         $sale->save();
-        // echo $sale->id;
+        // return view('Customer.addsale',['lead_types'=>$lead_types,'customer'=>$customer,'leads'=>$leads,'users'=>$users,'sectors'=>$sectors]);
+        // echo "hey";
+        // dd($sale->SaleID);
+        $sale=Sale::where('SaleID',$sale->SaleID)
+                ->leftJoin('CRM_Customers','CRM_Sale.CustomerIDRef','CRM_Customers.CustomerID')
+                ->get();
+                dd($sale);
+        return view('Customer.approvesale',['sale'=>$sale]);
         // approveSale($sale->id);
         // dd($request->all());
     }
