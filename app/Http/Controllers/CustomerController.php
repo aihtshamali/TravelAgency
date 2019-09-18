@@ -226,7 +226,7 @@ class CustomerController extends Controller
         $sale=Sale::where('SaleID',$sale->SaleID)
                 ->leftJoin('CRM_Customers','CRM_Sale.CustomerIDRef','CRM_Customers.CustomerID')
                 ->get();
-                dd($sale);
+                // dd($sale);
         return view('Customer.approvesale',['sale'=>$sale]);
         // approveSale($sale->id);
         // dd($request->all());
