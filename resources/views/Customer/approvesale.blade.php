@@ -31,7 +31,7 @@
                                 </tr> 
                                 <tr>
                                     <td>Customer</td> 
-                                    <td>PKR</td>
+                                    <td>{{$sale->CustomerName}}</td>
                                 </tr> 
                                 <tr>
                                     <td>Lead No</td> 
@@ -60,7 +60,7 @@
                             <tbody>
                                 <tr>
                                     <td>Transaction Type</td> 
-                                    <td>{{$sale->SaleID}}</td>
+                                    <td>{{$sale}}</td>
                                 </tr> 
                                 <tr>
                                     <td>Transaction Date</td> 
@@ -95,7 +95,7 @@
                             <tbody>
                                 <tr>
                                     <td>Amount</td> 
-                                    <td>{{$sale->SaleID}}</td>
+                                    <td>{{$sale}}</td>
                                 </tr> 
                                 <tr>
                                     <td>Net Amount</td> 
