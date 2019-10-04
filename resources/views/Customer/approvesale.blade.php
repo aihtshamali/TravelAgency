@@ -1,11 +1,5 @@
 @extends('layouts.master') 
 @section('content')
-@php
- $show ='display:none';   //USING FOR UPDATION
-@endphp
-
-
-    
     <div class="content-wrapper" style="margin-top:2%;">
         <div class="content-header">
             <div class="container-fluid">
@@ -31,19 +25,23 @@
                                 </tr> 
                                 <tr>
                                     <td>Customer</td> 
-                                    <td>PKR</td>
+                                    <td>{{$sale->CustomerName}}</td>
                                 </tr> 
                                 <tr>
-                                    <td>Lead No</td> 
-                                    <td>PKR</td>
+                                    <td>Lead No</td>
+                                    @if($sale->LeadIDRef == NULL) 
+                                    <td>N/A</td>
+                                    @else
+                                    <td>{{$sale->LeadIDRef}}</td>
+                                    @endif
                                 </tr> 
                                 <tr>
                                     <td>SPO</td> 
-                                    <td>qaiser @HDQ</td>
+                                    <td>{{$sale->Uname}} @ {{$sale->Branch}}</td>
                                 </tr>
                                 <tr>
                                     <td>Posted By</td> 
-                                    <td>PKR</td>
+                                    <td>{{$sale->Uname}} on {{date('d-M-y',strtotime($sale->created_at))}} ({{date('H:i',strtotime($sale->created_at))}})</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -60,23 +58,23 @@
                             <tbody>
                                 <tr>
                                     <td>Transaction Type</td> 
-                                    <td>{{$sale->SaleID}}</td>
+                                    <td>{{$sale->Type}}</td>
                                 </tr> 
                                 <tr>
                                     <td>Transaction Date</td> 
-                                    <td>PKR</td>
+                                    <td>{{date('d-M-y',strtotime($sale->IssueDate))}}</td>
                                 </tr> 
                                 <tr>
                                     <td>Document No</td> 
-                                    <td>PKR</td>
+                                    <td>{{$sale->ProductNum}}</td>
                                 </tr> 
                                 <tr>
                                     <td>Passenger</td> 
-                                    <td>PKR</td>
+                                    <td>{{$sale->ProductPax}}</td>
                                 </tr>
                                 <tr>
                                     <td>Details</td> 
-                                    <td>LHE-DXB</td>
+                                    <td>{{$sale->Sector}}</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -95,19 +93,19 @@
                             <tbody>
                                 <tr>
                                     <td>Amount</td> 
-                                    <td>{{$sale->SaleID}}</td>
+                                    <td>{{$sale->Amount}}</td>
                                 </tr> 
                                 <tr>
                                     <td>Net Amount</td> 
-                                    <td>PKR</td>
+                                    <td>{{$sale->NetCost}}</td>
                                 </tr> 
                                 <tr>
                                     <td>Profit</td> 
-                                    <td>PKR</td>
+                                    <td>{{$sale->ProfitAmount}}</td>
                                 </tr> 
                                 <tr>
                                     <td>Details</td> 
-                                    <td>Test</td>
+                                    <td>{{$sale->AccountingText}}</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -135,7 +133,7 @@
                                     <td>None</td>
                                 </tr> 
                                 <tr>
-                                    <td colspan="2"><a href="#">Approve</a>|<a href="#">Reject</a></td> 
+                                    <td align="center" colspan="2"><a href="#">Approve</a>|<a href="#">Reject</a></td> 
                                 </tr>
                                 
                             </tbody>
@@ -147,31 +145,5 @@
         
         
     </div>
-    
-           
-         
-
-@endsection
-@section('javascript')
-    <script>
-        $(document).ready(function(){
-            $('select[name="customer_type"]').on('change',function(){
-                var type=$(this).children('option:selected').text()
-                console.log(type);
-                if(type == "Individual"){
-                    $(".gender").show();
-                }else{
-                    $(".gender").hide();
-                }
-            });
-            
-        });
-        function ValidateAmount()
-        {
-            var profit=$( "#amount" ).val()-$( "#cost" ).val();
-            console.log(profit);
-            $("#profit").val(profit);
-            // alert("Hey");
-        }
-    </script>
+             
 @endsection

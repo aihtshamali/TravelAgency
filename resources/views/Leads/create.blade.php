@@ -128,7 +128,7 @@ CLASS:
         $(document).ready(function(){
             $('.select2').select2();
             //Date picker
-            $.fn.datepicker.defaults.format = "dd/mm/yyyy";
+            $.fn.datepicker.defaults.format = "yyyy-mm-dd";
 
             $('#service_date').datepicker({
                 startDate: '0d',

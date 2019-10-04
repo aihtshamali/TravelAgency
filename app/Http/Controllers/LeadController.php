@@ -3,12 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Lead;
+use App\LeadText;
 use App\LeadType;
 use Illuminate\Http\Request;
 use DB;
 use Redirect;
 use App\Customer;
 use App\Branch;
+use Auth;
 use App\Sector;
 class LeadController extends Controller
 {
@@ -44,7 +46,27 @@ class LeadController extends Controller
      */
     public function store(Request $request)
     {
-        dd($request->all());
+        $lead_id = Lead::latest()->first(); 
+        $lead = new Lead();
+        $lead->LeadID = $lead_id->id+1;
+        $lead->CustomerIDRef = $request->customer_id;
+        $lead->lead_type_id = $request->lead_type;
+        $lead->source_id = $request->source_id;
+        $lead->destination_id = $request->destination_id;
+        $lead->LeadSubject = $request->subject;
+        $lead->ServiceDate = $request->service_date;
+        $lead->branch_id = $request->branch_id;
+        $lead->taken_over_by = Auth::id();
+        $lead->LeadStatus = 'Open';
+        $lead->LeadTypeOLD = 'Open';
+        $lead->save();
+
+        $leadText = new LeadText();
+        $leadText->LeadRefID = $lead->id;
+        $leadText->NotePad = $requst->details;
+        $leadText->Comments ='<comments/>'; //'<comments><comment>'.$lead->id.'</comment></comments>';
+        $leadText->save();
+        dd($leadText);
     }
     /**
      * phoneSearch search phoneNumber in storage.

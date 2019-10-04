@@ -223,11 +223,20 @@ class CustomerController extends Controller
         // return view('Customer.addsale',['lead_types'=>$lead_types,'customer'=>$customer,'leads'=>$leads,'users'=>$users,'sectors'=>$sectors]);
         // echo "hey";
         // dd($sale->SaleID);
-        $sale=Sale::where('SaleID',$sale->SaleID)
-                ->leftJoin('CRM_Customers','CRM_Sale.CustomerIDRef','CRM_Customers.CustomerID')
-                ->get();
-                // dd($sale);
-        return view('Customer.approvesale',['sale'=>$sale]);
+        $sales = Sale::selectRaw('SaleID,branches.name as Branch,Login_users.name as Uname,CRM_Customers.CustomerName,
+        CRM_Sale.CustomerIDRef,LeadIDRef,CRM_Sale.created_at,Amount,NetCost,ProfitAmount,
+        AccountingText,lead_types.name as Type,IssueDate,ProductPax,ProductNum,sectors.name as Sector')
+        ->leftJoin('CRM_Customers','CRM_Sale.CustomerIDRef','CRM_Customers.CustomerID')
+        ->leftJoin('CRM_Leads','CRM_Sale.LeadIDRef','CRM_Leads.LeadID')
+        ->leftJoin('user_branches','CRM_Sale.user_branch_id','user_branches.id')
+        ->leftJoin('Login_Users','Login_Users.id','user_branches.user_id')
+        ->leftJoin('branches','branches.id','user_branches.branch_id')
+        ->leftJoin('lead_types','CRM_Sale.lead_type_id','lead_types.id')
+        ->leftJoin('sectors','CRM_Sale.sector_id','sectors.id')
+        ->where('SaleID',$sale->SaleID)->first();
+
+                // dd($sales);
+        return view('Customer.approvesale',['sale'=>$sales]);
         // approveSale($sale->id);
         // dd($request->all());
     }
