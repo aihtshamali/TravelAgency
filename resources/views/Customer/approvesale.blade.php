@@ -58,7 +58,11 @@
                             <tbody>
                                 <tr>
                                     <td>Transaction Type</td> 
+<<<<<<< HEAD
                                     <td>{{$sale->Type}}</td>
+=======
+                                    <td>{{$sale}}</td>
+>>>>>>> 36b7475a5463a0a53fd16282735b3096493859fd
                                 </tr> 
                                 <tr>
                                     <td>Transaction Date</td> 

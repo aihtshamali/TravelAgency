@@ -37,7 +37,16 @@ class LeadController extends Controller
         $customer = Customer::find($request->account);
         return view('Leads.create',['customer'=>$customer,'lead_types'=>$lead_types,'sectors'=>$sectors,'branches'=>$branches]);
     }
-
+    public function takeOver(Request $request){
+        
+       DB::update('exec CRM_LeadUpdate '.$request->LeadID.',"'.$request->action.'",'.Auth::id());
+       return redirect()->back();
+    }
+    public function saveNotePad(Request $request){
+        
+       DB::update('exec CRM_LeadUpdate '.$request->LeadID.',"'.$request->action.'",'.Auth::id());
+       return redirect()->back();
+    }
     /**
      * Store a newly created resource in storage.
      *
@@ -46,27 +55,13 @@ class LeadController extends Controller
      */
     public function store(Request $request)
     {
-        $lead_id = Lead::latest()->first(); 
-        $lead = new Lead();
-        $lead->LeadID = $lead_id->id+1;
-        $lead->CustomerIDRef = $request->customer_id;
-        $lead->lead_type_id = $request->lead_type;
-        $lead->source_id = $request->source_id;
-        $lead->destination_id = $request->destination_id;
-        $lead->LeadSubject = $request->subject;
-        $lead->ServiceDate = $request->service_date;
-        $lead->branch_id = $request->branch_id;
-        $lead->taken_over_by = Auth::id();
-        $lead->LeadStatus = 'Open';
-        $lead->LeadTypeOLD = 'Open';
-        $lead->save();
-
-        $leadText = new LeadText();
-        $leadText->LeadRefID = $lead->id;
-        $leadText->NotePad = $requst->details;
-        $leadText->Comments ='<comments/>'; //'<comments><comment>'.$lead->id.'</comment></comments>';
-        $leadText->save();
-        dd($leadText);
+       $updated = DB::update('exec CRM_AddLead "'.$request->customer_id.'",'.Auth::id().','.$request->lead_type.','.$request->source_id.','.$request->destination_id.',"'.$request->subject.'","'.date('Y-m-d',strtotime($request->service_date)).'","'.$request->details.'",'.$request->create_for_others.','.$request->branch_id);
+        // dd($updated);
+        if(!$updated)
+            return redirect()->back()->withMessage('Something went Wrong!');
+        
+        $lead = Lead::latest()->first();
+        return redirect()->route('leads.show',$lead->LeadID);
     }
     /**
      * phoneSearch search phoneNumber in storage.
@@ -128,6 +123,17 @@ class LeadController extends Controller
     {
        $lead = Lead::findOrFail($id);
        return view('Leads.show',['lead'=>$lead]);
+    }
+    /**
+     * Display the specified resource.
+     *
+     * 
+     * @return \Illuminate\Http\Response
+     */
+    public function myLeads()
+    {
+       $leads = Lead::where('user_id',Auth::id())->where('LeadStatus','Working')->get();
+       return view('Leads.myLead',['leads'=>$leads]);
     }
 
     /**

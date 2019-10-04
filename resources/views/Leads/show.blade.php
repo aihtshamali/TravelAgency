@@ -1,6 +1,12 @@
 @extends('layouts.master')
 @section('styleTags')
     <link rel="stylesheet" href="{{asset('dist/plugins/datepicker/datepicker3.css')}}">
+    <style>
+        .badge{
+            color:white;
+            font-weight: bold;
+        }
+    </style>
 @endsection
 @section('content')
     <div class="content-wrapper">
@@ -85,10 +91,6 @@
                                     <td><i class="fa fa-mail mr-2"></i>Email Address.</td>
                                     <td>{{$lead->Customer->EmailAddress ?? "NA" }}</td>
                                 </tr>
-                                <tr>
-                                    <td> <i class="fa fa-book mr-2"></i>Balance</td>
-                                    <td>PKR</td>
-                                </tr>
                             </tbody>
                         </table>
                     </div>
@@ -96,25 +98,36 @@
             </div>
             <div class="col-md-6">
                 <div class="card">
-                    <div class="card-header"><h3 class="card-title">Customers</h3></div>
+                    <div class="card-header"><h3 class="card-title">Created By</h3></div>
                     <div class="card-body">
                         <table class="table  table-hover  bordered ">
                             <tbody>
                                 <tr>
-                                    <td><i class="fas fa-coins mr-2"></i>Sales</td>
-                                    <td>PKR</td>
+                                    <td><i class="fas fa-user mr-2"></i>Created By</td>
+                                    <td>{{$lead->User->name}}</td>
                                 </tr>
                                 <tr>
-                                    <td><i class="fa fa-minus-circle mr-2"></i>Refunds</td>
-                                    <td>PKR</td>
+                                    <td><i class="fa fa-user-circle mr-2"></i>Taken Over By</td>
+                                    <td>{{isset($lead->TakenOverBy->name) ? $lead->TakenOverBy->name : "NA"}}</td>
+                                    
                                 </tr>
                                 <tr>
-                                    <td><i class="fa fa-money mr-2"></i>Payments</td>
-                                    <td>PKR</td>
+                                    <td><i class="fas fa-user mr-2"></i>Closed By</td>
+                                    <td>{{isset($lead->ClosedBy->name) ? $lead->ClosedBy->name : "NA"}}</td>
                                 </tr>
                                 <tr>
-                                    <td> <i class="fa fa-book mr-2"></i>Balance</td>
-                                    <td>PKR</td>
+                                    <td> <i class="fas fa-book mr-2"></i>Status</td>
+                                    <td>
+                                        @if($lead->LeadStatus == "Open")
+                                        <span style="padding:9px;margin-right:6px" class="text-uppercase badge badge-success">{{$lead->LeadStatus}}</span>
+                                        <a href="{{route('leads.takeOver',['LeadID'=>$lead->LeadID,'action'=>'takeover'])}}">Take Over</a>
+                                        @elseif($lead->LeadStatus == "Working")
+                                        <span style="padding:9px;margin-right:6px" class="text-uppercase badge badge-danger">{{$lead->LeadStatus}}</span>
+                                            <a href="{{route('leads.takeOver',['LeadID'=>$lead->LeadID,'action'=>'complete'])}}">Complete</a> |
+                                            <a href="{{route('leads.takeOver',['LeadID'=>$lead->LeadID,'action'=>'close'])}}">Close</a>
+
+                                        @endif
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>
@@ -123,29 +136,56 @@
             </div>
         </div>
         {{-- End --}}
-        <div class="row mr-2">
+        <div class="row">
             <div class="col-md-12">
                 <div class="card">
-                    <div class="card-header"><h3 class="card-title font-weight-bold">Leads</h3></div>
+                    <div class="card-header"><h3 class="card-title font-weight-bold">Note Pad</h3></div>
                         <div class="card-body">
-                            <table class="table table-hover">
-                                <caption>List of Lead</caption>
+                            <form action="{{route('leads.saveNotePad')}}" method="post">
+                                {{ csrf_field() }}
+                                <input type="hidden" name="lead_id" value="{{$lead->LeadID}}">
+                                <div class="form-group">
+                                                     <label for="">Maximum 1000 Characters</label>
+                                <textarea name="notepad" id="" cols="30" rows="7" class="form-control">ADT: 
+CHD: 
+INF:</textarea>
+                                </div>
+                                <br>
+                                <div class="pull-right">
+                                    <input type="submit" class="btn btn-primary" value="Update">
+                                </div>
+                            </form>
+                        </div>
+                </div>
+            </div>
+        </div>
+        {{-- End --}}
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header"><h3 class="card-title font-weight-bold">Comments</h3></div>
+                        <div class="card-body">
+                            <table class="table table-bordered">
                                 <thead class="thead-dark">
-                                    <th>Lead ID</th>
-                                    <th>Type</th>
-                                    <th>Subject</th>
-                                    <th>Created On</th>
-                                    <th>Taken Over By</th>
-                                    <th>Status</th>
+                                    <th>Time</th>
+                                    <th>Posted By</th>
+                                    <th>Comments</th>
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td>1</td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
+                                        <td colspan="3">
+                                            <form action="" method="post">
+                                                {{ csrf_field() }}
+                                                <input type="hidden" name="lead_id" value="{{$lead->LeadID}}">
+                                                <div class="form-group">
+                                                    <label for="">Enter New Comment</label>
+                                                    <input type="text" name="comment" class="form-control">
+                                                </div>
+                                                <div class="pull-right">
+                                                    <input type="submit" class="btn btn-primary" value="Post">
+                                                </div>
+                                            </form>
+                                        </td>
                                     </tr>
                                 </tbody>
                             </table>

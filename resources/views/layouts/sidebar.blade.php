@@ -57,7 +57,7 @@
               </a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
-                            <a href="pages/charts/chartjs.html" class="nav-link">
+                            <a href="{{route('myLeads')}}" class="nav-link">
                     
                     <p>My Leads</p>
                   </a>

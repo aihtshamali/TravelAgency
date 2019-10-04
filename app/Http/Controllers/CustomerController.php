@@ -217,11 +217,13 @@ class CustomerController extends Controller
         $sale->sector_id = $request->sector_id;
         $sale->AccountingText = $request->AccountigText;
         $sale->user_branch_id=$request->session()->get('userbranch')->id;
+        $sale->SaleStatus='Pending';
         // $sale->created_at=date('Y-m-d H:i:s');
         // $sale->updated_at=date('Y-m-d H:i:s');
         $sale->save();
         // return view('Customer.addsale',['lead_types'=>$lead_types,'customer'=>$customer,'leads'=>$leads,'users'=>$users,'sectors'=>$sectors]);
         // echo "hey";
+        dd($request->session());
         // dd($sale->SaleID);
         $sales = Sale::selectRaw('SaleID,branches.name as Branch,Login_users.name as Uname,CRM_Customers.CustomerName,
         CRM_Sale.CustomerIDRef,LeadIDRef,CRM_Sale.created_at,Amount,NetCost,ProfitAmount,
