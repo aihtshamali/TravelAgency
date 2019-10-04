@@ -92,7 +92,7 @@
                             </div>
                             <div class="form-group">
                                 <label for="service_date">Service Date</label>
-                                <input type="text" id="service_date" name="service_date" placeholder="Service Date" class="form-control">
+                                <input type="text" id="service_date" autocomplete="off" name="service_date" placeholder="Service Date" class="form-control">
                             </div>
                             <div class="form-group">
                             <label for="details">Details (Max 1000 Characters)</label>
@@ -113,7 +113,9 @@ CLASS:
                                     @endforeach
                                 </select>
                             </div>
+                            <input type="hidden" name="create_for_others" id="create_for_others" value="0">
                             <input type="submit" class="btn btn-success pull-right" value="Create & Take Over">
+                            <input type="submit" class="btn btn-primary pull-left" id="createForOthers" value="Create for Other">
                         </form>
                     </div>
                 </div>
@@ -127,8 +129,24 @@ CLASS:
     <script>
         $(document).ready(function(){
             $('.select2').select2();
+            $('#destination_id,#source_id').change(function(){
+                var dest = $('option:selected','#destination_id')
+                var src = $('option:selected','#source_id')
+                if(dest.val())
+                    dest = dest.text();
+                else
+                    dest = '';
+                if(src.val())
+                    src = src.text()
+                else
+                    src = ''
+                $('#subject').val(src +" - "+ dest)
+            });
+            $('#createForOthers').click(function(){
+                $('#create_for_others').val('1')
+            })
             //Date picker
-            $.fn.datepicker.defaults.format = "dd/mm/yyyy";
+            $.fn.datepicker.defaults.format = "dd-mm-yyyy";
 
             $('#service_date').datepicker({
                 startDate: '0d',

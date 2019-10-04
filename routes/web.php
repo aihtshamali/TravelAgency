@@ -16,6 +16,9 @@
 Auth::routes();
 Route::group(['middleware' => 'auth'], function () {
 Route::resource('/Customer','CustomerController');
+Route::post('leads/saveNotePad','LeadController@saveNotePad')->name('leads.saveNotePad');
+Route::get('leads/takeOver','LeadController@takeOver')->name('leads.takeOver');
+Route::get('leads/myLeads','LeadController@myLeads')->name('myLeads');
 Route::get('leads/searchPhone','LeadController@phoneSearch')->name('leads.searchPhone');
 Route::post('leads/searchPhone','LeadController@customerLead')->name('customerLead');
 Route::get('/lead/searchByID/','LeadController@searchByID')->name('lead_searchByID');

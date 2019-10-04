@@ -45,5 +45,8 @@ class User extends Authenticatable
     public function Sale(){
         return $this->hasOne('App\Sale','posted_by_user');
     }
+    public function Lead(){
+        return $this->hasOne('App\Lead','LeadID');
+    }
     
 }

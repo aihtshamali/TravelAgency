@@ -10,6 +10,7 @@ use Redirect;
 use App\Customer;
 use App\Branch;
 use App\Sector;
+use Auth;
 class LeadController extends Controller
 {
     /**
@@ -35,7 +36,16 @@ class LeadController extends Controller
         $customer = Customer::find($request->account);
         return view('Leads.create',['customer'=>$customer,'lead_types'=>$lead_types,'sectors'=>$sectors,'branches'=>$branches]);
     }
-
+    public function takeOver(Request $request){
+        
+       DB::update('exec CRM_LeadUpdate '.$request->LeadID.',"'.$request->action.'",'.Auth::id());
+       return redirect()->back();
+    }
+    public function saveNotePad(Request $request){
+        
+       DB::update('exec CRM_LeadUpdate '.$request->LeadID.',"'.$request->action.'",'.Auth::id());
+       return redirect()->back();
+    }
     /**
      * Store a newly created resource in storage.
      *
@@ -44,7 +54,13 @@ class LeadController extends Controller
      */
     public function store(Request $request)
     {
-        dd($request->all());
+       $updated = DB::update('exec CRM_AddLead "'.$request->customer_id.'",'.Auth::id().','.$request->lead_type.','.$request->source_id.','.$request->destination_id.',"'.$request->subject.'","'.date('Y-m-d',strtotime($request->service_date)).'","'.$request->details.'",'.$request->create_for_others.','.$request->branch_id);
+        // dd($updated);
+        if(!$updated)
+            return redirect()->back()->withMessage('Something went Wrong!');
+        
+        $lead = Lead::latest()->first();
+        return redirect()->route('leads.show',$lead->LeadID);
     }
     /**
      * phoneSearch search phoneNumber in storage.
@@ -106,6 +122,17 @@ class LeadController extends Controller
     {
        $lead = Lead::findOrFail($id);
        return view('Leads.show',['lead'=>$lead]);
+    }
+    /**
+     * Display the specified resource.
+     *
+     * 
+     * @return \Illuminate\Http\Response
+     */
+    public function myLeads()
+    {
+       $leads = Lead::where('user_id',Auth::id())->where('LeadStatus','Working')->get();
+       return view('Leads.myLead',['leads'=>$leads]);
     }
 
     /**
