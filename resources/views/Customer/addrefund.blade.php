@@ -45,7 +45,7 @@
                         
                         <div class="form-group">
                             <label for="NetCost">Profit</label>
-                            <input type="number" readonly="readonly" value="0" id="profit" name="profit" required name="ProfitAmount" class="form-control" autocomplete="off" >
+                            <input type="number"  value="0" id="profit" name="profit" required name="ProfitAmount" class="form-control" autocomplete="off" >
                         </div>
                         
                         </div>   

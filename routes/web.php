@@ -38,6 +38,7 @@ Route::get('/Customer/addrefund/{customer}', 'CustomerController@addRefund')->na
 Route::post('/Customer/saverefund', 'CustomerController@saveRefund')->name('saveRefund');
 Route::get('/Customer/addpayment/{customer}', 'CustomerController@addPayment')->name('addPayment');
 Route::post('/Customer/savepayment', 'CustomerController@savePayment')->name('savePayment');
+Route::get('/changeSaleStatus/{id}/{status}', 'CustomerController@changeSaleStatus')->name('changeSaleStatus');
 });
 
 
