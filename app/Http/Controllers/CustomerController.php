@@ -85,7 +85,7 @@ class CustomerController extends Controller
             DB::select('exec CRM_CreateCustomer "'.$request->name.'", "'.$request->customer_type.'","'.$request->phone_no.'","'.($request->customer_email ?? "NULL").'","'.$request->remarks.'","NULL","'.Auth::user()->name.'","'.Session::get('userbranch')->branch_id.'",1000');
         }
         
-        return redirect()->back();
+        return redirect()->back()>with('success','Customer added successfully!');
     }
     
     /**
@@ -146,7 +146,7 @@ class CustomerController extends Controller
                 ->first();
 
         $customer->CustomerName = $request->name;
-        $customer->PhoneNumber = $request->phone_no;
+        $customer->PhoneNumber = $request->PhoneNumber;
         $customer->customer_type_id = $request->customer_type;
                 
         if(CustomerType::find($request->customer_type)->name == "Individual"){
@@ -157,7 +157,7 @@ class CustomerController extends Controller
         $customer->CreatedBy = Auth::user()->name;
         $customer->EmailAddress = $request->customer_email;
         $customer->save();
-        return redirect()->back();
+        return redirect()->back()->with('success','Customer Added Successfully!');
         // dd($id);
         //
     }
@@ -276,7 +276,7 @@ class CustomerController extends Controller
         $sale->AccountingText = $request->AccountigText;
         $sale->user_branch_id=$request->session()->get('userbranch')->id;
         $sale->save();
-        return redirect()->back();
+        return redirect()->back()->with('success','Refund added successfully!');
         // dd($request->all());
     }
     public function addPayment($id)
@@ -329,6 +329,6 @@ class CustomerController extends Controller
         }
         
         $payment->save();
-        return redirect()->back();
+        return redirect()->back()->with('success','Item created successfully!');
     }
 }

@@ -7,6 +7,7 @@
 
 <div class="container">
     <div class="content-wrapper" style="margin-top:2%;">
+        @include('inc/flashMessages')
         <form role="form" action="{{route('savePayment')}}" method="POST">
             @csrf
         <div class="row">

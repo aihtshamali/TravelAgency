@@ -63,7 +63,7 @@
                   </a>
                         </li>
                         <li class="nav-item">
-                            <a href="pages/charts/flot.html" class="nav-link">
+                            <a href="{{route('AvailableLeads')}}" class="nav-link">
                     
                     <p>Available Leads</p>
                   </a>

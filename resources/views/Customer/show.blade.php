@@ -8,11 +8,15 @@
         table{
             width:100%;
         }
+        td > span.badge{
+            padding:0.5rem 0.4rem;
+            min-width:80px;
+        }
     </style>
 @endsection
 @section('content')
     <div class="content-wrapper">
-
+        @include('inc/flashMessages')
         {{-- Header Start --}}
         <div class="content-header">
             <div class="container-fluid pl-0">
@@ -50,25 +54,25 @@
         <div class="row mt-3">
             <div class="col-md-6">
                 <div class="card">
-                    <div class="card-header"><h3 class="card-title">Customer Details</h3></div>
+                    <div class="card-header"><h3 class="card-title">Customer Details</h3><span class="pull-right"><a href="{{route('Customer.edit',$customer->CustomerID)}}">Edit Customer</a></span></div>
                     <div class="card-body">
                         <table class="table  table-hover  bordered ">
                             <tbody>
                                 <tr>
-                                    <td><i class="fa fa-user mr-2"></i>{{$customer->CustomerName}}</td>
-                                    <td><a href="#">Edit</a></td>
+                                    <td><i class="fas fa-user mr-2"></i>Customer No</td>
+                                    <td>{{$customer->CustomerID}}</td>
                                 </tr>
                                 <tr>
-                                    <td><i class="fa fa-phone mr-2"></i>{{$customer->PhoneNumber}}</td>
-                                    <td><a href="#">Edit</a></td>
+                                    <td><i class="fa fa-info mr-2"></i>Name</td>
+                                    <td>{{$customer->CustomerName}}</td>
                                 </tr>
                                 <tr>
-                                    <td><i class="fa fa-envelope mr-2"></i>{{$customer->EmailAddress}}</td>
-                                    <td><a href="#">Edit</a></td>
+                                    <td><i class="fa fa-mobile mr-2"></i>Phone No.</td>
+                                    <td>{{$customer->PhoneNumber}}</td>
                                 </tr>
                                 <tr>
-                                    <td class="text-capitalize"> <i class="fa fa-industry mr-2"></i>{{ $customer->Customertype ? $customer->Customertype->name == 'Individual' ? $customer->gender : $customer->Customertype->name : $customer->gender }}</td>
-                                    <td><a href="#">Edit</a></td>
+                                    <td><i class="fa fa-envelope mr-2"></i>Email Address.</td>
+                                    <td>{{$customer->EmailAddress ?? "NA" }}</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -122,12 +126,12 @@
                                 <tbody>
                                     @foreach($leads as $lead)
                                     <tr>
-                                        <td>{{$lead->LeadID}}</td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
+                                        <td> <a href="{{route('leads.show',$lead->LeadID)}}">{{$lead->LeadID}}</a></td>
+                                        <td>{{$lead->LeadType->name}}</td>
+                                        <td>{{$lead->LeadSubject}}</td>
+                                        <td>{{date('d M y  h:i:s a',strtotime($lead->CreatedOn))}}</td>
+                                        <td>{{isset($lead->TakenOverBy->name) ? $lead->TakenOverBy->name : 'NA'}}</td>
+                                        <td><span class="badge badge-{{$lead->LeadStatus == "Open" ? 'success' : ($lead->LeadStatus == 'Working' ? 'danger' : '')}}">{{$lead->LeadStatus}}</span></td>
                                     </tr>
                                     @endforeach
                                 </tbody>

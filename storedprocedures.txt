@@ -1079,3 +1079,159 @@ ALTER PROCEDURE [dbo].[CRM_NewLead]
 
 AS
 SELECT * FROM [CRM_Customers] WHERE [PhoneNumber]=@PhoneNumber and status = 1 
+
+
+
+
+
+----------------------- NEW ----------------------
+
+USE [WAC]
+GO
+/****** Object:  StoredProcedure [dbo].[CRM_AddLead]    Script Date: 10/5/2019 2:04:57 AM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+-------------------------------------------------------------------------------
+ALTER PROCEDURE [dbo].[CRM_AddLead]
+(
+@CustomerID BIGINT,
+@UserRef INT,
+@LeadTypeID INT,
+@SourceID INT,
+@DestinationID	INT,
+@LeadSubject VARCHAR(100),
+@ServiceDate DATE,
+@Remarks VARCHAR(1000),
+@TakeOver BIT,
+@BranchRestrict int
+)
+
+AS
+
+	BEGIN TRANSACTION
+
+		
+	BEGIN TRY
+
+		DECLARE @TakenOverBy VARCHAR(30)
+		DECLARE @TakenOverOn DATETIME
+		DECLARE @LeadStatus VARCHAR(30)
+
+		SET @TakenOverBy=NULL
+		SET @TakenOverOn=NULL
+		SET @LeadStatus='Open'
+
+		IF @TakeOver=1
+		BEGIN
+			SET @TakenOverBy=@UserRef
+			SET @TakenOverOn=GETUTCDATE()
+			SET @LeadStatus='Working'
+		END
+
+		
+		DECLARE @LeadID BIGINT
+		SET @LeadID=NEXT VALUE FOR [CRM_Leads_ID]
+		INSERT INTO [CRM_Leads]
+		([LeadID], [CustomerIDRef],[lead_type_id],[LeadSubject], [ServiceDate],[LeadStatus], [user_id], [taken_over_by], [TakenOverOn], [branch_id],[source_id],[destination_id])
+		VALUES
+		(@LeadID, @CustomerID,@LeadTypeID, @LeadSubject, @ServiceDate, @LeadStatus, @UserRef, @TakenOverBy, @TakenOverOn, @BranchRestrict,@SourceID,@DestinationID)
+
+		INSERT INTO [CRM_Leads_Text]
+		VALUES
+		(@LeadID, @Remarks, '<?xml version="1.0" encoding="UTF-8"?><comments></comments>')
+
+		COMMIT TRANSACTION
+		RETURN @LeadID
+
+	END TRY
+	BEGIN CATCH
+
+		ROLLBACK TRANSACTION
+		RETURN 0
+
+	END CATCH				
+
+
+ --------------------- NEW ------------------------
+
+ USE [WAC]
+GO
+/****** Object:  StoredProcedure [dbo].[CRM_LeadUpdate]    Script Date: 10/5/2019 2:06:05 AM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+------------------------------------------------------------------------------
+ALTER PROCEDURE [dbo].[CRM_LeadUpdate]
+(
+@LeadID BIGINT,
+@ActionCode VARCHAR(30),
+@UserRef int
+)
+
+AS
+
+-- STATUS CODES
+-- 0: ERROR
+-- 1: SUCCESS
+-- 2: NOT YOUR LEAD
+
+IF @ActionCode='takeover'
+BEGIN
+	DECLARE @Stat VARCHAR(30)
+	SELECT @Stat=[LeadStatus] FROM [CRM_Leads] WHERE [LeadID]=@LeadID
+	IF @Stat='Open'
+	BEGIN
+		UPDATE [CRM_Leads] SET [LeadStatus]='Working', [taken_over_by]=@UserRef, [TakenOverOn]=GETUTCDATE() WHERE [LeadID]=@LeadID
+		RETURN 1
+	END
+END
+
+
+IF @ActionCode='complete' OR @ActionCode='close'
+BEGIN
+	DECLARE @NewStat VARCHAR(30)
+	
+	IF @ActionCode='complete'
+	BEGIN
+	SET @NewStat='Completed'
+	END
+
+	IF @ActionCode='close'
+	BEGIN
+	SET @NewStat='Closed'
+	END
+
+	DECLARE @Statu VARCHAR(30)
+	DECLARE @TakenOverBy VARCHAR(30)
+
+	SELECT @Statu=[LeadStatus], @TakenOverBy=[taken_over_by] FROM [CRM_Leads] WHERE [LeadID]=@LeadID
+		IF NOT @Statu='Working'
+		BEGIN
+			RETURN 0
+		END
+		IF NOT @UserRef=@TakenOverBy
+		BEGIN
+			RETURN 2
+		END
+		UPDATE [CRM_Leads] SET [LeadStatus]=@NewStat, [closed_by]=@UserRef, [ClosedOn]=GETUTCDATE() WHERE [LeadID]=@LeadID
+		RETURN 1
+END
+
+IF @ActionCode='reopen'
+
+BEGIN
+	DECLARE @TheStat VARCHAR(30)
+	SELECT @TheStat=[LeadStatus] FROM [CRM_Leads] WHERE [LeadID]=@LeadID
+	IF @TheStat='Completed' OR @TheStat='Closed'
+	BEGIN
+		UPDATE [CRM_Leads] SET [LeadStatus]='Working' WHERE [LeadID]=@LeadID
+		RETURN 1
+	END
+END
+
+RETURN 0

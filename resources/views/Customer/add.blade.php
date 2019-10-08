@@ -6,15 +6,7 @@
 
 
 <div class="content-wrapper" style="margin-top:2%;">
-    @if ($errors->any())
-        <div class="alert alert-danger">
-            <ul>
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
+    @include('inc/flashMessages')
     <div class="card-header">
         @if(isset($customer))
             <h1 class="title">Edit Customer</h1>
