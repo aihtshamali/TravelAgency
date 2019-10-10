@@ -85,7 +85,7 @@ class CustomerController extends Controller
             DB::select('exec CRM_CreateCustomer "'.$request->name.'", "'.$request->customer_type.'","'.$request->phone_no.'","'.($request->customer_email ?? "NULL").'","'.$request->remarks.'","NULL","'.Auth::user()->name.'","'.Session::get('userbranch')->branch_id.'",1000');
         }
         
-        return redirect()->back();
+        return redirect()->back()>with('success','Customer added successfully!');
     }
     
     /**
@@ -146,7 +146,7 @@ class CustomerController extends Controller
                 ->first();
 
         $customer->CustomerName = $request->name;
-        $customer->PhoneNumber = $request->phone_no;
+        $customer->PhoneNumber = $request->PhoneNumber;
         $customer->customer_type_id = $request->customer_type;
                 
         if(CustomerType::find($request->customer_type)->name == "Individual"){
@@ -157,7 +157,7 @@ class CustomerController extends Controller
         $customer->CreatedBy = Auth::user()->name;
         $customer->EmailAddress = $request->customer_email;
         $customer->save();
-        return redirect()->back();
+        return redirect()->back()->with('success','Customer Added Successfully!');
         // dd($id);
         //
     }
@@ -225,8 +225,28 @@ class CustomerController extends Controller
         // echo "hey";
         // dd($request->session()->get('userbranch')->user_id);
         // dd($sale->SaleID);
-        $sales = Sale::selectRaw('SaleID,branches.name as Branch,Login_users.name as Uname,CRM_Customers.CustomerName,
-        CRM_Sale.CustomerIDRef,LeadIDRef,CRM_Sale.created_at,Amount,NetCost,ProfitAmount,
+        // $sales = Sale::selectRaw('SaleID,branches.name as Branch,Login_users.name as Uname,CRM_Customers.CustomerName,
+        // CRM_Sale.CustomerIDRef,LeadIDRef,CRM_Sale.created_at,Amount,NetCost,ProfitAmount,
+        // AccountingText,lead_types.name as Type,IssueDate,ProductPax,ProductNum,sectors.name as Sector')
+        // ->leftJoin('CRM_Customers','CRM_Sale.CustomerIDRef','CRM_Customers.CustomerID')
+        // ->leftJoin('CRM_Leads','CRM_Sale.LeadIDRef','CRM_Leads.LeadID')
+        // ->leftJoin('user_branches','CRM_Sale.user_branch_id','user_branches.id')
+        // ->leftJoin('Login_Users','Login_Users.id','user_branches.user_id')
+        // ->leftJoin('branches','branches.id','user_branches.branch_id')
+        // ->leftJoin('lead_types','CRM_Sale.lead_type_id','lead_types.id')
+        // ->leftJoin('sectors','CRM_Sale.sector_id','sectors.id')
+        // ->where('SaleID',$sale->SaleID)->first();
+
+        //         // dd($sales);
+        // return view('Customer.approvesale',['sale'=>$sales]);
+        // approveSale($sale->id);
+        // dd($request->all());
+        return redirect()->route('approveSale', array('id' => $sale->SaleID));
+    }
+    public function approveSale($id)
+    {
+        $sales = Sale::selectRaw('SaleID,branches.name as Branch,action_by,Login_users.name as Uname,CRM_Customers.CustomerName,
+        CRM_Sale.CustomerIDRef,LeadIDRef,CRM_Sale.created_at,Amount,NetCost,ProfitAmount,ActionOn,SaleStatus,
         AccountingText,lead_types.name as Type,IssueDate,ProductPax,ProductNum,sectors.name as Sector')
         ->leftJoin('CRM_Customers','CRM_Sale.CustomerIDRef','CRM_Customers.CustomerID')
         ->leftJoin('CRM_Leads','CRM_Sale.LeadIDRef','CRM_Leads.LeadID')
@@ -235,12 +255,9 @@ class CustomerController extends Controller
         ->leftJoin('branches','branches.id','user_branches.branch_id')
         ->leftJoin('lead_types','CRM_Sale.lead_type_id','lead_types.id')
         ->leftJoin('sectors','CRM_Sale.sector_id','sectors.id')
-        ->where('SaleID',$sale->SaleID)->first();
-
+        ->where('SaleID',$id)->first();
                 // dd($sales);
         return view('Customer.approvesale',['sale'=>$sales]);
-        // approveSale($sale->id);
-        // dd($request->all());
     }
     public function changeSaleStatus($id,$status)
     {
@@ -307,20 +324,12 @@ class CustomerController extends Controller
         $sale->SaleStatus='Pending';
         $sale->save();
         // return redirect()->back();
-        $sales = Sale::selectRaw('SaleID,branches.name as Branch,Login_users.name as Uname,CRM_Customers.CustomerName,
-        CRM_Sale.CustomerIDRef,LeadIDRef,CRM_Sale.created_at,Amount,NetCost,ProfitAmount,
-        AccountingText,lead_types.name as Type,IssueDate,ProductPax,ProductNum,sectors.name as Sector')
-        ->leftJoin('CRM_Customers','CRM_Sale.CustomerIDRef','CRM_Customers.CustomerID')
-        ->leftJoin('CRM_Leads','CRM_Sale.LeadIDRef','CRM_Leads.LeadID')
-        ->leftJoin('user_branches','CRM_Sale.user_branch_id','user_branches.id')
-        ->leftJoin('Login_Users','Login_Users.id','user_branches.user_id')
-        ->leftJoin('branches','branches.id','user_branches.branch_id')
-        ->leftJoin('lead_types','CRM_Sale.lead_type_id','lead_types.id')
-        ->leftJoin('sectors','CRM_Sale.sector_id','sectors.id')
-        ->where('SaleID',$sale->SaleID)->first();
-        return view('Customer.approverefund',['sale'=>$sales]);
+        
+        return redirect()->route('approveSale', array('id' => $sale->SaleID));
+        // return redirect()->back()->with('success','Refund added successfully!');
         // dd($request->all());
     }
+    
     public function addPayment($id)
     {
         // $id = Auth::id();
@@ -373,6 +382,10 @@ class CustomerController extends Controller
         $payment->FOP='';
         $payment->PostedOn=date('Y-m-d H:i:s');
         $payment->save();
+        return redirect()->route('approvePayment', array('id' => $payment->PaymentID));
+    }
+    public function approvePayment($id)
+    {
         $payments = Payment::selectRaw('PaymentID,branches.name as Branch,Login_users.name as Uname,CRM_Customers.CustomerName,
         CRM_Payments.CustomerIDRef,LeadIDRef,CRM_Payments.PostedOn,Amount,FOPText,AccountingText,
         payment_forms.name as FOP,PrintRemark,RecFrom')
@@ -382,7 +395,26 @@ class CustomerController extends Controller
         ->leftJoin('Login_Users','Login_Users.id','user_branches.user_id')
         ->leftJoin('branches','branches.id','user_branches.branch_id')
         ->leftJoin('payment_forms','CRM_Payments.payment_form_id','payment_forms.id')
-        ->where('PaymentID',$payment->PaymentID)->first();
+        ->where('PaymentID',$id)->first();
         return view('Customer.approvepayment',['payment'=>$payments]);
+    }
+    public function changePaymentStatus($id,$status)
+    {
+        $payment=Payment::where('PaymentID',$id)
+                ->first();
+        if($status == 0)
+        {
+            $payment->StatusCode='Rejected';
+        }
+        if($status == 1)
+        {
+            $payment->StatusCode='Approved';
+        }
+        $payment->auth_by=Session()->get('userbranch')->user_id;
+        // dd(date('M j Y g:iA'));
+        $payment->AuthOn=date('Y-m-d H:i:s');
+        $payment->save();
+        return redirect('/Customer');
+        // dd(Session()->get('userbranch')->user_id);
     }
 }

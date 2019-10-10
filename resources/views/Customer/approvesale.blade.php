@@ -1,6 +1,7 @@
 @extends('layouts.master') 
 @section('content')
     <div class="content-wrapper" style="margin-top:2%;">
+        @include('inc/flashMessages')
         <div class="content-header">
             <div class="container-fluid">
                 <div class="row mb-2">
@@ -25,7 +26,7 @@
                                 </tr> 
                                 <tr>
                                     <td>Customer</td> 
-                                    <td>{{$sale->CustomerName}}</td>
+                                    <td><a href="{{route('Customer.show',$sale->CustomerIDRef)}}">{{$sale->CustomerName}}</a></td>
                                 </tr> 
                                 <tr>
                                     <td>Lead No</td>
@@ -122,18 +123,30 @@
                             <tbody>
                                 <tr>
                                     <td>Approval Status</td> 
-                                    <td>Pending</td>
+                                    <td>{{$sale->SaleStatus}}</td>
                                 </tr> 
                                 <tr>
                                     <td>Action By</td> 
-                                    <td>None</td>
+                                    @if(isset($sale->ActionBy->name))
+                                        <td>{{$sale->ActionBy->name}}</td>
+                                    @else
+                                        <td>None</td>
+                                    @endif
                                 </tr> 
                                 <tr>
-                                    <td>Action On</td> 
-                                    <td>None</td>
+                                    <td>Action On</td>
+                                    @if($sale->ActionOn != '')
+                                        <td>{{$sale->ActionOn}}</td>
+                                    @else
+                                        <td>None</td>
+                                    @endif
                                 </tr> 
                                 <tr>
-                                    <td align="center" colspan="2"><a href="{{ route('changeSaleStatus',['sale' => $sale->SaleID,'status'=>1]) }}">Approve</a>|<a href="{{ route('changeSaleStatus',['sale' => $sale->SaleID,'status'=>0]) }}">Reject</a></td> 
+                                    @if($sale->SaleStatus == 'Rejected' || $sale->SaleStatus == 'Deleted')
+                                        <td></td>
+                                    @else
+                                        <td align="center" colspan="2"><a href="{{ route('changeSaleStatus',['sale' => $sale->SaleID,'status'=>1]) }}">Approve</a>|<a href="{{ route('changeSaleStatus',['sale' => $sale->SaleID,'status'=>0]) }}">Reject</a></td>
+                                    @endif 
                                 </tr>
                                 
                             </tbody>

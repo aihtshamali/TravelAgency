@@ -37,4 +37,7 @@ class Lead extends Model
     public function Customer(){
         return $this->belongsTo('App\Customer','CustomerIDRef');
     }
+    public function LeadText(){
+        return $this->hasOne('App\LeadText','LeadRef');
+    }
 }

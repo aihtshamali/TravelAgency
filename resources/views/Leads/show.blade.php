@@ -10,7 +10,7 @@
 @endsection
 @section('content')
     <div class="content-wrapper">
-
+        @include('inc/flashMessages')
         {{-- Header Start --}}
         <div class="content-header">
             <div class="container-fluid pl-0">
@@ -52,13 +52,17 @@
                                     <td>{{$lead->LeadType->name}}</td>
                                     <td>{{$lead->LeadSubject}}</td>
                                     <td> 
-                                        <div class="form-group">
-                                            <div class='input-group date' id='datetimepicker1'>
-                                                <input type='text' class="form-control" name="date" value="{{$lead->ServiceDate}}" />
-                                                <span class="input-group-addon">
-                                                </span>
+                                        <form action="{{route('leads.changeServiceDate')}}" method="post" id="ServiceDateForm">
+                                            {{ csrf_field() }}
+                                            <div class="form-group">
+                                                        <input type="hidden" name="lead_id" value="{{$lead->LeadID}}">
+                                                <div class='input-group date' id='datetimepicker1'>
+                                                        <input type='text' class="form-control" name="date" value="{{date('d-m-Y',strtotime($lead->ServiceDate))}}" />
+                                                        <span class="input-group-addon">
+                                                        </span>
+                                                </div>
                                             </div>
-                                        </div>
+                                        </form>
                                     </td>
                                 </tr>
                               
@@ -71,7 +75,7 @@
         <div class="row">
             <div class="col-md-6">
                 <div class="card">
-                    <div class="card-header"><h3 class="card-title">Customers</h3></div>
+                    <div class="card-header"><h3 class="card-title">Customers</h3> <span class="pull-right"><a href="{{route('Customer.edit',$lead->Customer->CustomerID)}}">Edit Customer</a></span></div>
                     <div class="card-body">
                         <table class="table  table-hover  bordered ">
                             <tbody>
@@ -80,7 +84,7 @@
                                     <td>{{$lead->Customer->CustomerID}}</td>
                                 </tr>
                                 <tr>
-                                    <td><i class="fa fa-notepad mr-2"></i>Name</td>
+                                    <td><i class="fa fa-info mr-2"></i>Name</td>
                                     <td>{{$lead->Customer->CustomerName}}</td>
                                 </tr>
                                 <tr>
@@ -88,7 +92,7 @@
                                     <td>{{$lead->Customer->PhoneNumber}}</td>
                                 </tr>
                                 <tr>
-                                    <td><i class="fa fa-mail mr-2"></i>Email Address.</td>
+                                    <td><i class="fa fa-envelope mr-2"></i>Email Address.</td>
                                     <td>{{$lead->Customer->EmailAddress ?? "NA" }}</td>
                                 </tr>
                             </tbody>
@@ -125,7 +129,8 @@
                                         <span style="padding:9px;margin-right:6px" class="text-uppercase badge badge-danger">{{$lead->LeadStatus}}</span>
                                             <a href="{{route('leads.takeOver',['LeadID'=>$lead->LeadID,'action'=>'complete'])}}">Complete</a> |
                                             <a href="{{route('leads.takeOver',['LeadID'=>$lead->LeadID,'action'=>'close'])}}">Close</a>
-
+                                        @else
+                                            <span style="padding:9px;margin-right:6px" class="text-uppercase badge badge-primary">{{$lead->LeadStatus}}</span>
                                         @endif
                                     </td>
                                 </tr>
@@ -141,14 +146,12 @@
                 <div class="card">
                     <div class="card-header"><h3 class="card-title font-weight-bold">Note Pad</h3></div>
                         <div class="card-body">
-                            <form action="{{route('leads.saveNotePad')}}" method="post">
+                            <form action="{{route('leads.saveNotePad')}}" method="POST">
                                 {{ csrf_field() }}
                                 <input type="hidden" name="lead_id" value="{{$lead->LeadID}}">
                                 <div class="form-group">
                                                      <label for="">Maximum 1000 Characters</label>
-                                <textarea name="notepad" id="" cols="30" rows="7" class="form-control">ADT: 
-CHD: 
-INF:</textarea>
+                                <textarea name="notepad" id="" cols="30" rows="7" class="form-control">{{isset($lead->LeadText->NotePad) ? $lead->LeadText->NotePad : ''}}</textarea>
                                 </div>
                                 <br>
                                 <div class="pull-right">
@@ -172,9 +175,17 @@ INF:</textarea>
                                     <th>Comments</th>
                                 </thead>
                                 <tbody>
+                                    @foreach ($comments as $comment)
+                                        <tr>
+
+                                            @foreach ($comment as $fields)
+                                                <td>{{$fields}}</td>    
+                                            @endforeach
+                                        </tr>
+                                    @endforeach
                                     <tr>
                                         <td colspan="3">
-                                            <form action="" method="post">
+                                            <form action="{{route('leads.saveComment')}}" method="post">
                                                 {{ csrf_field() }}
                                                 <input type="hidden" name="lead_id" value="{{$lead->LeadID}}">
                                                 <div class="form-group">
@@ -200,12 +211,19 @@ INF:</textarea>
     <script>
         $(document).ready(function(){
             //Date picker
-            $.fn.datepicker.defaults.format = "dd/mm/yyyy";
+            $.fn.datepicker.defaults.format = "dd-mm-yyyy";
 
             $('#datetimepicker1').datepicker({
                 startDate: '0d',
-                autoclose: true
+                autoclose: true,
+                onSelect: function(dateText, inst) {
+                   alert(dateText);
+                }
             })
+            .on("change", function() {
+                $('#ServiceDateForm').submit();
+                console.log("Got change event from field",$(this));
+            });
 
            
         });

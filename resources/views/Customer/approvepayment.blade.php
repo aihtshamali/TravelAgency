@@ -25,7 +25,7 @@
                                 </tr> 
                                 <tr>
                                     <td>Customer</td> 
-                                    <td>{{$payment->CustomerName}}</td>
+                                    <td><a href="{{route('Customer.show',$payment->CustomerIDRef)}}">{{$payment->CustomerName}}</a></td>
                                 </tr> 
                                 <tr>
                                     <td>Lead No</td>
@@ -104,7 +104,7 @@
                                     <td>{{$payment->AccountingText}}</td>
                                 </tr>
                                 <tr>
-                                    <td align="center" colspan="2"><a href="{{ route('changeSaleStatus',['sale' => $payment->PaymentID,'status'=>1]) }}">Approve</a>|<a href="{{ route('changeSaleStatus',['sale' => $payment->PaymentID,'status'=>0]) }}">Reject</a></td> 
+                                    <td align="center" colspan="2"><a href="{{ route('changePaymentStatus',['sale' => $payment->PaymentID,'status'=>1]) }}">Approve</a>|<a href="{{ route('changePaymentStatus',['sale' => $payment->PaymentID,'status'=>0]) }}">Reject</a></td> 
                                 </tr> 
                             </tbody>
                         </table>

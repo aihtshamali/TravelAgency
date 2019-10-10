@@ -22,4 +22,7 @@ class Sale extends Model
     public function UserBranch(){
         return $this->hasOne('App\UserBranch','id');
     }
+    public function ActionBy(){
+        return $this->belongsTo('App\User','action_by');
+    }
 }

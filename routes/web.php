@@ -16,7 +16,10 @@
 Auth::routes();
 Route::group(['middleware' => 'auth'], function () {
 Route::resource('/Customer','CustomerController');
+Route::get('leads/AvailableLeads','LeadController@AvailableLeads')->name('AvailableLeads');
+Route::post('leads/changeServiceDate','LeadController@changeServiceDate')->name('leads.changeServiceDate');
 Route::post('leads/saveNotePad','LeadController@saveNotePad')->name('leads.saveNotePad');
+Route::post('leads/saveComment','LeadController@saveComment')->name('leads.saveComment');
 Route::get('leads/takeOver','LeadController@takeOver')->name('leads.takeOver');
 Route::get('leads/myLeads','LeadController@myLeads')->name('myLeads');
 Route::get('leads/searchPhone','LeadController@phoneSearch')->name('leads.searchPhone');
@@ -39,6 +42,10 @@ Route::post('/Customer/saverefund', 'CustomerController@saveRefund')->name('save
 Route::get('/Customer/addpayment/{customer}', 'CustomerController@addPayment')->name('addPayment');
 Route::post('/Customer/savepayment', 'CustomerController@savePayment')->name('savePayment');
 Route::get('/changeSaleStatus/{id}/{status}', 'CustomerController@changeSaleStatus')->name('changeSaleStatus');
+Route::get('/changePaymentStatus/{id}/{status}', 'CustomerController@changePaymentStatus')->name('changePaymentStatus');
+Route::get('/approveSale/{id}', 'CustomerController@approveSale')->name('approveSale');
+Route::get('/approveRefund/{id}', 'CustomerController@approveRefund')->name('approveRefund');
+Route::get('/approvePayment/{id}', 'CustomerController@approvePayment')->name('approvePayment');
 });
 
 

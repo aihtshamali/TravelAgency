@@ -5,6 +5,7 @@
 @endsection
 @section('content')
     <div class="content-wrapper">
+        @include('inc/flashMessages')
 
         {{-- Header Start --}}
         <div class="content-header">

@@ -8,10 +8,14 @@ use App\LeadType;
 use Illuminate\Http\Request;
 use DB;
 use Redirect;
+use DateTime;
+
 use App\Customer;
 use App\Branch;
-use Auth;
+
+use Carbon\Carbon;
 use App\Sector;
+use Auth;
 class LeadController extends Controller
 {
     /**
@@ -37,15 +41,34 @@ class LeadController extends Controller
         $customer = Customer::find($request->account);
         return view('Leads.create',['customer'=>$customer,'lead_types'=>$lead_types,'sectors'=>$sectors,'branches'=>$branches]);
     }
+ 
     public function takeOver(Request $request){
         
        DB::update('exec CRM_LeadUpdate '.$request->LeadID.',"'.$request->action.'",'.Auth::id());
-       return redirect()->back();
+       return redirect()->route('myLeads');
+    }
+ 
+    public function changeServiceDate(Request $request){
+        // dd($request->all());
+        $lead = Lead::find($request->lead_id);
+        $lead->ServiceDate = date('Y-m-d',strtotime($request->date));
+        $lead->update();
+        return redirect()->back();
     }
     public function saveNotePad(Request $request){
-        
-       DB::update('exec CRM_LeadUpdate '.$request->LeadID.',"'.$request->action.'",'.Auth::id());
-       return redirect()->back();
+        $lead = LeadText::find($request->lead_id);
+        $lead->NotePad = $request->notepad;
+        $lead->update();
+        return redirect()->back()->with('success','NotePad added successfully!');
+    }
+    
+    public function saveComment(Request $request){
+        $lead = LeadText::find($request->lead_id);
+        if($lead->Comments == "<comments/>")
+            $lead->Comments=str_replace("<comments/>","",$lead->Comments);
+        $lead->Comments = $lead->Comments.''.date('Y-m-d H:i:s')." #$$ ".Auth::user()->name." #$$ ".$request->comment." $%$ ";
+        $lead->update();
+        return redirect()->back()->with('success','Comment has been added successfully!');
     }
     /**
      * Store a newly created resource in storage.
@@ -58,7 +81,7 @@ class LeadController extends Controller
        $updated = DB::update('exec CRM_AddLead "'.$request->customer_id.'",'.Auth::id().','.$request->lead_type.','.$request->source_id.','.$request->destination_id.',"'.$request->subject.'","'.date('Y-m-d',strtotime($request->service_date)).'","'.$request->details.'",'.$request->create_for_others.','.$request->branch_id);
         // dd($updated);
         if(!$updated)
-            return redirect()->back()->withMessage('Something went Wrong!');
+            return redirect()->back()->with('error','Something went Wrong!');
         
         $lead = Lead::latest()->first();
         return redirect()->route('leads.show',$lead->LeadID);
@@ -121,8 +144,24 @@ class LeadController extends Controller
      */
     public function show($id)
     {
-       $lead = Lead::findOrFail($id);
-       return view('Leads.show',['lead'=>$lead]);
+       $leads = Lead::findOrFail($id);
+        $lead = LeadText::find($id);
+        //its a very bad practice but i have to follow the previous table structure
+        $comments = collect();
+        if($lead)
+        foreach(explode("$%$",$lead->Comments) as $st1)
+        {   $comment = array();
+            if($st1 && $st1!=" "){
+                foreach(explode("#$$",$st1) as $st2)
+                {
+                    array_push($comment,$st2);
+                }
+                $comments->push($comment);
+            }
+        }
+        // dd($comments);
+
+       return view('Leads.show',['lead'=>$leads,'comments'=>$comments]);
     }
     /**
      * Display the specified resource.
@@ -134,6 +173,11 @@ class LeadController extends Controller
     {
        $leads = Lead::where('user_id',Auth::id())->where('LeadStatus','Working')->get();
        return view('Leads.myLead',['leads'=>$leads]);
+    }
+    public function AvailableLeads()
+    {
+       $leads = Lead::where('user_id',Auth::id())->where('LeadStatus','Open')->get();
+       return view('Leads.available',['leads'=>$leads]);
     }
 
     /**

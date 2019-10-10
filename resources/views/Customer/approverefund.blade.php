@@ -25,7 +25,7 @@
                                 </tr> 
                                 <tr>
                                     <td>Customer</td> 
-                                    <td>{{$sale->CustomerName}}</td>
+                                    <td><a href="{{route('Customer.show',$sale->CustomerIDRef)}}">{{$sale->CustomerName}}</a></td>
                                 </tr> 
                                 <tr>
                                     <td>Lead No</td>
