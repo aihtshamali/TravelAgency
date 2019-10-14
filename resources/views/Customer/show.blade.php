@@ -54,7 +54,7 @@
         <div class="row mt-3">
             <div class="col-md-6">
                 <div class="card">
-                    <div class="card-header"><h3 class="card-title">Customer Details</h3><span class="pull-right"><a href="{{route('Customer.edit',$customer->CustomerID)}}">Edit Customer</a></span></div>
+                    <div class="card-header"><h3 class="card-title">Customer Details<span class="pull-right"><a href="{{route('Customer.edit',$customer->CustomerID)}}">Edit Customer</a> </h3></span></div>
                     <div class="card-body">
                         <table class="table  table-hover  bordered ">
                             <tbody>

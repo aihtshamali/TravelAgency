@@ -16,6 +16,7 @@
 Auth::routes();
 Route::group(['middleware' => 'auth'], function () {
 Route::resource('/Customer','CustomerController');
+Route::post('leads/TransferLead','LeadController@transferLead')->name('transferLead');
 Route::get('leads/AvailableLeads','LeadController@AvailableLeads')->name('AvailableLeads');
 Route::post('leads/changeServiceDate','LeadController@changeServiceDate')->name('leads.changeServiceDate');
 Route::post('leads/saveNotePad','LeadController@saveNotePad')->name('leads.saveNotePad');

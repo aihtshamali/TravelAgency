@@ -14,6 +14,7 @@ use App\Branch;
 use App\LeadText;
 use Carbon\Carbon;
 use App\Sector;
+use App\User;
 use Auth;
 class LeadController extends Controller
 {
@@ -39,6 +40,14 @@ class LeadController extends Controller
         $sectors = Sector::where('status',1)->get();
         $customer = Customer::find($request->account);
         return view('Leads.create',['customer'=>$customer,'lead_types'=>$lead_types,'sectors'=>$sectors,'branches'=>$branches]);
+    }
+
+    public function transferLead(Request $request){
+        $lead = Lead::find($request->lead_id);
+        $lead->taken_over_by = $request->user_id;
+        $lead->TakenOverOn = date('Y-m-d H:i:s');
+        $lead->update();
+        return redirect()->back()->with('success','Transferred Successfully!');
     }
  
     public function takeOver(Request $request){
@@ -147,6 +156,7 @@ class LeadController extends Controller
         $lead = LeadText::find($id);
         //its a very bad practice but i have to follow the previous table structure
         $comments = collect();
+        $users = User::where('status',1)->get();
         if($lead)
         foreach(explode("$%$",$lead->Comments) as $st1)
         {   $comment = array();
@@ -160,7 +170,7 @@ class LeadController extends Controller
         }
         // dd($comments);
 
-       return view('Leads.show',['lead'=>$leads,'comments'=>$comments]);
+       return view('Leads.show',['lead'=>$leads,'comments'=>$comments,'users'=>$users]);
     }
     /**
      * Display the specified resource.

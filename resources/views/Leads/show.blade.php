@@ -6,6 +6,10 @@
             color:white;
             font-weight: bold;
         }
+         td > span.badge{
+            padding:0.5rem 0.4rem;
+            min-width:80px;
+        }
     </style>
 @endsection
 @section('content')
@@ -72,10 +76,19 @@
                 </div>
             </div>
          </div>
+        @if($lead->LeadStatus != 'Closed' && $lead->LeadStatus != 'Completed')
+        <div class="row mr-2">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-body transferDiv"><a href="#" class="transferLead">Transfer Lead</a></div>
+                </div>
+            </div>
+        </div>
+        @endif
         <div class="row">
             <div class="col-md-6">
                 <div class="card">
-                    <div class="card-header"><h3 class="card-title">Customers</h3> <span class="pull-right"><a href="{{route('Customer.edit',$lead->Customer->CustomerID)}}">Edit Customer</a></span></div>
+                    <div class="card-header"><h3 class="card-title">Customers <span class="pull-right"><a href="{{route('Customer.edit',$lead->Customer->CustomerID)}}">Edit Details</a></span></h3> </div>
                     <div class="card-body">
                         <table class="table  table-hover  bordered ">
                             <tbody>
@@ -108,29 +121,29 @@
                             <tbody>
                                 <tr>
                                     <td><i class="fas fa-user mr-2"></i>Created By</td>
-                                    <td>{{$lead->User->name}}</td>
+                                    <td>{{$lead->User->name}} on {{date('d-M-y (H:i)',strtotime($lead->CreatedOn))}}</td>
                                 </tr>
                                 <tr>
                                     <td><i class="fa fa-user-circle mr-2"></i>Taken Over By</td>
-                                    <td>{{isset($lead->TakenOverBy->name) ? $lead->TakenOverBy->name : "NA"}}</td>
+                                    <td>{{isset($lead->TakenOverBy->name) ? $lead->TakenOverBy->name .' on '.date('d-M-y (H:i)',strtotime($lead->TakenOverOn)) : "NA"}}</td>
                                     
                                 </tr>
                                 <tr>
                                     <td><i class="fas fa-user mr-2"></i>Closed By</td>
-                                    <td>{{isset($lead->ClosedBy->name) ? $lead->ClosedBy->name : "NA"}}</td>
+                                    <td>{{isset($lead->ClosedBy->name) ? $lead->ClosedBy->name.' on '. date('d-M-y (H:i)',strtotime($lead->ClosedOn)) : "NA"}}</td>
                                 </tr>
                                 <tr>
                                     <td> <i class="fas fa-book mr-2"></i>Status</td>
                                     <td>
                                         @if($lead->LeadStatus == "Open")
-                                        <span style="padding:9px;margin-right:6px" class="text-uppercase badge badge-success">{{$lead->LeadStatus}}</span>
+                                        <span style="margin-right:6px" class="text-uppercase badge badge-success">{{$lead->LeadStatus}}</span>
                                         <a href="{{route('leads.takeOver',['LeadID'=>$lead->LeadID,'action'=>'takeover'])}}">Take Over</a>
                                         @elseif($lead->LeadStatus == "Working")
-                                        <span style="padding:9px;margin-right:6px" class="text-uppercase badge badge-danger">{{$lead->LeadStatus}}</span>
+                                        <span style="margin-right:6px" class="text-uppercase badge badge-danger">{{$lead->LeadStatus}}</span>
                                             <a href="{{route('leads.takeOver',['LeadID'=>$lead->LeadID,'action'=>'complete'])}}">Complete</a> |
                                             <a href="{{route('leads.takeOver',['LeadID'=>$lead->LeadID,'action'=>'close'])}}">Close</a>
                                         @else
-                                            <span style="padding:9px;margin-right:6px" class="text-uppercase badge badge-primary">{{$lead->LeadStatus}}</span>
+                                            <span style="margin-right:6px" class="text-uppercase badge badge-primary">{{$lead->LeadStatus}}</span>
                                         @endif
                                     </td>
                                 </tr>
@@ -175,11 +188,20 @@
                                     <th>Comments</th>
                                 </thead>
                                 <tbody>
+                                    @php
+                                        $i=0;
+                                    @endphp
                                     @foreach ($comments as $comment)
                                         <tr>
-
                                             @foreach ($comment as $fields)
-                                                <td>{{$fields}}</td>    
+                                                @if($i==0 && $fields!="")
+                                                    <td>{{date('d-M-y (H:i)',strtotime($fields))}}</td>
+                                                @else
+                                                    <td>{{$fields}}</td>
+                                                @endif
+                                                @php
+                                                    $i++;
+                                                @endphp
                                             @endforeach
                                         </tr>
                                     @endforeach
@@ -205,11 +227,28 @@
             </div>
         </div>
     </div>
+
 @endsection
 @section('javascript')
     <script src="{{asset('dist/plugins/datepicker/bootstrap-datepicker.js')}}"></script>
     <script>
         $(document).ready(function(){
+
+            $('.transferLead').click(function(){
+                let st = `<form method="Post" action="{{route('transferLead')}}">
+                {{csrf_field()}}
+                <input name="lead_id" type="hidden" value="{{$lead->LeadID}}">
+        <div class="form-group">
+        <select name="user_id" required id="" class="form-control">
+            <option value="">-</option>
+            @foreach ($users as $user)
+                <option value="{{$user->id}}">{{$user->name}}</option>                
+            @endforeach
+        </select>
+        <input type="submit" class="btn btn-primary mt-3" value="Transfer">
+    </div> </form>`;                
+                $('.transferDiv').html(st);
+            })
             //Date picker
             $.fn.datepicker.defaults.format = "dd-mm-yyyy";
 
