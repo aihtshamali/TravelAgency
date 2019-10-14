@@ -42,11 +42,15 @@ class User extends Authenticatable
     {
         return $this->hasMany('App\UserBranch');
     }
-    public function Sale(){
-        return $this->hasOne('App\Sale','posted_by_user');
-    }
+    
     public function Lead(){
         return $this->hasOne('App\Lead','LeadID');
+    }
+    public function Sale(){
+        return $this->hasOne('App\Sale','SaleID');
+    }
+    public function Payment(){
+        return $this->hasOne('App\Payment','PaymentID');
     }
     
 }

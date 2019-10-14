@@ -10,4 +10,8 @@ class Payment extends Model
     protected $table ="CRM_Payments";
     protected $primaryKey = "PaymentID";
     const CREATED_AT = 'PostedOn';
+
+    public function AuthBy(){
+        return $this->belongsTo('App\User','auth_by');
+    }
 }

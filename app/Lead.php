@@ -8,6 +8,8 @@ class Lead extends Model
 {
     protected $table = "CRM_Leads";
     protected $primaryKey = "LeadID";
+    public $incrementing = true;
+
     const CREATED_AT = 'CreatedOn';
     const UPDATED_AT = 'LastUpdatedOn';
 

@@ -42,6 +42,13 @@ Route::get('/Customer/addrefund/{customer}', 'CustomerController@addRefund')->na
 Route::post('/Customer/saverefund', 'CustomerController@saveRefund')->name('saveRefund');
 Route::get('/Customer/addpayment/{customer}', 'CustomerController@addPayment')->name('addPayment');
 Route::post('/Customer/savepayment', 'CustomerController@savePayment')->name('savePayment');
+Route::get('/changeSaleStatus/{id}/{status}', 'CustomerController@changeSaleStatus')->name('changeSaleStatus');
+Route::get('/changePaymentStatus/{id}/{status}', 'CustomerController@changePaymentStatus')->name('changePaymentStatus');
+Route::get('/approveSale/{id}', 'CustomerController@approveSale')->name('approveSale');
+Route::get('/approveRefund/{id}', 'CustomerController@approveRefund')->name('approveRefund');
+Route::get('/approvePayment/{id}', 'CustomerController@approvePayment')->name('approvePayment');
+Route::get('/viewSaleByID/{id?}','SaleController@viewSaleByID')->name('viewSaleByID');
+Route::get('/viewPaymentByID/{id?}','PaymentController@viewPaymentByID')->name('viewPaymentByID');
 });
 
 

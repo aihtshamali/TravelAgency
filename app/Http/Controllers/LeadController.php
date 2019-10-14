@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Lead;
+use App\LeadText;
 use App\LeadType;
 use Illuminate\Http\Request;
 use DB;
@@ -11,7 +12,7 @@ use DateTime;
 
 use App\Customer;
 use App\Branch;
-use App\LeadText;
+
 use Carbon\Carbon;
 use App\Sector;
 use App\User;
