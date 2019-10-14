@@ -92,13 +92,13 @@
               </a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
-                            <a href="pages/UI/general.html" class="nav-link">
+                            <a href="{{ route('viewSaleByID') }}" class="nav-link">
                     
                     <p>Posting ID</p>
                   </a>
                         </li>
                         <li class="nav-item">
-                            <a href="pages/UI/icons.html" class="nav-link">
+                            <a href="{{ route('viewPaymentByID') }}" class="nav-link">
                     
                     <p>Payment ID</p>
                   </a>

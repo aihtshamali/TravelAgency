@@ -49,5 +49,8 @@ class User extends Authenticatable
     public function Sale(){
         return $this->hasOne('App\Sale','SaleID');
     }
+    public function Payment(){
+        return $this->hasOne('App\Payment','PaymentID');
+    }
     
 }

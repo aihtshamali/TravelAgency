@@ -7,9 +7,18 @@ use App\Sale;
 class SaleController extends Controller
 {
     //
-    public function viewSaleByID($id)
+    public function viewSaleByID($id = null)
     {
-        return redirect()->route('approveSale', array('id' => $id));
+        if($id == null)
+        {
+            // echo "hey";
+            return view('Sale.viewSaleByID');
+        }
+        else
+        {
+            return redirect()->route('approveSale', array('id' => $id));
+        }
+        
     }
     
 }

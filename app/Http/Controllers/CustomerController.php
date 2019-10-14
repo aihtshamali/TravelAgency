@@ -388,7 +388,7 @@ class CustomerController extends Controller
     {
         $payments = Payment::selectRaw('PaymentID,branches.name as Branch,Login_users.name as Uname,CRM_Customers.CustomerName,
         CRM_Payments.CustomerIDRef,LeadIDRef,CRM_Payments.PostedOn,Amount,FOPText,AccountingText,
-        payment_forms.name as FOP,PrintRemark,RecFrom')
+        payment_forms.name as FOP,PrintRemark,RecFrom,StatusCode,AuthOn,auth_by')
         ->leftJoin('CRM_Customers','CRM_Payments.CustomerIDRef','CRM_Customers.CustomerID')
         ->leftJoin('CRM_Leads','CRM_Payments.LeadIDRef','CRM_Leads.LeadID')
         ->leftJoin('user_branches','CRM_Payments.user_branch_id','user_branches.id')

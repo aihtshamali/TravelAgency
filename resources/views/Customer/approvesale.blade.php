@@ -144,6 +144,8 @@
                                 <tr>
                                     @if($sale->SaleStatus == 'Rejected' || $sale->SaleStatus == 'Deleted')
                                         <td></td>
+                                    @elseif($sale->SaleStatus == 'Approved')
+                                        <td align="center" colspan="2">Delete Entry</td>
                                     @else
                                         <td align="center" colspan="2"><a href="{{ route('changeSaleStatus',['sale' => $sale->SaleID,'status'=>1]) }}">Approve</a>|<a href="{{ route('changeSaleStatus',['sale' => $sale->SaleID,'status'=>0]) }}">Reject</a></td>
                                     @endif 

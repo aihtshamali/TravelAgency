@@ -46,6 +46,8 @@ Route::get('/changePaymentStatus/{id}/{status}', 'CustomerController@changePayme
 Route::get('/approveSale/{id}', 'CustomerController@approveSale')->name('approveSale');
 Route::get('/approveRefund/{id}', 'CustomerController@approveRefund')->name('approveRefund');
 Route::get('/approvePayment/{id}', 'CustomerController@approvePayment')->name('approvePayment');
+Route::get('/viewSaleByID/{id?}','SaleController@viewSaleByID')->name('viewSaleByID');
+Route::get('/viewPaymentByID/{id?}','PaymentController@viewPaymentByID')->name('viewPaymentByID');
 });
 
 

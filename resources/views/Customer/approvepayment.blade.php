@@ -70,11 +70,15 @@
                                 </tr> 
                                 <tr>
                                     <td>Approval Status</td> 
-                                    <td>Pending</td>
+                                    <td>{{$payment->StatusCode}}</td>
                                 </tr>
                                 <tr>
                                     <td>Action By</td> 
-                                    <td></td>
+                                    @if(isset($payment->auth_by))
+                                        <td>{{$payment->AuthBy->name}} on {{date('j-M-y (H:i)',strtotime($payment->AuthOn))}}</td>
+                                    @else
+                                        <td></td>
+                                    @endif
                                 </tr>
                             </tbody>
                         </table>
@@ -104,7 +108,15 @@
                                     <td>{{$payment->AccountingText}}</td>
                                 </tr>
                                 <tr>
-                                    <td align="center" colspan="2"><a href="{{ route('changePaymentStatus',['sale' => $payment->PaymentID,'status'=>1]) }}">Approve</a>|<a href="{{ route('changePaymentStatus',['sale' => $payment->PaymentID,'status'=>0]) }}">Reject</a></td> 
+                                    
+                                    @if($payment->StatusCode == 'Rejected' || $payment->StatusCode == 'Deleted')
+                                        <td></td>
+                                    @elseif($payment->StatusCode == 'Approved')
+                                        <td align="center" colspan="2">Delete Entry</td>
+                                    @else
+                                        <td align="center" colspan="2"><a href="{{ route('changePaymentStatus',['sale' => $payment->PaymentID,'status'=>1]) }}">Approve</a>|<a href="{{ route('changePaymentStatus',['sale' => $payment->PaymentID,'status'=>0]) }}">Reject</a></td> 
+                                    @endif
+                                    
                                 </tr> 
                             </tbody>
                         </table>
