@@ -356,8 +356,6 @@ class CustomerController extends Controller
         $payment->CustomerIDRef=$request->customer_id;
         if(isset($request->LeadId) && $request->LeadId !="")
         {
-            echo $request->LeadId;
-            exit;
             $payment->LeadIDRef=$request->LeadId;
         }
         $payment->user_id=$request->CreatedBy;

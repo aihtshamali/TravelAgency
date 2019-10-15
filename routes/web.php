@@ -49,6 +49,11 @@ Route::get('/approveRefund/{id}', 'CustomerController@approveRefund')->name('app
 Route::get('/approvePayment/{id}', 'CustomerController@approvePayment')->name('approvePayment');
 Route::get('/viewSaleByID/{id?}','SaleController@viewSaleByID')->name('viewSaleByID');
 Route::get('/viewPaymentByID/{id?}','PaymentController@viewPaymentByID')->name('viewPaymentByID');
+
+
+//Individual Reports
+Route::get('/myTransactions','IndividualReportController@transactions')->name('mytransactions');
+
 });
 
 

@@ -122,7 +122,7 @@
                 </a>
                       <ul class="nav nav-treeview">
                           <li class="nav-item">
-                              <a href="pages/tables/simple.html" class="nav-link">
+                              <a href="{{route('mytransactions')}}" class="nav-link">
                       
                       <p>My Transactions</p>
                     </a>
