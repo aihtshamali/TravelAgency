@@ -25,4 +25,7 @@ class Sale extends Model
     public function ActionBy(){
         return $this->belongsTo('App\User','action_by');
     }
+    public function PostedBy(){
+        return $this->belongsTo('App\User','posted_by_user');
+    }
 }

@@ -104,7 +104,7 @@
                   </a>
                         </li>
                         <li class="nav-item">
-                            <a href="pages/UI/buttons.html" class="nav-link">
+                            <a href="{{ route('viewDocumentByID') }}" class="nav-link">
                     
                     <p>Document Number</p>
                   </a>

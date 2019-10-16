@@ -1,0 +1,3 @@
+--------------------------Payments-----------------------------------------
+Remove FOP constraint
+Remove Foreign Keys SaleVy and BranchRef
