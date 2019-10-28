@@ -59,11 +59,11 @@
                                         <form action="{{route('leads.changeServiceDate')}}" method="post" id="ServiceDateForm">
                                             {{ csrf_field() }}
                                             <div class="form-group">
-                                                        <input type="hidden" name="lead_id" value="{{$lead->LeadID}}">
+                                                <input type="hidden" name="lead_id" value="{{$lead->LeadID}}">
                                                 <div class='input-group date' id='datetimepicker1'>
-                                                        <input type='text' class="form-control" name="date" value="{{date('d-m-Y',strtotime($lead->ServiceDate))}}" />
-                                                        <span class="input-group-addon">
-                                                        </span>
+                                                    <input type='text' class="form-control" name="date" value="{{date('d-m-Y',strtotime($lead->ServiceDate))}}" />
+                                                    <span class="input-group-addon">
+                                                    </span>
                                                 </div>
                                             </div>
                                         </form>
