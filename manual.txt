@@ -1,3 +1,5 @@
 --------------------------Payments-----------------------------------------
 Remove FOP constraint
-Remove Foreign Keys SaleVy and BranchRef
+Remove Foreign Keys SaleBy and BranchRef
+-------------------------User---------------------------------------------
+Add unique constraint to phone

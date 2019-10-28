@@ -1,5 +1,6 @@
 <?php
-
+use App\Payment;
+use App\Sale;
 if (!function_exists('classActivePath')) {
     function classActivePath($segment, $value)
     {
@@ -23,5 +24,35 @@ if (!function_exists('classActiveSegment')) {
             if(Request::segment($segment) == $v) return 'active';
         }
         return '';
+    }
+}
+if (!function_exists('getPayment')) {
+    function getPayment($id)
+    {
+        $payment=Payment::selectRaw('Sum(Amount) as payment')
+                    ->where('CustomerIDRef',$id)
+                    ->where('StatusCode','Approved')->first();
+
+        return $payment->payment;
+    }
+}
+if (!function_exists('getSale')) {
+    function getSale($id)
+    {
+        $sale=Sale::selectRaw('Sum(Amount) as sale')
+                ->where('CustomerIDRef',$id)
+                ->where('SaleStatus','Approved')
+                ->where('Amount','>',0)->first();
+        return $sale->sale;
+    }
+}
+if (!function_exists('getRefund')) {
+    function getRefund($id)
+    {
+        $sale=Sale::selectRaw('Sum(Amount) as refund')
+                ->where('CustomerIDRef',$id)
+                ->where('SaleStatus','Approved')
+                ->where('Amount','<',0)->first();
+        return $sale->refund;
     }
 }

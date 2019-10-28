@@ -1,4 +1,7 @@
-@extends('layouts.master') 
+@extends('layouts.master')
+@section('styleTags')
+    <link rel="stylesheet" type="text/css" href="{{asset('DataTables/datatables.min.css')}}"/>
+@endsection 
 @section('content')
     <div class="content-wrapper" style="margin-top:2%;">
         @include('inc/flashMessages')
@@ -37,6 +40,7 @@
             <div class="box-body">
                 <table class="table-hover table" id="CustomerTable">
                     <thead>
+                        <th>Helper</th>
                         <th>ID</th>
                         <th>Type</th>
                         <th>Document Number</th>
@@ -51,6 +55,7 @@
                         
                         @forelse ($sales as $sale)
                             <tr>
+                                <td>Payment:{{getPayment($sale->CustomerID)}} Sale:{{getSale($sale->CustomerID)}} Refund:{{getRefund($sale->CustomerID)}}</td>
                                 <td> <a href="{{route('Customer.show',$sale->CustomerID)}}">{{$sale->SaleID}}</a></td>
                                 <td>{{$sale->LeadType}}</td>
                                 <td>{{$sale->ProductNum}}</td>
@@ -83,6 +88,8 @@
              
 @endsection
 @section('javascript')
+<script type="text/javascript" src="{{asset('DataTables/datatables.min.js')}}"></script>
+
 <script type="text/javascript">
         $("form#viewDocument").submit(function (e) {
             var id = $("#saleId").val();
@@ -92,5 +99,9 @@
             console.log($(this).attr('action'))
             // return false;        
         });
+        $(document).ready(function() {
+            $('#CustomerTable').DataTable();
+        } );
     </script>
+    
 @endsection
