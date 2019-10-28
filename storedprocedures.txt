@@ -1235,3 +1235,25 @@ BEGIN
 END
 
 RETURN 0
+
+------------------------New----------------------------------------------------------
+USE [WAC]
+GO
+/****** Object:  StoredProcedure [dbo].[CRM_PendingPayments]    Script Date: 28/10/2019 6:19:11 pm ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+----------------------------------------------------------------------
+ALTER PROCEDURE [dbo].[CRM_PendingPayments]
+
+
+AS
+Select * from (Select CRM_Customers.CustomerID,(Select sum(CONVERT(BIGINT,CRM_Payments.Amount))
+from CRM_Payments where CRM_Payments.CustomerIDRef=CRM_Customers.CustomerID 
+and StatusCode='Approved') as Payment,(Select sum(CONVERT(BIGINT,CRM_Sale.Amount)) from CRM_Sale
+where CRM_Sale.CustomerIDRef=CRM_Customers.CustomerID and SaleStatus='Approved' and Amount > 0)
+as Sale,(Select sum(CONVERT(BIGINT,CRM_Sale.Amount)) from CRM_Sale where 
+CRM_Sale.CustomerIDRef=CRM_Customers.CustomerID and SaleStatus='Approved' and Amount < 0) as Refund
+from CRM_Customers) as Account where Sale-Payment-Refund !=0
+

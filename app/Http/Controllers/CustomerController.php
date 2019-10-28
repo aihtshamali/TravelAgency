@@ -257,7 +257,14 @@ class CustomerController extends Controller
         ->leftJoin('sectors','CRM_Sale.sector_id','sectors.id')
         ->where('SaleID',$id)->first();
                 // dd($sales);
-        return view('Customer.approvesale',['sale'=>$sales]);
+        if($sales == null)
+        {
+            return redirect()->back()->with('error', 'No Sale found against this ID');
+        }
+        else
+        {
+            return view('Customer.approvesale',['sale'=>$sales]);
+        }
     }
     public function changeSaleStatus($id,$status)
     {
@@ -394,7 +401,15 @@ class CustomerController extends Controller
         ->leftJoin('branches','branches.id','user_branches.branch_id')
         ->leftJoin('payment_forms','CRM_Payments.payment_form_id','payment_forms.id')
         ->where('PaymentID',$id)->first();
-        return view('Customer.approvepayment',['payment'=>$payments]);
+        if($payments == null)
+        {
+            return redirect()->back()->with('error', 'No Receipt found against this ID');
+        }
+        else
+        {
+            return view('Customer.approvepayment',['payment'=>$payments]);
+        }
+        
     }
     public function changePaymentStatus($id,$status)
     {
