@@ -128,14 +128,14 @@
                     </a>
                           </li>
                           <li class="nav-item">
-                              <a href="pages/tables/data.html" class="nav-link">
+                              <a href="{{route('FinalizedLeads')}}" class="nav-link">
                       
                       <p>My Finalized Leads</p>
                     </a>
                           </li>
                       
                   <li class="nav-item">
-                      <a href="pages/tables/data.html" class="nav-link">
+                      <a href="{{route('saleReport')}}" class="nav-link">
               
               <p>My Sale Report</p>
             </a>

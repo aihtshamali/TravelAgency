@@ -57,4 +57,13 @@ class LoginController extends Controller
         $request->session()->invalidate();
         return $this->loggedOut($request) ?: redirect('/');
     }
+      /**
+     * Get the login username to be used by the controller.
+     *
+     * @return string
+     */
+    public function username()
+    {
+        return 'user_name';
+    }
 }

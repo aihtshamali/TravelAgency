@@ -107,6 +107,7 @@
                 <a href="#" class="dropdown-item dropdown-footer">See All Notifications</a>
             </div>
         </li>
+        <li><a href="#" data-toggle="control-sidebar"><i class="fa fa-gears"></i></a></li>
     </ul>
 </nav>
 <!-- /.navbar -->

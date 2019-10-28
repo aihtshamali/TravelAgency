@@ -53,7 +53,7 @@ class LeadController extends Controller
  
     public function takeOver(Request $request){
         
-       DB::update('exec CRM_LeadUpdate '.$request->LeadID.',"'.$request->action.'",'.Auth::id());
+       DB::update('exec CRM_LeadUpdate '.$request->LeadID.',"'.$request->action.'",'.Session()->get('userbranch')->user_id);
        return redirect()->route('myLeads');
     }
  
@@ -87,7 +87,7 @@ class LeadController extends Controller
      */
     public function store(Request $request)
     {
-       $updated = DB::update('exec CRM_AddLead "'.$request->customer_id.'",'.Auth::id().','.$request->lead_type.','.$request->source_id.','.$request->destination_id.',"'.$request->subject.'","'.date('Y-m-d',strtotime($request->service_date)).'","'.$request->details.'",'.$request->create_for_others.','.$request->branch_id);
+       $updated = DB::update('exec CRM_AddLead "'.$request->customer_id.'",'.Session()->get('userbranch')->user_id.','.$request->lead_type.','.$request->source_id.','.$request->destination_id.',"'.$request->subject.'","'.date('Y-m-d',strtotime($request->service_date)).'","'.$request->details.'",'.$request->create_for_others.','.$request->branch_id);
         // dd($updated);
         if(!$updated)
             return redirect()->back()->with('error','Something went Wrong!');
@@ -181,12 +181,12 @@ class LeadController extends Controller
      */
     public function myLeads()
     {
-       $leads = Lead::where('user_id',Auth::id())->where('LeadStatus','Working')->get();
+       $leads = Lead::where('user_id',Session()->get('userbranch')->user_id)->where('LeadStatus','Working')->get();
        return view('Leads.myLead',['leads'=>$leads]);
     }
     public function AvailableLeads()
     {
-       $leads = Lead::where('user_id',Auth::id())->where('LeadStatus','Open')->get();
+       $leads = Lead::where('user_id',Session()->get('userbranch')->user_id)->where('LeadStatus','Open')->get();
        return view('Leads.available',['leads'=>$leads]);
     }
 
