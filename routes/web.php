@@ -58,6 +58,9 @@ Route::get('/FinalizedLeads','IndividualReportController@FinalizedLeads')->name(
 Route::get('/saleReport','IndividualReportController@saleReport')->name('saleReport');
 Route::post('/saleReport','IndividualReportController@saleReportSearch')->name('saleReportSearch');
 
+//User Dashboard
+Route::resource('User','UserController');
+
 });
 
 

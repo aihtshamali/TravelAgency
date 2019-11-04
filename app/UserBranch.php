@@ -14,6 +14,6 @@ class UserBranch extends Model
         return $this->belongsTo('App\Branch');
     }
     public function Sale(){
-        return $this->hasOne('App\Sale','user_branch_id');
+        return $this->hasMany('App\Sale');
     }
 }

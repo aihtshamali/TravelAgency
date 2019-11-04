@@ -23,6 +23,27 @@ body{
     float: right; 
     
 }
+table th.Big{font-size: 19px !important;}
+td,th{
+    padding:5px !important;
+    border-right:0.1px solid #000 !important;
+    border-left:0.1px solid #000 !important;
+    border-top:0.2px solid #000 !important;
+    border-bottom:0.2px solid #000 !important;
+    font-size: 0.9em !important
+}
+.table-bordered{border:2px solid #000 !important;}
+.border-top{
+    border-top-color: black !important;
+}
+.border-bottom{
+    border-bottom-color: black !important;
+}
+ 
+.border-lr{
+    border-left-color: black !important;
+    border-right-color: black !important;
+}
 .usr-logo > img{
      width: 200px;
 }
@@ -33,7 +54,11 @@ table th.Big{
 .mauto{
     margin:auto
 }
+th,td{
+    text-align: center
+}
 </style>
+    <link rel="stylesheet" type="text/css" href="{{asset('DataTables/datatables.min.css')}}"/>
 @endsection
 
 @section('content')
@@ -42,20 +67,21 @@ table th.Big{
             <div class="usr-logo">
                 <img src="{{asset('img/logo.jpg')}}" alt="Logo-png">
             </div>
-            <h1 class="mb-0">Sale Report ▶ Single User</h1>
-            <strong>From:</strong> {{$UserData['fromDate']}}
+            <h1 class="mb-0 mt-0">Sale Report ▶ Single User</h1>
+            <p><strong>From:</strong> {{$UserData['fromDate']}}
             <br>            
             <strong>To:</strong> {{$UserData['toDate']}}            
             <br>            
-            <strong>Showing:</strong> {{$UserData['transaction_type']}}            
+            <strong>Showing:</strong> {{$UserData['transaction_type']}} ({{$UserData['status']=='Rejected' ? 'Not Approved Transaction' : 'Approved Transaction'}})         
+            </p>
         </div>
     </div>
-    {{dump($reportData)}}
-    <div class="row mauto mt-4">
-        <table class="table table-bordered table-responsive-sm table-responsive-md table-responsive-lg">
+    <div class="row mauto mt-3">
+        {{-- <table id='CustomerTable' class="table table-bordered table-responsive-sm table-responsive-md table-responsive-lg border-top border-bottom border-lr"> --}}
+        <table class="table-bordered table-responsive-sm table-responsive-md table-responsive-lg border-top" style="width:100%;">
             <thead>
-                <tr>
-                    <th colspan="16" class="Big text-center">Sales</th>
+                <tr >
+                    <th colspan="16" class="border-top Big text-center">Sales</th>
                 </tr>
                 <tr>
                     <th>ID</th>
@@ -77,17 +103,55 @@ table th.Big{
                 </tr>
             </thead>
             <tbody>
+                @php
+                    $Totalamount = 0;$Totalnet=0;$Totalprofit=0;
+                @endphp
                 @forelse ($reportData as $item)
                     <tr>
+                        @php
+                            $Totalprofit+=$item->ProfitAmount;
+                            $Totalnet+=$item->NetCost;
+                            $Totalamount+=$item->Amount;
+                        @endphp
                         <td>{{$item->SaleID}}</td>
-                        <td>{{date('d M yy',strtotime($item->IssueDate))}}</td>
+                        <td>{{date('d-M-y',strtotime($item->IssueDate))}}</td>
+                        <td>{{$item->Customer->CustomerName}}</td>
+                        <td><a href="{{route('Customer.show',$item->Customer->CustomerID)}}">{{$item->Customer->CustomerID}}</td>
+                        <td>{{isset($item->Leadtype->name) ? $item->Leadtype->name : '-'}}</td>
+                        <td>{{$item->ProductNum}}</td>
+                        <td>{{$item->ProductPax}}</td>
+                        <td>{{$item->ProductDetail ?? "-"}}</td>
+                        <td>{{$item->AccountingText}}</td>
+                        <td>{{number_format($item->Amount)}}</td>
+                        <td>{{number_format($item->NetCost)}}</td>
+                        <td>{{number_format($item->ProfitAmount)}}</td>
+                        <td>{{isset($item->PostedBy->name) ? $item->PostedBy->name : '-'}}</td>
+                        <td>{{isset($item->UserBranch->User->name) ? $item->UserBranch->User->name : '-'}}</td>
+                        <td>{{date('d M y',strtotime($item->PostedOn))}}</td>
+                        <td>{{isset($item->ActionByUser->name) ? $item->ActionByUser->name : '-'}}</td>
                     </tr>
                 @empty
                     <tr>
                         <td colspan="16">There is no Data</td>
                     </tr>
                 @endforelse
+                <tr>
+                    <td colspan="9"></td>
+                    <td><strong>{{number_format($Totalamount)}}</strong></td>
+                    <td><strong>{{number_format($Totalnet)}}</strong></td>
+                    <td><strong>{{number_format($Totalprofit)}}</strong></td>
+                    <td colspan="4"></td>
+                </tr>
             </tbody>
         </table>
     </div>
+@endsection
+
+@section('javascript')
+ <script type="text/javascript" src="{{asset('DataTables/datatables.min.js')}}"></script>
+    <script>
+        $(document).ready(function() {
+            $('#CustomerTable').DataTable();
+        } );
+    </script>
 @endsection

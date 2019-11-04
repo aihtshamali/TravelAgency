@@ -1164,8 +1164,7 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-
-------------------------------------------------------------------------------
+----------
 ALTER PROCEDURE [dbo].[CRM_LeadUpdate]
 (
 @LeadID BIGINT,
@@ -1236,7 +1235,7 @@ END
 
 RETURN 0
 
-------------------------New----------------------------------------------------------
+----------------------------------------------------------------------------------
 USE [WAC]
 GO
 /****** Object:  StoredProcedure [dbo].[CRM_PendingPayments]    Script Date: 28/10/2019 6:19:11 pm ******/
@@ -1245,7 +1244,7 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 ----------------------------------------------------------------------
-ALTER PROCEDURE [dbo].[CRM_PendingPayments]
+CREATE PROCEDURE [dbo].[CRM_PendingPayments]
 
 
 AS

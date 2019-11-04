@@ -44,11 +44,11 @@
                             {{ csrf_field() }}
                             <div class="form-group">
                                 <label for="">Date From</label>
-                                <input type="text" name="fromDate" autocomplete="off" placeholder="dd-mm-yyyy" class="datepicker form-control">
+                                <input type="text" name="fromDate" required autocomplete="off" placeholder="dd-mm-yyyy" class="datepicker form-control">
                             </div>
                             <div class="form-group">
                                 <label for="">Date To</label>
-                                <input type="text" name="toDate" autocomplete="off" placeholder="dd-mm-yyyy" class="datepicker form-control">
+                                <input type="text" name="toDate" required autocomplete="off" placeholder="dd-mm-yyyy" class="datepicker form-control">
                             </div>
                             <div class="form-group">
                                 <label for="">Transaction Type</label>
