@@ -17,7 +17,7 @@
             <div class="col-md-12">
                <div class="card text-center">
                    <div class="card-body">
-                    <table class="table table-responsive card-body">
+                    <table class="table card-body">
                             <thead>
                                 <th>Name</th>
                                 <th>Email</th>
@@ -35,10 +35,11 @@
                                         {{$user->email}}
                                         </a></td>
                                     <td>{{$user->phone}}</td>
-                                    <td>{{$user->address}}</td>
-                                    <td>{{$user->dob}}</td>
-                                    <td>{{$user->cnic_no}}</td>
-                                    <td>{{$user->cnic_attacment_front || $user->cnic_attacment_end ? 'Attached' : 'N\A'}}</td>
+                                    <td>{{$user->UserDetail->address}}</td>
+                                    <td>{{$user->UserDetail->dob}}</td>
+                                    <td>{{$user->UserDetail->cnic_no}}</td>
+                                    <td><a href="{{$user->UserDetail->cnic_attachment_front ? asset('storage/attachments/'.$user->id.'/'.$user->UserDetail->cnic_attachment_front) : '#'}}" download>{{$user->UserDetail->cnic_attachment_front ? 'Front Attached' : 'Front N\A'}} </a> |
+                                    <a href="{{$user->UserDetail->cnic_attachment_back ? asset('storage/attachments/'.$user->id.'/'.$user->UserDetail->cnic_attachment_back) : '#'}}" download>{{$user->UserDetail->cnic_attachment_back ? 'Back Attached' : 'Back N\A'}} </a></td>
                                     <td><a href="{{route('User.edit',$user->id)}}">Edit</a></td>
                                 </tr>
                             </tbody>

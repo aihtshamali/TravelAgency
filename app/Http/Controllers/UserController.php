@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
+use App\UserDetail;
 use App\User;
 class UserController extends Controller
 {
@@ -75,30 +76,44 @@ class UserController extends Controller
         if($user){
             $user->name = $request->name; 
             $user->email = $request->email; 
-            $user->password = Hash::make($request->email);
+            if($request->password)
+                $user->password = Hash::make($request->password);
             $user->update();
 
-            $userDetail = UserDetail::where('user_id',$id)->get();
-            if(!$userDetail)
+            $userDetail = UserDetail::where('user_id',$id)->first();
+            if($userDetail->count()==0)
                 $userDetail = new UserDetail();
             $userDetail->address = $request->address;
             $userDetail->dob = $request->dob;
             $userDetail->cnic_no = $request->cnic_no;
-            if(!is_dir('storage/uploads/attachments')){
-                mkdir('storage/uploads/attachments');
+            if(!is_dir('storage/attachments')){
+                mkdir('storage/attachments');
             }
-            if(!is_dir('storage/uploads/attachments/'.$user->id)){
-                mkdir('storage/uploads/attachments/'.$user->id);
+            if(!is_dir('storage/attachments/'.$user->id)){
+                mkdir('storage/attachments/'.$user->id);
             }
             if($request->hasFile('cnic_front'))
             {
-                $request->file('cnic_front')->store('public/uploads/attachments/'.$user->id.'/');
-                dd('asd');
-        
+                $request->file('cnic_front')->store('public/attachments/'.$user->id.'/');
+                $userDetail->cnic_attachment_front = $request->file('cnic_front')->hashName();
             }
-            $userDetail->attach = $request->cnic_no;
+            if($request->hasFile('cnic_back'))
+            {
+                $request->file('cnic_back')->store('public/attachments/'.$user->id.'/');
+                $userDetail->cnic_attachment_back = $request->file('cnic_back')->hashName();
+            }
+            if($request->hasFile('profile_pic'))
+            {
+                $request->file('profile_pic')->store('public/attachments/'.$user->id.'/');
+                $userDetail->profile_pic = $request->file('profile_pic')->hashName();
+            }
+            $userDetail->user_id = $user->id;
+            $userDetail->save();
+
+            return redirect()->route('User.show',$id)->with('success','Updated Successfully!');
 
         }
+        return redirect()->back()->with('error','No User Found!');
     }
 
     /**

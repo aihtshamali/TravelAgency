@@ -1,4 +1,11 @@
 @extends('layouts.master')
+@section('styleTags')
+    <style>
+        .pd-0{
+            padding:0 !important;
+        }
+    </style>
+@endsection
 @section('content')
     <div class="content-wrapper">
         @include('inc/flashMessages')
@@ -24,20 +31,20 @@
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="name">Name</label>
-                                        <input type="text" required autocomplete="off" class="form-control" name="name" id="name">
+                                        <input type="text" required autocomplete="off" value="{{$user->name}}" class="form-control" name="name" id="name">
                                     </div>
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="email">Email</label>
-                                        <input type="email" required autocomplete="off" class="form-control" name="email" id="email">
+                                        <input type="email" required value="{{$user->email}}" class="form-control" name="email" id="email">
                                     </div>
                                 </div>
                                 
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="password">Password</label>
-                                        <input type="password" required autocomplete="off" class="form-control" name="password" id="password">
+                                        <input type="password" minlength="6" placeholder="Enter your new Password.." class="form-control" name="password" id="password">
                                     </div>
                                 </div>
                             </div>
@@ -45,20 +52,20 @@
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="address">Address</label>
-                                        <input type="text" class="form-control" name="address" id="address">
+                                        <input type="text" class="form-control" value="{{$user->UserDetail->address}}" name="address" id="address">
                                     </div>
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="dob">DOB(01-29-1999)</label>
-                                        <input type="date" class="form-control" name="dob" id="dob">
+                                        <input type="date" class="form-control" value="{{$user->UserDetail->dob}}" name="dob" id="dob">
                                     </div>
                                 </div>
                                 
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="cnic_no">CNIC #</label>
-                                        <input type="password" class="form-control" name="cnic_no" id="cnic_no">
+                                        <input type="text" class="form-control" name="cnic_no" id="cnic_no" value="{{$user->UserDetail->cnic_no}}">
                                     </div>
                                 </div>
 
@@ -72,14 +79,20 @@
                             <div class="row mt-2">
                                 <div class="col-md-4">
                                     <div class="form-group">
+                                        <label for="profile_pic">Profile Pic</label>
+                                        <input type="file" class="form-control pd-0" name="profile_pic" id="profile_pic">
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
                                         <label for="cnic_front">CNIC Front</label>
-                                        <input type="file" class="form-control" name="cnic_front" id="cnic_front">
+                                        <input type="file" class="form-control pd-0" name="cnic_front" id="cnic_front">
                                     </div>
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="cnic_back">CNIC Back</label>
-                                        <input type="file" class="form-control" name="cnic_back" id="cnic_back">
+                                        <input type="file" class="form-control pd-0" name="cnic_back" id="cnic_back">
                                     </div>
                                 </div>
                             </div>

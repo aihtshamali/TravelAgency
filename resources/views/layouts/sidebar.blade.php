@@ -12,10 +12,10 @@
         <!-- Sidebar user panel (optional) -->
         <div class="user-panel mt-3 pb-3 mb-3 d-flex">
             <div class="image">
-                <img src="/img/profile.png" class="img-circle elevation-2" alt="User Image">
+                <img src="{{isset(Auth::user()->UserDetail->profile_pic) ? asset('storage/attachments/'.Auth::id().'/'.Auth::user()->UserDetail->profile_pic) :'/img/profile.png'}}" class="img-circle elevation-2" alt="User Image">
             </div>
             <div class="info">
-                <a href="#" class="d-block"> {{auth()->user()->name!=null ? auth()->user()->name : "Administrator"}} </a>
+                <a href="{{route('User.show',Auth::id())}}" class="d-block"> {{auth()->user()->name!=null ? auth()->user()->name : "Guest"}} </a>
             </div>
         </div>
 
