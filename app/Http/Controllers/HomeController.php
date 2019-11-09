@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Lead;
 use App\Customer;
 use Illuminate\Support\Facades\Hash;
-
+use DB;
 class HomeController extends Controller
 {
     /**
@@ -136,8 +136,11 @@ class HomeController extends Controller
         // $this->replaceLeadType();
         // $this->replaceCustomerType();
         // $this->UpdatedallUsersInLeads();
-        
-        return view('home');
+        $model = new Customer();
+        $data =  $model->hydrate(DB::select('exec CRM_PendingPayments '));
+        // return $data;
+        return view('home',['payments'=>$data]);
+        // return view('home');
     }
     public function paymentForm()
     {

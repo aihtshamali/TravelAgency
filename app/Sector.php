@@ -8,7 +8,7 @@ class Sector extends Model
 {
     
     public function Sale(){
-        return $this->hasOne('App\Sale','sector_id');
+        return $this->hasMany('App\Sale');
     }
      public function Lead(){
         return $this->hasMany('App\Lead');

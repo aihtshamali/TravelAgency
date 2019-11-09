@@ -160,7 +160,7 @@
               </a>
                     </li>
                     <li class="nav-item">
-                        <a href="pages/tables/data.html" class="nav-link">
+                        <a href="{{ route('viewPendingPayments') }}" class="nav-link">
                 
                 <p>Pending Payments</p>
               </a>

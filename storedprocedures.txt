@@ -1239,7 +1239,7 @@ RETURN 0
 ------------------------New----------------------------------------------------------
 USE [WAC]
 GO
-/****** Object:  StoredProcedure [dbo].[CRM_PendingPayments]    Script Date: 28/10/2019 6:19:11 pm ******/
+/****** Object:  StoredProcedure [dbo].[CRM_PendingPayments]    Script Date: 30/10/2019 8:37:19 pm ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1249,11 +1249,83 @@ ALTER PROCEDURE [dbo].[CRM_PendingPayments]
 
 
 AS
-Select * from (Select CRM_Customers.CustomerID,(Select sum(CONVERT(BIGINT,CRM_Payments.Amount))
-from CRM_Payments where CRM_Payments.CustomerIDRef=CRM_Customers.CustomerID 
-and StatusCode='Approved') as Payment,(Select sum(CONVERT(BIGINT,CRM_Sale.Amount)) from CRM_Sale
-where CRM_Sale.CustomerIDRef=CRM_Customers.CustomerID and SaleStatus='Approved' and Amount > 0)
-as Sale,(Select sum(CONVERT(BIGINT,CRM_Sale.Amount)) from CRM_Sale where 
-CRM_Sale.CustomerIDRef=CRM_Customers.CustomerID and SaleStatus='Approved' and Amount < 0) as Refund
-from CRM_Customers) as Account where Sale-Payment-Refund !=0
+SELECT
+ CRM_Customers.CustomerID,CRM_Customers.CustomerName,
+ Payment.PaymentsAmount,
+ Sale.SaleAmount,
+ Refund.RefundAmount,
+ CASE
+   WHEN Payment.PaymentsPostedOn > Sale.SalePostedOn AND
+     Payment.PaymentsPostedOn > Refund.RefundPostedOn THEN Payment.PaymentsPostedOn
+   WHEN Sale.SalePostedOn > Refund.RefundPostedOn AND
+     Sale.SalePostedOn > Payment.PaymentsPostedOn THEN Sale.SalePostedOn
+   WHEN Refund.RefundPostedOn > Sale.SalePostedOn AND
+     Refund.RefundPostedOn > Sale.SalePostedOn THEN Refund.RefundPostedOn
+ END AS ActionDate,
+ CASE
+   WHEN Payment.PaymentsPostedOn > Sale.SalePostedOn AND
+     Payment.PaymentsPostedOn > Refund.RefundPostedOn THEN Payment.SaleBy
+   WHEN Sale.SalePostedOn > Refund.RefundPostedOn AND
+     Sale.SalePostedOn > Payment.PaymentsPostedOn THEN CONVERT(varchar(20), Sale.posted_by_user)
+   WHEN Refund.RefundPostedOn > Sale.SalePostedOn AND
+     Refund.RefundPostedOn > Sale.SalePostedOn THEN CONVERT(varchar(20),Refund.posted_by_user)
+ END AS PostedBy
+FROM CRM_Customers
+CROSS APPLY (SELECT (SELECT
+                     SUM(CONVERT(bigint, CRM_Payments.Amount))
+                   FROM CRM_Payments
+                   WHERE CRM_Payments.CustomerIDRef = CRM_Customers.CustomerID
+                   AND StatusCode = 'Approved')
+                   PaymentsAmount,
+                   CRM_Payments.PostedOn AS PaymentsPostedOn,
+                   SaleBy
+FROM CRM_Payments
+WHERE CRM_Payments.CustomerIDRef = CRM_Customers.CustomerID
+AND StatusCode = 'Approved'
+AND CRM_Payments.PostedOn = (SELECT
+ MAX(CRM_Payments.PostedOn)
+FROM CRM_Payments
+WHERE CRM_Payments.CustomerIDRef = CRM_Customers.CustomerID
+AND StatusCode = 'Approved')) AS Payment
+CROSS APPLY (
+SELECT
+ (Select SUM(CONVERT(bigint, CRM_Sale.Amount))
+  From CRM_Sale
+  WHERE CRM_Sale.CustomerIDRef = CRM_Customers.CustomerID
+  AND SaleStatus = 'Approved'
+  AND Amount > 0
+ )SaleAmount,
+ CRM_Sale.PostedOn As SalePostedOn,
+ posted_by_user
+FROM CRM_Sale
+WHERE CRM_Sale.CustomerIDRef = CRM_Customers.CustomerID
+AND SaleStatus = 'Approved'
+AND Amount > 0
+AND PostedOn =(Select MAX(PostedOn)
+             From CRM_Sale
+             WHERE CRM_Sale.CustomerIDRef = CRM_Customers.CustomerID
+             AND SaleStatus = 'Approved'
+             AND Amount > 0 )
+) AS Sale
+CROSS APPLY (
+SELECT
+ (Select SUM(CONVERT(bigint, CRM_Sale.Amount))
+   FROM CRM_Sale
+   WHERE CRM_Sale.CustomerIDRef = CRM_Customers.CustomerID
+   AND SaleStatus = 'Approved'
+   AND Amount < 0)RefundAmount,
+   CRM_Sale.PostedOn RefundPostedOn
+   ,posted_by_user
+FROM CRM_Sale
+WHERE CRM_Sale.CustomerIDRef =  CRM_Customers.CustomerID
+AND SaleStatus = 'Approved'
+AND Amount < 0
+AND CRM_Sale.PostedOn = (Select MAX(CRM_Sale.PostedOn)
+   FROM CRM_Sale
+   WHERE CRM_Sale.CustomerIDRef = CRM_Customers.CustomerID
+   AND SaleStatus = 'Approved'
+   AND Amount < 0)
+) AS Refund
+WHERE   Sale.SaleAmount - Payment.PaymentsAmount + Refund.RefundAmount != 0
+
 

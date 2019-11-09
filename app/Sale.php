@@ -16,8 +16,11 @@ class Sale extends Model
     public function PostedUser(){
         return $this->hasOne('App\User','id');
     }
-    public function Sector(){
-        return $this->hasOne('App\Sector','id');
+    public function Source(){
+        return $this->belongsTo('App\Sector');
+    }
+    public function Destination(){
+        return $this->belongsTo('App\Sector');
     }
     public function UserBranch(){
         return $this->hasOne('App\UserBranch','id');

@@ -57,7 +57,7 @@ Route::get('/myTransactions','IndividualReportController@transactions')->name('m
 Route::get('/FinalizedLeads','IndividualReportController@FinalizedLeads')->name('FinalizedLeads');
 Route::get('/saleReport','IndividualReportController@saleReport')->name('saleReport');
 Route::post('/saleReport','IndividualReportController@saleReportSearch')->name('saleReportSearch');
-
+Route::get('/viewPendingPayments','PaymentController@viewPendingPayments')->name('viewPendingPayments');
 });
 
 
