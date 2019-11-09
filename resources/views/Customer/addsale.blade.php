@@ -5,16 +5,18 @@
 @endphp
 
 
-<div class="container">
+<div class="">
     <div class="content-wrapper" style="margin-top:2%;">
         @include('inc/flashMessages')
-        <form role="form" action="{{route('saveSale')}}" method="POST">
+        <form role="form" action="{{route('saveSale')}}" method="POST" enctype="multipart/form-data">
             @csrf
         <div class="row">
             <div class="col-md-6">
-                <div class="card card-primary">
-                    <div class="container">
-                    <h3>Basic Details</h3>
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Basic Details</h3>
+                    </div>
+                    <div class="card-body">
                     <div class="form-group">
                         <label for="customer">Customer</label>
                         <input type="hidden" value="{{$customer->CustomerID}}" name="customer_id">
@@ -47,9 +49,11 @@
                 </div>
             </div>
             <div class="col-md-6">
-                    <div class="card card-primary">
-                        <div class="container">
-                        <h3>Basic Details</h3>
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Amount</h3>
+                        </div>
+                        <div class="card-body">
                         <div class="form-group">
                             <label for="Amount">Charge To Customer</label>
                             <input type="number" onblur="ValidateAmount()" required id="amount" name="amount" class="form-control" autocomplete="off" >
@@ -69,12 +73,13 @@
         </div>
         <div class="row">
             <div class="col-md-12">
-                <div class="card card-primary">
-                    <div class="container">
-                    <h3>Product Sold</h3>
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Product Sold</h3>
+                    </div>
+                    <div class="card-body">
                        <div class="form-group">
                            <label for="lead_type">Product Type</label>
-                           {{-- {{dd(Auth::user()->id)}} --}}
                            <div class="input-group">
                                <select name="lead_type_id" id="lead_type" class="select2 form-control">
                                    <option value="">-</option>
@@ -112,17 +117,18 @@
                         <label for="AccountigText">Accounting Remarks</label>
                         <input type="text" placeholder="Issued from (Self or Vendor Name)" name="AccountigText" class="form-control" autocomplete="off" >
                     </div>
+                    <div class="form-group">
+                        <label for="">Ticket Attachment</label>
+                        <input type="file" name="ticket_attachment" class="form-control" >
+                    </div>
                     </div>   
                 </div>
+                <button type="submit" class="btn btn-primary pull-right">Submit</button>
             </div>
             
         </div>
-        <button type="submit" class="btn btn-primary">Submit</button>
         </form>
-    </div>
-    
-           
-         
+    </div>   
 </div>
 @endsection
 @section('javascript')
