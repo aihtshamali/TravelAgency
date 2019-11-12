@@ -61,6 +61,7 @@ Route::post('/saleReport','IndividualReportController@saleReportSearch')->name('
 //User Dashboard
 Route::resource('User','UserController');
 
+Route::get('/viewPendingPayments','PaymentController@viewPendingPayments')->name('viewPendingPayments');
 });
 
 

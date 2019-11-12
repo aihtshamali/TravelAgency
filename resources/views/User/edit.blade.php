@@ -1,11 +1,4 @@
 @extends('layouts.master')
-@section('styleTags')
-    <style>
-        .pd-0{
-            padding:0 !important;
-        }
-    </style>
-@endsection
 @section('content')
     <div class="content-wrapper">
         @include('inc/flashMessages')

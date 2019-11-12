@@ -14,4 +14,14 @@ class Payment extends Model
     public function AuthBy(){
         return $this->belongsTo('App\User','auth_by');
     }
+
+    public function SaleByUser(){
+        return $this->belongsTo('App\User','user_id');
+    }
+    public function PaymentForm(){
+        return $this->belongsTo('App\PaymentForm');
+    }
+    public function UserBranch(){
+        return $this->belongsTo('App\UserBranch');
+    }
 }

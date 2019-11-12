@@ -5,8 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Lead;
 use App\Customer;
+use App\User;
 use Illuminate\Support\Facades\Hash;
-
+use DB;
 class HomeController extends Controller
 {
     /**
@@ -136,8 +137,13 @@ class HomeController extends Controller
         // $this->replaceLeadType();
         // $this->replaceCustomerType();
         // $this->UpdatedallUsersInLeads();
-        
-        return view('home');
+        // $this->AddCustomersToUsers();
+
+        $model = new Customer();
+        $data =  $model->hydrate(DB::select('exec CRM_PendingPayments '));
+        // return $data;
+        return view('home',['payments'=>$data]);
+        // return view('home');
     }
     public function paymentForm()
     {
@@ -190,5 +196,23 @@ class HomeController extends Controller
             $payment->save();
         }
         dump('UpdatedallUsersInPayments');
+    }
+
+    private function AddCustomersToUsers(){
+        $customers = \App\Customer::all();
+         set_time_limit(3000);
+        foreach($customers as $customer){
+            if(!User::where('user_name',$customer->PhoneNumber)->count()){
+                $user = new User();
+                $user->name = $customer->CustomerName;
+                $user->user_name = $customer->PhoneNumber;
+                $user->email = $customer->EmailAddress;
+                $user->password = Hash::make($customer->PhoneNumber);
+                $user->save();
+                $customer->user_id = $user->id;
+                $customer->save(); 
+            }
+        }
+        dump('AddCustomersToUsers');
     }
 }

@@ -13,8 +13,11 @@ class Sale extends Model
     public function Customer(){
         return $this->belongsTo('App\Customer','CustomerIDRef');
     }
-    public function Sector(){
-        return $this->belongsTo('App\Sector','id');
+    public function Source(){
+        return $this->belongsTo('App\Sector');
+    }
+    public function Destination(){
+        return $this->belongsTo('App\Sector');
     }
     public function UserBranch(){
         return $this->belongsTo('App\UserBranch');
@@ -22,7 +25,7 @@ class Sale extends Model
     public function ActionByUser(){
         return $this->belongsTo('App\User','action_by');
     }
-    public function PostedBy(){
+    public function PostedByUser(){
         return $this->belongsTo('App\User','posted_by_user');
     }
     public function Leadtype(){   

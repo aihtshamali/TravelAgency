@@ -47,7 +47,7 @@ class UserController extends Controller
      */
     public function show($id)
     {
-        $user = User::find($id)->with('UserDetail')->first();
+        $user = User::where('id',$id)->with('UserDetail')->first();
         return view('User.details',compact('user'));
     }
 

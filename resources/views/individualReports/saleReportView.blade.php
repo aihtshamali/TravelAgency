@@ -125,7 +125,7 @@ th,td{
                         <td>{{number_format($item->Amount)}}</td>
                         <td>{{number_format($item->NetCost)}}</td>
                         <td>{{number_format($item->ProfitAmount)}}</td>
-                        <td>{{isset($item->PostedBy->name) ? $item->PostedBy->name : '-'}}</td>
+                        <td>{{isset($item->PostedByUser->name) ? $item->PostedByUser->name : '-'}}</td>
                         <td>{{isset($item->UserBranch->User->name) ? $item->UserBranch->User->name : '-'}}</td>
                         <td>{{date('d M y',strtotime($item->PostedOn))}}</td>
                         <td>{{isset($item->ActionByUser->name) ? $item->ActionByUser->name : '-'}}</td>

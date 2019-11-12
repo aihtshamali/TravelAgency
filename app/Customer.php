@@ -20,5 +20,8 @@ class Customer extends Model
     public function Sales(){
         return $this->hasMany('App\Sale','SaleID');
     }
+    public function User(){
+        return $this->belongsTo('App\User');
+    }
 
 }

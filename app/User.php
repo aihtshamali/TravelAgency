@@ -55,5 +55,8 @@ class User extends Authenticatable
     public function UserDetail(){
         return $this->hasOne('App\UserDetail');
     }
+    public function Customer(){
+        return $this->hasOne('App\Customer','CustomerID');
+    }
     
 }

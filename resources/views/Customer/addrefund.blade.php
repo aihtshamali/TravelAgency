@@ -1,4 +1,8 @@
 @extends('layouts.master') 
+@section('styleTags')
+    
+    <link rel="stylesheet" href="{{asset('dist/plugins/select2/select2.css')}}">
+@endsection 
 @section('content')
 @php
  $show ='display:none';   //USING FOR UPDATION
@@ -85,14 +89,30 @@
                        </div>
                        <div class="form-group">
                         <label for="sector_id">Route or Details</label>
-                        <div class="input-group">
-                            <select name="sector_id" class="select2 form-control">
-                                <option value="">-</option>
-                                @foreach ($sectors as $sector)
-                                    <option value="{{$sector->id}}">{{$sector->name}}</option>
-                                @endforeach
-                            </select>
-                        </div>
+                        <div class="row">
+                                <div class="form-group col-md-6">
+                                    <label for="source_id">Source</label>
+                                    <select name="source_id" id="source_id" class="select2 form-control">
+                                        <option value="">Select Source</option>
+                                        @foreach ($sectors as $sector)
+                                            <option value="{{$sector->id}}">{{$sector->name}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="destination_id">Destination</label>
+                                    <select name="destination_id" id="destination_id" class="select2 form-control">
+                                        <option value="">Select Destination</option>
+                                        @foreach ($sectors as $sector)
+                                            <option value="{{$sector->id}}">{{$sector->name}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="subject">Details</label>
+                                <input type="text" name="ProductDetail"  id="subject" class="form-control" placeholder="From ---- TO ---">
+                            </div>
                     </div>
                     <div class="form-group">
                         <label for="AccountigText">Accounting Remarks</label>
@@ -112,6 +132,7 @@
 </div>
 @endsection
 @section('javascript')
+<script src="{{asset('dist/plugins/select2/select2.js')}}"></script>
     <script>
         $(document).ready(function(){
             $('select[name="customer_type"]').on('change',function(){
@@ -132,5 +153,21 @@
             $("#profit").val(profit);
             // alert("Hey");
         }
+        $(document).ready(function(){
+            $('.select2').select2();
+            $('#destination_id,#source_id').change(function(){
+                var dest = $('option:selected','#destination_id')
+                var src = $('option:selected','#source_id')
+                if(dest.val())
+                    dest = dest.text();
+                else
+                    dest = '';
+                if(src.val())
+                    src = src.text()
+                else
+                    src = ''
+                $('#subject').val(src +" - "+ dest)
+            });
+        })
     </script>
 @endsection
