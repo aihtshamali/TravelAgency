@@ -248,7 +248,7 @@ class CustomerController extends Controller
     }
     public function approveSale($id)
     {
-        $sales = Sale::selectRaw('SaleID,branches.name as Branch,action_by,Login_users.name as Uname,CRM_Customers.CustomerName,
+        $sales = Sale::selectRaw('SaleID,ProductDetail,branches.name as Branch,action_by,Login_users.name as Uname,CRM_Customers.CustomerName,
         CRM_Sale.CustomerIDRef,LeadIDRef,CRM_Sale.created_at,Amount,NetCost,ProfitAmount,ActionOn,SaleStatus,
         AccountingText,lead_types.name as Type,IssueDate,ProductPax,ProductNum,sectors.name as Sector')
         ->leftJoin('CRM_Customers','CRM_Sale.CustomerIDRef','CRM_Customers.CustomerID')

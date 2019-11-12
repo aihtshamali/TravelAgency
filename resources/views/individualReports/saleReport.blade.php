@@ -42,6 +42,17 @@
                     <div class="card-body">
                         <form action="{{route('saleReportSearch')}}" id="SalesearchForm" method="post">
                             {{ csrf_field() }}
+                            @if(isset($users))
+                            <div class="form-group">
+                                <label for="">Branch or User</label>
+                                <select name="user" id="" class="form-control">
+                                    @foreach ($users as $user)
+                                        <option value="{{$user->id}}">{{$user->user_name}} ({{$user->name}})</option>
+                                    @endforeach
+                                </select>
+                                <input type="hidden" id="status" name="status">
+                            </div>
+                            @endif
                             <div class="form-group">
                                 <label for="">Date From</label>
                                 <input type="text" name="fromDate" autocomplete="off" placeholder="dd-mm-yyyy" class="datepicker form-control">

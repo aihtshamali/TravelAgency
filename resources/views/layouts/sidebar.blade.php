@@ -179,7 +179,7 @@
       </a>
             </li>
             <li class="nav-item">
-                <a href="pages/tables/data.html" class="nav-link">
+                <a href="{{route('saleReport',1)}}" class="nav-link">
         
         <p>Sale Report</p>
       </a>

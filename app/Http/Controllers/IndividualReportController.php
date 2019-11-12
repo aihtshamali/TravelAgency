@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Sale;
+use App\User;
 use App\Payment;
 use App\Lead;
 use App\UserBranch;
@@ -34,10 +35,21 @@ class IndividualReportController extends Controller
         return view('individualReports.finalized_leads',compact('leads'));
     }
 
-    public function saleReport(){
-        $transactionTypes = ["Sale","Refunds","Payments"];
-
-        return view('individualReports.saleReport',compact('transactionTypes'));
+    public function saleReport($user = null){
+        if($user == null)
+        {
+            $transactionTypes = ["Sale","Refunds","Payments"];
+            // dd("yes");
+            return view('individualReports.saleReport',compact('transactionTypes'));
+        }
+        else
+        {
+            $transactionTypes = ["Sale","Refunds","Payments"];
+            $users=User::where('status',1)
+            ->get();
+            // dd("yes");
+            return view('individualReports.saleReport',compact('transactionTypes','users'));
+        }
     }
     public function saleReportSearch(Request $request){
         $model = new Sale();
