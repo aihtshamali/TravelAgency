@@ -34,7 +34,7 @@
                         @forelse ($payments as $payment)
                             <tr>
                                 <td> <a href="{{route('Customer.show',$payment->CustomerID)}}">{{$payment->CustomerName}}</a></td>
-                                <td>{{$payment->PostedBy}}</td>
+                                <td>{{$payment->PostedByUser}}</td>
                                 <td>{{date('d-M-y',strtotime($payment->ActionDate))}} ({{date('H:i',strtotime($payment->ActionDate))}})</td>
                                 <td>
                                     {{$payment->SaleAmount-$payment->PaymentsAmount+$payment->RefundAmount}}

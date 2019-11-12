@@ -111,10 +111,9 @@ class CustomerController extends Controller
         // dd($id);
         $customer = Customer::where('CustomerID',$id)->where('status',1)->first();
         $leads= Lead::where('CustomerIDRef',$id)->get();
-        $payments= Payment::where('CustomerIDRef',$id)->get();
-        $payments= Payment::where('CustomerIDRef',$id)->get();
-        // dd($leads);
-        return view('Customer.show',['customer'=>$customer,'leads'=>$leads,'payments'=>$payments]);
+        $sales = Sale::where('CustomerIDRef',$id)->get();
+        $payments= Payment::where('CustomerIDRef',$id)->with('PaymentForm')->get();
+        return view('Customer.show',['sales'=>$sales,'customer'=>$customer,'leads'=>$leads,'payments'=>$payments]);
     }
 
     /**
@@ -221,6 +220,23 @@ class CustomerController extends Controller
         $sale->AccountingText = $request->AccountigText;
         $sale->user_branch_id=$request->session()->get('userbranch')->id;
         $sale->SaleStatus='Pending';
+        
+        $customer = Customer::find($request->customer_id);
+        $user_id = 0;
+        
+        if(isset($customer->User)){
+            $user_id = $customer->User->id;
+        }
+        if(!is_dir('storage/attachments')){
+            mkdir('storage/attachments');
+        }
+        if(!is_dir('storage/attachments/'.$user_id)){
+            mkdir('storage/attachments/'.$user_id);
+        }
+        if($request->hasFile('ticket_attachment')){
+            $request->file('ticket_attachment')->store('public/attachments/'.$user_id.'/');
+            $sale->ticket_attachment = $request->file('ticket_attachment')->hashName();
+        }
         // $sale->created_at=date('Y-m-d H:i:s');
         // $sale->updated_at=date('Y-m-d H:i:s');
         $sale->save();
@@ -248,7 +264,7 @@ class CustomerController extends Controller
     }
     public function approveSale($id)
     {
-        $sales = Sale::selectRaw('SaleID,ProductDetail,branches.name as Branch,action_by,Login_users.name as Uname,CRM_Customers.CustomerName,
+        $sales = Sale::selectRaw('CRM_Sale.ticket_attachment,SaleID,branches.name as Branch,action_by,Login_users.name as Uname,CRM_Customers.CustomerName,
         CRM_Sale.CustomerIDRef,LeadIDRef,CRM_Sale.created_at,Amount,NetCost,ProfitAmount,ActionOn,SaleStatus,
         AccountingText,lead_types.name as Type,IssueDate,ProductPax,ProductNum,sectors.name as Sector')
         ->leftJoin('CRM_Customers','CRM_Sale.CustomerIDRef','CRM_Customers.CustomerID')

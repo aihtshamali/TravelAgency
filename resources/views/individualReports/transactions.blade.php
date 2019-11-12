@@ -122,8 +122,8 @@
                                 @forelse ($payments as $payment)
                                     <tr>
                                         <td><a href="{{route('approvePayment',$payment->PaymentID)}}">{{$payment->PaymentID}}</a> </td>
-                                        <td>{{$lead->LeadType->name}}</td>
-                                        <td>{{$sale->FOP}}</td>
+                                        <td>{{isset($payment->LeadType->name) ? $payment->LeadType->name : "NA" }}</td>
+                                        <td>{{$payment->FOP}}</td>
                                         <td><a href="{{route('Customer.show',$payment->CustomerIDRef)}}">{{$payment->CustomerIDRef}}</a> </td>
                                         <td>{{date('d-M-y (H:i)',strtotime($payment->PostedOn))}}</td>
                                         <td>

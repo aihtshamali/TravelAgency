@@ -17,5 +17,11 @@ class Customer extends Model
     public function Leads(){
         return $this->hasMany('App\Lead','LeadID');
     }
+    public function Sales(){
+        return $this->hasMany('App\Sale','SaleID');
+    }
+    public function User(){
+        return $this->belongsTo('App\User');
+    }
 
 }

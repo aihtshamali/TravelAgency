@@ -65,8 +65,8 @@
                                 <td>{{$sale->Uname}}</td>
                                 
                                 <td>
-                                    @if(isset($sale->PostedBy->name))
-                                        {{$sale->PostedBy->name}}
+                                    @if(isset($sale->PostedByUser->name))
+                                        {{$sale->PostedByUser->name}}
                                     @endif
                                 </td>
                                 <td>{{$sale->SaleStatus}}</td>

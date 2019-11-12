@@ -57,6 +57,10 @@ Route::get('/myTransactions','IndividualReportController@transactions')->name('m
 Route::get('/FinalizedLeads','IndividualReportController@FinalizedLeads')->name('FinalizedLeads');
 Route::get('/saleReport/{user?}','IndividualReportController@saleReport')->name('saleReport');
 Route::post('/saleReport','IndividualReportController@saleReportSearch')->name('saleReportSearch');
+
+//User Dashboard
+Route::resource('User','UserController');
+
 Route::get('/viewPendingPayments','PaymentController@viewPendingPayments')->name('viewPendingPayments');
 });
 

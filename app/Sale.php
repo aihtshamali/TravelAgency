@@ -10,11 +10,8 @@ class Sale extends Model
     protected $primaryKey = "SaleID";
 
     //
-    public function Leadtype(){
-        return $this->hasOne('App\LeadType','id');
-    }
-    public function PostedUser(){
-        return $this->hasOne('App\User','id');
+    public function Customer(){
+        return $this->belongsTo('App\Customer','CustomerIDRef');
     }
     public function Source(){
         return $this->belongsTo('App\Sector');
@@ -23,12 +20,15 @@ class Sale extends Model
         return $this->belongsTo('App\Sector');
     }
     public function UserBranch(){
-        return $this->hasOne('App\UserBranch','id');
+        return $this->belongsTo('App\UserBranch');
     }
-    public function ActionBy(){
+    public function ActionByUser(){
         return $this->belongsTo('App\User','action_by');
     }
-    public function PostedBy(){
+    public function PostedByUser(){
         return $this->belongsTo('App\User','posted_by_user');
+    }
+    public function Leadtype(){   
+        return $this->belongsTo('App\LeadType','lead_type_id','id');
     }
 }

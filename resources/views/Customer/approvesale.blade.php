@@ -67,7 +67,7 @@
                                 </tr> 
                                 <tr>
                                     <td>Document No</td> 
-                                    <td>{{$sale->ProductNum}}</td>
+                                    <td>{{$sale->ProductNum}} | <a href="{{$sale->ticket_attachment ? asset('storage/attachments/'.$sale->Customer->User->id.'/'.$sale->ticket_attachment) : '#'}}" download>{{isset($sale->ticket_attachment) ? 'Download' : 'No Attachment'}}</a></td>
                                 </tr> 
                                 <tr>
                                     <td>Passenger</td> 

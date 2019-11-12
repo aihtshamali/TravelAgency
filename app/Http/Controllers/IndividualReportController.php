@@ -52,9 +52,10 @@ class IndividualReportController extends Controller
         }
     }
     public function saleReportSearch(Request $request){
+        
         $model = new Sale();
         $data =  $model->hydrate(DB::select('exec CRM_UserSaleReport '.Session()->get('userbranch')->user_id.',"'.$request->fromDate.'","'.$request->toDate.'","'.$request->transaction_type.'","'.$request->status.'"'));
-        return view('individualReports.saleReportView');
+        return view('individualReports.saleReportView',['reportData'=>$data,'UserData'=>$request->all()]);
     }
 
 }

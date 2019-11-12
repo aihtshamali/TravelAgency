@@ -1164,8 +1164,7 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-
-------------------------------------------------------------------------------
+----------
 ALTER PROCEDURE [dbo].[CRM_LeadUpdate]
 (
 @LeadID BIGINT,
@@ -1236,7 +1235,7 @@ END
 
 RETURN 0
 
-------------------------New----------------------------------------------------------
+----------------------------------------------------------------------------------
 USE [WAC]
 GO
 /****** Object:  StoredProcedure [dbo].[CRM_PendingPayments]    Script Date: 30/10/2019 8:37:19 pm ******/
@@ -1245,7 +1244,7 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 ----------------------------------------------------------------------
-ALTER PROCEDURE [dbo].[CRM_PendingPayments]
+CREATE PROCEDURE [dbo].[CRM_PendingPayments]
 
 
 AS
@@ -1327,5 +1326,73 @@ AND CRM_Sale.PostedOn = (Select MAX(CRM_Sale.PostedOn)
    AND Amount < 0)
 ) AS Refund
 WHERE   Sale.SaleAmount - Payment.PaymentsAmount + Refund.RefundAmount != 0
+
+
+
+-------------------------NEW ----------------------------------------
+
+
+USE [WAC]
+GO
+/****** Object:  StoredProcedure [dbo].[CRM_UserSaleReport]    Script Date: 11/12/2019 12:19:57 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+----------------------------------------------------------------------
+ALTER PROCEDURE [dbo].[CRM_UserSaleReport]
+(
+@User INT,
+@StartDate DATETIME,
+@EndDate DATETIME,
+@TransactionType varchar(50),
+@Status varchar(50)
+)
+
+AS
+	DECLARE @STR nvarchar(1000)
+	set @Str = ' Select * from CRM_Sale '+ 
+		' where ' +  
+		' CRM_Sale.posted_by_user = ' + Convert(varchar(10) , @User) +
+		' AND CRM_Sale.IssueDate >= ''' + Convert(varchar(10), @StartDate,111) + ''' '+ 
+		' AND  CRM_Sale.IssueDate <= ''' +Convert(varchar(10),@EndDate,111) + ''' ' 
+    
+	
+	IF @EndDate IS NULL 
+	  BEGIN
+			SET @EndDate = GETDATE()
+	  END
+	
+	IF @Status = 'Approved'
+	  BEGIN
+
+			SET @Status = 'Approved'
+	  END
+	
+	IF @Status = 'Rejected'
+	  BEGIN
+
+			SET @Status = 'Rejected'',''Pending'
+	  END
+	
+	IF @TransactionType = 'Sale'
+	  BEGIN
+	  	set @Str += ' AND SaleStatus in ( ''' + @Status + ''' ) AND CRM_Sale.Amount >=0' 
+      END
+
+	
+	IF @TransactionType = 'Refunds'
+	  BEGIN
+		set @Str += 'AND SaleStatus in ( ''' + @Status + ''' ) AND CRM_Sale.Amount < 0 '
+      END
+
+	  IF @TransactionType = 'Payments'
+	  BEGIN
+	  	Select * from CRM_Payments 
+		where  CRM_Payments.SaleBy = @User AND CRM_Payments.PostedOn >=@StartDate
+		AND CRM_Payments.PostedOn <= @EndDate AND (StatusCode = @Status) 
+      END
+	
+	  EXECUTE sp_executesql @STR
 
 

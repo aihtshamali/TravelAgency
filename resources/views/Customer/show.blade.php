@@ -139,37 +139,9 @@
                         </div>
                 </div>
                 <div class="card">
-                    <div class="card-header"><h3 class="card-title font-weight-bold">Payments</h3></div>
-                        <div class="card-body">
-                            <table class="table table-hover">
-                                <caption>List of Payments</caption>
-                                <thead class="thead-dark">
-                                    <th>Payment ID</th>
-                                    <th>Type</th>
-                                    <th>Subject</th>
-                                    <th>Created On</th>
-                                    <th>Taken Over By</th>
-                                    <th>Status</th>
-                                </thead>
-                                <tbody>
-                                    @foreach($payments as $payment)
-                                    <tr>
-                                        <td>{{$payment->PaymentID}}</td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-                </div>
-                <div class="card">
                     <div class="card-header"><h3 class="card-title font-weight-bold">Sales</h3></div>
                         <div class="card-body">
-                            <table class="table table-hover">
+                            <table class="table table-responsive-md table-responsive-lg table-responsive-xs table-hover">
                                 <caption>List of Sales</caption>
                                 <thead class="thead-dark">
                                     <th>ID</th>
@@ -181,16 +153,51 @@
                                     <th>Branch</th>
                                     <th>SPO</th>
                                     <th>Amount</th>
+                                    <th>Attachment</th>
+                                </thead>
+                                <tbody>
+                                    @foreach($sales as $sale)
+                                    <tr>
+                                        <td><a href="{{route('approveSale',$sale->SaleID)}}">{{$sale->SaleID}}</a></td>
+                                        <td>{{date('d-M-Y',strtotime($sale->IssueDate))}}</td>
+                                        <td>{{$sale->Leadtype->name}}</td>
+                                        <td>{{$sale->ProductPax}}</td>
+                                        <td>{{$sale->ProductNum}}</td>
+                                        <td>{{$sale->ProductDetail}}</td>
+                                        <td>{{isset($sale->UserBranch->Branch->name) ? $sale->UserBranch->Branch->name : '-'}}</td>
+                                        <td><a href="{{route('User.show',$sale->posted_by_user)}}">{{$sale->PostedByUser->name}}</a></td>
+                                        <td>{{$sale->Amount}}</td>
+                                        <td><a href="{{$sale->ticket_attachment ? asset('storage/attachments/'.$sale->Customer->User->id.'/'.$sale->ticket_attachment) : '#'}}" {{ isset($sale->ticket_attachment) ? 'download' : 'disabled'}}>{{isset($sale->ticket_attachment) ? 'Download' : 'No Attachment'}}</a></td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                </div>
+                <div class="card">
+                    <div class="card-header"><h3 class="card-title font-weight-bold">Payments</h3></div>
+                        <div class="card-body">
+                            <table class="table table-hover">
+                                <caption>List of Payments</caption>
+                                <thead class="thead-dark">
+                                    <th>Receipt No.</th>
+                                    <th>FOP</th>
+                                    <th>Date</th>
+                                    <th>Remarks</th>
+                                    <th>Branch</th>
+                                    <th>SPO</th>
+                                    <th>Amount</th>
                                 </thead>
                                 <tbody>
                                     @foreach($payments as $payment)
                                     <tr>
-                                        <td>{{$payment->PaymentID}}</td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
+                                        <td><a href="{{route('approvePayment',$payment->PaymentID)}}"> {{$payment->PaymentID}} </a></td>
+                                        <td>{{$payment->PaymentForm->name}}</td>
+                                        <td>{{date('d-M-Y',strtotime($payment->PostedOn))}}</td>
+                                        <td>{{$payment->PrintRemark}}</td>
+                                        <td>{{isset($payment->UserBranch->Branch) ? $payment->UserBranch->Branch->name : ''}}</td>
+                                        <td><a href="{{route('User.show',$payment->user_id)}}">{{isset($payment->SaleByUser->name) ? $payment->SaleByUser->name : '-'}}</a></td>
+                                        <td>{{$payment->Amount}}</td>
                                     </tr>
                                     @endforeach
                                 </tbody>
