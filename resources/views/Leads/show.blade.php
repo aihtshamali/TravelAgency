@@ -43,7 +43,7 @@
         <div class="row mt-3">
             <div class="col-md-12">
                 <div class="card">
-                    <div class="card-header"><h3 class="card-title">Details</h3></div>
+                    <div class="card-header"><h3 class="card-title">Details <span class="pull-right"><a href="{{route('leads.edit',$lead->LeadID)}}">Edit</a></span></h3></div>
                     <div class="card-body">
                         <table class="table  table-hover  bordered ">
                             <thead class="thead-dark">
