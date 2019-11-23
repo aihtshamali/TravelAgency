@@ -15,7 +15,8 @@ class UserController extends Controller
      */
     public function index()
     {
-        //
+        // dd('ok');
+       return view("User.index");;
     }
 
     /**
