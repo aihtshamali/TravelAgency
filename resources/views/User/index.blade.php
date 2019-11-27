@@ -1,5 +1,5 @@
 @extends('layouts.userLayout')
-@section('styleTags')
+@section('styleTags')   
     <link rel="stylesheet" href="{{asset('css/userCustom.css')}}">
 @endsection 
 @section('content')

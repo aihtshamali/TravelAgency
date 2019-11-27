@@ -22,12 +22,32 @@
 
     <!-- Right navbar links -->
     <ul class="navbar-nav ml-auto">
-        <!-- Messages Dropdown Menu -->
         <li class="nav-item dropdown">
+             <a class="nav-link" data-toggle="dropdown" href="#">
+                 <i class="fa fa-cog"></i>
+            </a>
+            <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+                <div class="dropdown-divider"></div>
+                <a href="#" class="dropdown-item">
+                <i class="fa fa-dashboard mr-2"></i> Go To Dashboard
+                {{-- <span class="float-right text-muted text-sm">3 mins</span> --}}
+              </a>
+                <div class="dropdown-divider"></div>
+                <a href="#" class="dropdown-item">
+                    <i class="fa fa-sign-out mr-2"></i> Settings
+                    {{-- <span class="float-right text-muted text-sm">12 hours</span> --}}
+                </a>
+                               
+                <div class="dropdown-divider"></div>
+                <a href="#" class="dropdown-item dropdown-footer">Log Out</a>
+            </div>
+        </li>
+        <!-- Messages Dropdown Menu -->
+        {{-- <li class="nav-item dropdown">
             <a class="nav-link" data-toggle="dropdown" href="#">
-  <i class="fa fa-comments-o"></i>
-  <span class="badge badge-danger navbar-badge">3</span>
-</a>
+         <i class="fa fa-comments-o"></i>
+            <span class="badge badge-danger navbar-badge">3</span>
+            </a>
             <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
                 <a href="#" class="dropdown-item">
                     <!-- Message Start -->
@@ -79,35 +99,35 @@
                 <div class="dropdown-divider"></div>
                 <a href="#" class="dropdown-item dropdown-footer">See All Messages</a>
             </div>
-        </li>
+        </li> --}}
         <!-- Notifications Dropdown Menu -->
-        <li class="nav-item dropdown">
-            <a class="nav-link" data-toggle="dropdown" href="#">
-  <i class="fa fa-bell-o"></i>
-  <span class="badge badge-warning navbar-badge">15</span>
-</a>
+        {{-- <li class="nav-item dropdown">
+             <a class="nav-link" data-toggle="dropdown" href="#">
+                 <i class="fa fa-bell-o"></i>
+            <span class="badge badge-warning navbar-badge">15</span>
+            </a>
             <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
                 <span class="dropdown-header">15 Notifications</span>
                 <div class="dropdown-divider"></div>
                 <a href="#" class="dropdown-item">
-    <i class="fa fa-envelope mr-2"></i> 4 new messages
-    <span class="float-right text-muted text-sm">3 mins</span>
-  </a>
+                <i class="fa fa-envelope mr-2"></i> 4 new messages
+                <span class="float-right text-muted text-sm">3 mins</span>
+              </a>
                 <div class="dropdown-divider"></div>
                 <a href="#" class="dropdown-item">
-    <i class="fa fa-users mr-2"></i> 8 friend requests
-    <span class="float-right text-muted text-sm">12 hours</span>
-  </a>
-                <div class="dropdown-divider"></div>
-                <a href="#" class="dropdown-item">
-    <i class="fa fa-file mr-2"></i> 3 new reports
-    <span class="float-right text-muted text-sm">2 days</span>
-  </a>
+                    <i class="fa fa-users mr-2"></i> 8 friend requests
+                    <span class="float-right text-muted text-sm">12 hours</span>
+                </a>
+                                <div class="dropdown-divider"></div>
+                                <a href="#" class="dropdown-item">
+                    <i class="fa fa-file mr-2"></i> 3 new reports
+                    <span class="float-right text-muted text-sm">2 days</span>
+                </a>
                 <div class="dropdown-divider"></div>
                 <a href="#" class="dropdown-item dropdown-footer">See All Notifications</a>
             </div>
-        </li>
-        <li><a href="#" data-toggle="control-sidebar"><i class="fa fa-gears"></i></a></li>
+        </li> --}}
+        {{-- <li><a href="#" data-toggle="control-sidebar"><i class="fa fa-gears"></i></a></li> --}}
     </ul>
 </nav>
 <!-- /.navbar -->

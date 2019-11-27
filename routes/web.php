@@ -60,7 +60,14 @@ Route::post('/saleReport','IndividualReportController@saleReportSearch')->name('
 
 //User Dashboard
 Route::resource('/User','UserController');
-// Route::get('/UserIndex','UserController@index')->name('userindex');
+Route::get('/searchUserView','UserController@searchUserView')->name('searchUserView');
+Route::post('/searchUser','UserController@searchUser')->name('searchUser');
+Route::get('/activeUser','UserController@activeUser')->name('activeUser');
+Route::get('/blockUser','UserController@blockUser')->name('blockUser');
+Route::get('/rolesAuthorityView','UserController@rolesAuthorityView')->name('rolesAuthorityView');
+Route::get('/userActivitylogView','UserController@userActivitylogView')->name('userActivitylogView');
+
+
 
 Route::get('/viewPendingPayments','PaymentController@viewPendingPayments')->name('viewPendingPayments');
 });

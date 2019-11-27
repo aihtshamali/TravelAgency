@@ -30,6 +30,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <link rel="stylesheet" href="{{asset('/dist/plugins/daterangepicker/daterangepicker-bs3.css')}}">
     <!-- bootstrap wysihtml5 - text editor -->
     <link rel="stylesheet" href="{{asset('/dist/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css')}}">
+  
     <!-- Google Font: Source Sans Pro -->
     <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
     <!-- IonIcons -->
@@ -51,6 +52,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <!-- ./wrapper -->
     @endguest 
     <script src="{{asset('js/app.js')}}"></script>
+    
     @yield('javascript')
 </body>
 </html>

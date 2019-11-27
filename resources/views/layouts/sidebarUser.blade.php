@@ -6,7 +6,7 @@
    style="opacity: .8">
 <span class="brand-text font-weight-light">{{env('APP_NAME')}}</span> --}}
  <i class="nav-icon fas fa-users"></i>
-<b>User Management</b>
+    <b>User Management</b>
 </a>
 
     <!-- Sidebar -->
@@ -40,12 +40,12 @@
                     </a>
                     <ul class="nav nav-treeview">
                       <li class="nav-item">
-                        <a href="#" class="nav-link">
+                        <a href="{{route("activeUser")}}" class="nav-link">
                           <p>Active Users</p>
                         </a>
                       </li>
                         <li class="nav-item">
-                            <a href="#" class="nav-link">
+                            <a href="{{route("blockUser")}}" class="nav-link">
                                <p>Blocked Users</p>
                             </a>
                         </li>
@@ -53,7 +53,7 @@
                 </li>
 
                 <li class="nav-item has-treeview">
-                    <a href="#" class="nav-link">
+                    <a href="{{route("searchUserView")}}" class="nav-link">
                      <i class="nav-icon fas fa-search"></i>
                      <p>Search User </p>
                     </a>
@@ -65,13 +65,13 @@
                     </a>
                 </li>
                  <li class="nav-item has-treeview">
-                    <a href="#" class="nav-link">
+                    <a href="{{route("rolesAuthorityView")}}" class="nav-link">
                      <i class="nav-icon fas fa-book"></i>
                      <p>Roles & Authority </p>
                     </a>
                 </li>
                  <li class="nav-item has-treeview">
-                    <a href="#" class="nav-link">
+                    <a href="{{route("userActivitylogView")}}" class="nav-link">
                      <i class="nav-icon fas fa-history"></i>
                      <p>Activity Log </p>
                     </a>

@@ -16,7 +16,7 @@ class UserController extends Controller
     public function index()
     {
         // dd('ok');
-       return view("User.index");;
+       return view("User.index");
     }
 
     /**
@@ -24,9 +24,39 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
-        //
+     return view("User.create");
+    }
+    
+    public function searchUserView(Request $request)
+    {
+       
+         return view("User.searchUserView");
+    }
+     public function searchUser(Request $request)
+    {
+       
+         return view("User.searchUserView");
+    }
+      public function activeUser(Request $request)
+    {
+       
+         return view("User.activeUser");
+    }
+    
+    public function blockUser(Request $request)
+    {
+       
+         return view("User.blockUser");
+    }
+
+    public function userActivitylogView(){
+         return view("User.userActivitylogView");
+    }
+
+      public function rolesAuthorityView(){
+         return view("User.rolesAuthorityView");
     }
 
     /**
@@ -37,7 +67,13 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // $user= new User();
+        // $user->name = $request->user_name; 
+        // $user->email = $request->user_email; 
+        // if($request->password)
+        //     $user->password = Hash::make($request->user_password);
+        // $user->save();
+          return view("User.create")->with('success','User has been created');
     }
 
     /**
