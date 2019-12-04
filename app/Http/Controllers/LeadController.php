@@ -198,7 +198,11 @@ class LeadController extends Controller
      */
     public function edit($id)
     {
-        //
+        $lead = Lead::find($id);
+        $lead_types  = LeadType::where('status','1')->get();
+        $branches = Branch::where('status',1)->get();
+        $sectors = Sector::where('status',1)->get();
+        return view('Leads.edit',compact('lead','lead_types','branches','sectors'));
     }
 
     /**
@@ -210,7 +214,18 @@ class LeadController extends Controller
      */
     public function update(Request $request, $lead)
     {
-        //
+        $lead = Lead::find($lead);
+        $lead->LeadSubject = $request->subject;
+        $lead->lead_type_id = $request->lead_type;
+        $lead->source_id = $request->source_id;
+        $lead->destination_id = $request->destination_id;
+        $lead->LeadSubject = $request->subject;
+        $lead->ServiceDate = $request->service_date;
+        $lead->branch_id = $request->branch_id;
+        $lead->update();
+
+        return redirect()->route('leads.show',$lead->LeadID)->with('success','Updated Successfully!');
+
     }
 
     /**
