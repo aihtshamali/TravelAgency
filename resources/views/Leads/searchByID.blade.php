@@ -90,7 +90,7 @@
                                                 {{$lead->CreatedOn}}
                                             </td>
                                             <td>
-                                                {{$lead->TakenOverBy}}
+                                                {{$lead->TakenOverByUser}}
                                             </td>
                                             <td>
                                                 {{$lead->LeadStatus}}

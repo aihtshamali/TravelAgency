@@ -19,14 +19,14 @@
             <div class="container-fluid">
                 <div class="row mb-2">
                     <div class="col-sm-6">
-                        <h1 class="m-0 text-dark">My Sale Report</h1>
+                        <h1 class="m-0 text-dark">Lead Report</h1>
                     </div> 
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
                             <li class="breadcrumb-item">
                                 <a href="{{route('home')}}">Home</a>
                             </li> 
-                            <li class="breadcrumb-item active">My Sale Report
+                            <li class="breadcrumb-item active">Lead Report
                             </li>
                         </ol>
                     </div>
@@ -38,9 +38,9 @@
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header">
-                        {{-- <h3 class="card-title">Pending Approval</h3></div> --}}
+                       
                     <div class="card-body">
-                        <form action="{{route('saleReportSearch')}}" id="SalesearchForm" method="post">
+                        <form action="{{route('leadReportSearch')}}" id="SalesearchForm" method="post">
                             {{ csrf_field() }}
                             @if(isset($users))
                             <div class="form-group">
@@ -67,13 +67,7 @@
                                 <input type="text" name="toDate" required autocomplete="off" placeholder="dd-mm-yyyy" class="datepicker form-control">
                             </div>
                             <div class="form-group">
-                                <label for="">Transaction Type</label>
-                                <select name="transaction_type" id="" class="form-control">
-                                    @foreach ($transactionTypes as $types)
-                                        <option value="{{$types}}">{{$types}}</option>
-                                    @endforeach
-                                </select>
-                                <input type="hidden" id="status" name="status">
+                                
                                 <input type="hidden" id="branch" name="branch" value="1">
                             </div>
                             <div class="form-group">

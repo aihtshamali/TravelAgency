@@ -130,7 +130,7 @@
                                         <td>{{$lead->LeadType->name}}</td>
                                         <td>{{$lead->LeadSubject}}</td>
                                         <td>{{date('d M y  h:i:s a',strtotime($lead->CreatedOn))}}</td>
-                                        <td>{{isset($lead->TakenOverBy->name) ? $lead->TakenOverBy->name : 'NA'}}</td>
+                                        <td>{{isset($lead->TakenOverByUser->name) ? $lead->TakenOverByUser->name : 'NA'}}</td>
                                         <td><span class="badge badge-{{$lead->LeadStatus == "Open" ? 'success' : ($lead->LeadStatus == 'Working' ? 'danger' : '')}}">{{$lead->LeadStatus}}</span></td>
                                     </tr>
                                     @endforeach

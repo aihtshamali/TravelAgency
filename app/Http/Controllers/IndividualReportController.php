@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Sale;
 use App\User;
 use App\Payment;
+use App\Branch;
 use App\Lead;
 use App\UserBranch;
 use Auth;
@@ -47,14 +48,33 @@ class IndividualReportController extends Controller
             $transactionTypes = ["Sale","Refunds","Payments"];
             $users=User::where('status',1)
             ->get();
-            // dd("yes");
-            return view('individualReports.saleReport',compact('transactionTypes','users'));
+            $branches=Branch::where('status',1)
+            ->get();
+            // dd($branches);
+            return view('individualReports.saleReport',compact('transactionTypes','users','branches'));
         }
     }
     public function saleReportSearch(Request $request){
         
         $model = new Sale();
-        $data =  $model->hydrate(DB::select('exec CRM_UserSaleReport '.Session()->get('userbranch')->user_id.',"'.$request->fromDate.'","'.$request->toDate.'","'.$request->transaction_type.'","'.$request->status.'"'));
+        if(isset($request->user))
+        {
+            if($request->branch == 1)
+            {
+                // dd("Branches");
+                $data =  $model->hydrate(DB::select('exec CRM_BranchSaleReport '.$request->user.',"'.$request->fromDate.'","'.$request->toDate.'","'.$request->transaction_type.'","'.$request->status.'"'));
+            }
+            else
+            {
+                // dd("User");
+                $data =  $model->hydrate(DB::select('exec CRM_UserSaleReport '.$request->user.',"'.$request->fromDate.'","'.$request->toDate.'","'.$request->transaction_type.'","'.$request->status.'"'));
+            }
+
+        }
+        else
+        {
+            $data =  $model->hydrate(DB::select('exec CRM_UserSaleReport '.Session()->get('userbranch')->user_id.',"'.$request->fromDate.'","'.$request->toDate.'","'.$request->transaction_type.'","'.$request->status.'"'));
+        }
         return view('individualReports.saleReportView',['reportData'=>$data,'UserData'=>$request->all()]);
     }
 
