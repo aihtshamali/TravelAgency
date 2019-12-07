@@ -1,6 +1,17 @@
 @extends('layouts.userLayout')
 @section('styleTags')   
     <link rel="stylesheet" href="{{asset('css/userCustom.css')}}">
+    <style>
+    a{
+    color:black;
+    }
+    a:hover{ 
+    color:black;
+    -webkit-box-shadow: 0px -1px 28px -4px rgba(28,34,102,0.46);
+-moz-box-shadow: 0px -1px 28px -4px rgba(28,34,102,0.46);
+box-shadow: 0px -1px 28px -4px rgba(28,34,102,0.46);
+    }
+    </style>
 @endsection 
 @section('content')
     <div class="content-wrapper">
@@ -16,31 +27,33 @@
             </div>
         </div>
         {{-- Header End --}}  
-        <form action="#" method="post">
-         @csrf
+        
             <div class="row">
                 <div class="col-md-6">
                     <div class="card">
+                            <a href="{{route('activeUser')}}" class="activeshadow"> 
                         <div class="card-body greentick">
                         <div><img alt="" src="{{asset('images/checkmark.png')}}"></div> 
                         <span>
-                            <strong>6</strong><br> Active Users
+                        <strong>{{$active_users}}</strong><br> Active Users
                         </span>
                         </div>
+                    </a>
                     </div>
                 </div>
                  <div class="col-md-6">
-                    <div class="card">
+                     <div class="card">
+                            <a href="{{route('blockUser')}}" class="blockshadow"> 
                          <div class="card-body redtick">
                         <div><img alt="" src="{{asset('images/cross.png')}}"></div> 
                         <span>
-                            <strong>2</strong><br> Blocked Users
+                            <strong>{{$block_users}}</strong><br> Blocked Users
                         </span>
                         </div>
+                    </a>
                     </div>
                 </div>
             </div>
             <div class="clearfix"></div>
-        </form>
     </div>
 @endsection

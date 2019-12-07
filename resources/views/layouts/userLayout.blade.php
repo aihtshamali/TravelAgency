@@ -51,7 +51,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
     @include('layouts.sidebarUser') 
     @yield('content')
         <!-- Footer -->
-    @include('layouts.footer')
+    {{-- @include('layouts.footer') --}}
     </div>
     <!-- ./wrapper -->
     @endguest 
@@ -72,6 +72,13 @@ $('#activitylogtable').DataTable( {
             'copy', 'csv', 'excel', 'pdf', 'print'
         ]
 } );
+$('#loginRecordtable').DataTable( {
+     dom: 'Bfrtip',
+     buttons: [
+            'copy', 'csv', 'excel', 'pdf', 'print'
+        ]
+} );
+
 </script>
     @yield('javascript')
 </body>

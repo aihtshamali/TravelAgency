@@ -66,6 +66,11 @@ Route::get('/activeUser','UserController@activeUser')->name('activeUser');
 Route::get('/blockUser','UserController@blockUser')->name('blockUser');
 Route::get('/rolesAuthorityView','UserController@rolesAuthorityView')->name('rolesAuthorityView');
 Route::get('/userActivitylogView','UserController@userActivitylogView')->name('userActivitylogView');
+Route::get('/userDetails','UserController@userDetails')->name('userDetails');
+Route::post('/assignRole','UserController@assignRole')->name('assignRole');
+Route::post('/removerole','UserController@removerole')->name('removerole');
+Route::post('/updateDetails','UserController@updateDetails')->name('updateDetails');
+Route::get('/assignedUsertoRoles/{id}','UserController@assignedUsertoRoles')->name('assignedUsertoRoles');
 
 
 

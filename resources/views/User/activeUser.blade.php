@@ -8,18 +8,20 @@
     background: white !important;
 }
 table thead th{    
-    font-weight: 400;
     background-color: rgb(31,38,45);
     color: #ffffff;
     text-align: center;
+    padding:1px !important;
 }
-table tbody td{
- font-weight: 400;
- text-align: center;
-}
+
 td img,th img{
     height: 16px;
     width:16px;
+}
+table.dataTable tbody th, table.dataTable tbody td {
+padding:0px !important;
+ font-size:14px !important;
+text-align: center;
 }
    </style>
 @endsection 
@@ -37,15 +39,13 @@ td img,th img{
             </div>
         </div>
         {{-- Header End --}}  
-    <form action="{{route("activeUser")}}" method="post">
-         @csrf
-           
+    
                 <div class="card">
                     <div class="card-header">
                         <h4><b>User List</b></h4>
                     </div>
                     <div class="card-body ">
-                         <table class="table table-bordered">
+                         <table class="table table-bordered " data-page-length="100" id="activeUsers">
                             <thead>
                                 <tr>
                                     <th>User ID</th>
@@ -58,14 +58,41 @@ td img,th img{
                                 </tr>
                             </thead>
                             <tbody>
+                              @foreach ($active_users as $userRole )
                                 <tr>
-                                    <td>admin</td>
-                                    <td>Administrator</td>
-                                    <td>14-Dec-17 (00:10)</td>
-                                    <td><img alt="Offline" src="{{asset('images/online.png')}}"></td>
-                                    <td>31-Jan-19 (19:06)</td><td><img alt="Active" src="{{asset('images/active.png')}}"></td>
-                                    <td><a href="">View</a></td>
+                                <td>{{$userRole->user_name}}</td>
+                                <td>{{$userRole->name}}</td>
+                              
+                                <td>
+                                    {{Date('d-M-y',strtotime($userRole->created_at))}}
+                                    | {{Date('h:i:s A',strtotime($userRole->created_at))}}
+                                </td>
+                                <td>
+                                    @if($userRole->login_status == '1')
+                                   Online <img alt="Online" src="{{asset('images/online.png')}}">
+                                    @elseif($userRole->login_status == '0')
+                                   Offline <img alt="Offline" src="{{asset('images/offline.png')}}">
+                                    @endif 
+                                </td>
+                                <td>
+                                    {{Date('d-M-y',strtotime($userRole->updated_at))}}
+                                    | {{Date('h:i:s A',strtotime($userRole->updated_at))}}
+                                </td>
+                                <td>
+                                @if($userRole->status == '1')
+                                   Active <img alt="active" src="{{asset('images/active.png')}}">
+                                    @elseif($userRole->status == '0')
+                                   Blocked <img alt="blocked" src="{{asset('images/blocked.png')}}">
+                                    @endif 
+                                </td>
+                                    <td>
+                                    <form action="{{route('userDetails',$userRole->id)}}" >
+                                        <input type="hidden" name="userId" value="{{$userRole->id}}">
+                                        <button type="submit" class="btn btn-sm btn-primary">View</button>
+                                    </form>
+                                    </td>
                                 </tr>
+                             @endforeach
                             </tbody>
                         </table>
                     </div>
@@ -74,6 +101,15 @@ td img,th img{
                 </div>
 
             <div class="clearfix"></div>
-        </form>
     </div>
+@endsection
+@section('javascript')
+<script>
+$('#activeUsers').DataTable( {
+     dom: 'Bfrtip',
+     buttons: [
+            'copy', 'csv', 'excel', 'pdf', 'print'
+        ]
+} );
+</script>
 @endsection
