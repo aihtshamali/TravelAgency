@@ -1,30 +1,7 @@
 @extends('layouts.userLayout')
 @section('styleTags')   
-   <style>
-   label{
-    font-weight: 500 !important;
-}
-.card-footer{
-    background: white !important;
-}
-.table thead th{    
-    font-weight: 400;
-    background-color: rgb(31,38,45);
-    color: #ffffff;
-    text-align: center;
-    padding:4px;
-}
-.table tbody td{
- font-weight: 400;
- text-align: center;
- padding:4px;
-}
-td img,th img{
-    height: 16px;
-    width:16px;
-}
-   </style>
-@endsection 
+    <link rel="stylesheet" href="{{asset('css/userCustom.css')}}">
+@endsection  
 @section('content')
     <div class="content-wrapper">
         @include('inc/flashMessages')
@@ -47,7 +24,7 @@ td img,th img{
                     </div>
                     <div class="card-body ">
                         <div class="form-group">
-                            <label>Search In</label>
+                            <label class="label">Search In</label>
                             <select name="SearchIn" class="form-control">
                                 <option value="name">Full Name</option>
                                  <option value="uname">User Name</option>
@@ -55,7 +32,7 @@ td img,th img{
                             
                         </div>
                         <div class="form-group">
-                            <label>Criteria</label>
+                            <label class="label">Criteria</label>
                             <select name="Criteria" class="form-control">
                                 <option value="contains">Contains</option>
                                 <option value="exact">Exactly Match</option>
@@ -64,7 +41,7 @@ td img,th img{
                             </select>
                         </div>
                          <div class="form-group">
-                            <label>Search Text</label>
+                            <label class="label">Search Text</label>
                             <input type="text" pattern=".{3,}" name="searchtext" class="form-control">
                         </div>
                         
@@ -121,10 +98,8 @@ td img,th img{
                          @endif 
                         </td>
                     <td>
-                    <form action="{{route('userDetails',$user_search->id)}}" >
-                        <input type="hidden" name="userId" value="{{$user_search->id}}">
-                        <button type="submit" class="btn btn-sm btn-primary">View Details</button>
-                    </form>
+                    <a href="{{route('userDetails',$user_search->id)}}" class="btn btn-sm btn-primary">View Details</a>
+                    
                     </td>
                          </tr>
                          @endforeach

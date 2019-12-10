@@ -36,7 +36,7 @@ padding: 4px;
             <div class="container-fluid">
                 <div class="row mb-2">
                     <div class="col-sm-6">
-                        <h1 class="m-0 text-dark"><b style="padding: 1px 5px 1px 5px; background:firebrick; color:white;" >{{$user->name}}'s Details</b></h1>
+                        <h1 class="m-0 text-dark"><b>{{$user->name}}'s Details</b></h1>
                     </div> 
                 </div>
             </div>
@@ -218,18 +218,11 @@ padding: 4px;
                  <tr>
                  <td>{{$loginAuditdetail->RecordID}}</td>
                 <td>  
-                <form action="{{route('userDetails',$user->id)}}" method="get">
-                @csrf
-                        <input type="hidden" name="userId" value="{{$user->id}}">
-                        <button type="submit" style="background:lightskyblue; border:none;cursor:pointer;">{{$loginAuditdetail->ActionOn}}</button>
-                    </form>
+                     <a href="{{route('showDetailByUserName',$loginAuditdetail->ActionOn)}}">{{$loginAuditdetail->ActionOn}}</a>               
                     </td>
                  <td>
-                  <form action="{{route('userDetails',$user->id)}}" method="get">
-                  @csrf
-                        <input type="hidden" name="userId" value="{{$user->id}}">
-                        <button type="submit" style="background:mediumpurple; border:none;cursor:pointer;">{{$loginAuditdetail->ActionBy}}</button>
-                    </form>
+                    <a href="{{route('showDetailByUserName',$loginAuditdetail->ActionBy)}}">{{$loginAuditdetail->ActionBy}}</a>               
+
                   </td>
                     <td>{{Date('d-M-y',strtotime($loginAuditdetail->ActionTime))}}
                 |  {{Date('h:i:s A',strtotime($loginAuditdetail->ActionTime))}}</td>

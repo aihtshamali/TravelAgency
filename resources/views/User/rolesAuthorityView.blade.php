@@ -1,27 +1,6 @@
 @extends('layouts.userLayout')
 @section('styleTags')   
     <link rel="stylesheet" href="{{asset('css/userCustom.css')}}">
-    <style>
- 
-table thead th{    
-    font-weight: 400;
-    background-color: rgb(31,38,45);
-    color: #ffffff;
-    text-align: center;
-}
-table tbody td{
- font-weight: 400;
- text-align: center;
-}
-td img,th img{
-    height: 16px;
-    width:16px;
-}
-.summarytable tbody td{
-padding: 5px !important;
-vertical-align: -webkit-baseline-middle !important;
-}
-   </style>
 @endsection 
 @section('content')
     <div class="content-wrapper">
@@ -115,10 +94,7 @@ vertical-align: -webkit-baseline-middle !important;
                                     @endif 
                                 </td>
                                 <td>
-                                  <form action="{{route('userDetails',$userRole->id)}}" >
-                                    <input type="hidden" name="userId" value="{{$userRole->id}}">
-                                    <button type="submit" class="btn btn-sm btn-primary">View</button>
-                                </form>
+                                    <a href="{{route('userDetails',$userRole->id)}}" class="btn btn-sm btn-primary">View Details</a>
                                 </td>
                             </tr>
                         @endforeach

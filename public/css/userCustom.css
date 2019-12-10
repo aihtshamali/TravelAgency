@@ -41,3 +41,36 @@
     text-align: right;
     font-size: 1.2em;
 }
+
+table thead th {
+    font-weight: 400;
+    background-color: rgb(31, 38, 45);
+    color: #ffffff;
+    text-align: center;
+    padding: 4px;
+}
+
+table tbody td {
+    font-weight: 400;
+    text-align: center;
+    padding: 4px;
+}
+
+td img,
+th img {
+    height: 16px;
+    width: 16px;
+}
+
+.summarytable tbody td {
+    padding: 5px !important;
+    vertical-align: -webkit-baseline-middle !important;
+}
+
+.label {
+    font-weight: 500 !important;
+}
+
+.card-footer {
+    background: white !important;
+}

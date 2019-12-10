@@ -19,7 +19,6 @@ class UserController extends Controller
     
     public function index()
     {
-        // dd('ok');
         $active_users=User::where('status','=',true)->get()->count();
         $block_users=User::where('status','=',false)->get()->count();
        return view("User.index",compact('active_users','block_users'));
@@ -135,19 +134,22 @@ class UserController extends Controller
          $assigned_rolesUsers=DB::table('model_has_roles')->where('role_id',$id)
          ->leftjoin('Login_Users','Login_Users.id','=','model_has_roles.model_id')
          ->get();
-        //  ->join('roles','roles.id','=','model_has_roles.roles.id')->get();
           return view("User.rolesAuthorityView",compact('assigned_rolesUsers','roles','searched_Role'));
      }
-    
-    public function userDetails( Request $req){
-  
-    $user= User::find($req->userId);
+     
+     public function showDetailByUserName($username)
+    {
+      $username=User::where('user_name','=',$username)->first();
+      return redirect()->route('userDetails',$username->id);
+      
+    }
+    public function userDetails($id)
+    {
+    $user= User::find($id);
     $user_Roles=$user->roles;
     $roles =Role::all();
     $logindetails=LoginLog::where('UserRef','=',$user->user_name)->get();
     $loginAuditdetails=LoginAudit::where('ActionOn','=',$user->user_name)->get();
-    $loginAuditBy=LoginAudit::where('ActionOn','=',$user->user_name)->get();
-    // dd($loginAuditdetails);
       return view("User.userDetails",compact('user','roles','user_Roles','logindetails','loginAuditdetails'));
     }
     

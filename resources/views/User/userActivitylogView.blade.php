@@ -1,24 +1,6 @@
 @extends('layouts.userLayout')
 @section('styleTags')   
     <link rel="stylesheet" href="{{asset('css/userCustom.css')}}">
-     
-<style>
-table thead th{    
-    background-color: rgb(31,38,45);
-    color: #ffffff;
-    text-align: center;
-}
-
-td img,th img{
-    height: 16px;
-    width:16px;
-}
-table.dataTable tbody th, table.dataTable tbody td {
-padding:4px !important;
- font-size:16px !important;
-text-align: center;
-}
-</style>
 @endsection 
 @section('content')
     <div class="content-wrapper">
@@ -50,22 +32,14 @@ text-align: center;
             <tbody>
                   @foreach ($loginAuditdetails as $loginAuditdetail )
                  <tr>
-                 <td>{{$loginAuditdetail->RecordID}}</td>
-                <td>  
-                {{$loginAuditdetail->ActionOn}}
-                {{-- <form action="{{route('userDetails',$user->id)}}" method="get">
-                @csrf
-                        <input type="hidden" name="userId" value="{{$user->id}}">
-                        <button type="submit" style="background:lightskyblue; border:none;cursor:pointer;">{{$loginAuditdetail->ActionOn}}</button>
-                    </form> --}}
-                    </td>
                  <td>
-                 {{$loginAuditdetail->ActionBy}}
-                  {{-- <form action="{{route('userDetails',$user->id)}}" method="get">
-                  @csrf
-                        <input type="hidden" name="userId" value="{{$user->id}}">
-                        <button type="submit" style="background:mediumpurple; border:none;cursor:pointer;">{{$loginAuditdetail->ActionBy}}</button>
-                    </form> --}}
+                 {{$loginAuditdetail->RecordID}}</td>
+                <td>  
+                    <a href="{{route('showDetailByUserName',$loginAuditdetail->ActionOn)}}">{{$loginAuditdetail->ActionOn}}</a>               
+                </td>
+                 <td>
+                 <a href="{{route('showDetailByUserName',$loginAuditdetail->ActionBy)}}">{{$loginAuditdetail->ActionBy}}</a>               
+                 
                   </td>
                     <td>{{Date('d-M-y',strtotime($loginAuditdetail->ActionTime))}}
                 |  {{Date('h:i:s A',strtotime($loginAuditdetail->ActionTime))}}</td>

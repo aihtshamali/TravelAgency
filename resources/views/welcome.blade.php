@@ -258,7 +258,7 @@
 				</div>
 				</div> --}}
 			</a>
-			<a class="card3 text-center" href="#">
+			<a class="card3 text-center" href="{{route('cashbookIndex')}}">
 			<img alt="" src="{{asset('images/accounts.png')}}">
 				<h3 >Cashbook</h3>
 				{{-- <div class="go-corner" href="#">
