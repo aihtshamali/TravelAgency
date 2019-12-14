@@ -111,9 +111,14 @@ class CustomerController extends Controller
         // dd($id);
         $customer = Customer::where('CustomerID',$id)->where('status',1)->first();
         $leads= Lead::where('CustomerIDRef',$id)->get();
-        $sales = Sale::where('CustomerIDRef',$id)->get();
+        $sales = Sale::where('CustomerIDRef',$id)
+                    ->where('amount','>',0)
+                    ->get();
+        $refunds = Sale::where('CustomerIDRef',$id)
+                    ->where('amount','<',0)
+                    ->get();
         $payments= Payment::where('CustomerIDRef',$id)->with('PaymentForm')->get();
-        return view('Customer.show',['sales'=>$sales,'customer'=>$customer,'leads'=>$leads,'payments'=>$payments]);
+        return view('Customer.show',['sales'=>$sales,'refunds'=>$refunds,'customer'=>$customer,'leads'=>$leads,'payments'=>$payments]);
     }
 
     /**
