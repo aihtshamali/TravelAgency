@@ -169,7 +169,7 @@
                                         <td><a href="{{route('User.show',$sale->posted_by_user)}}">{{$sale->PostedByUser->name}}</a></td>
                                         <td>{{$sale->Amount}}</td>
                                         <td><a href="{{$sale->ticket_attachment ? asset('storage/attachments/'.$sale->Customer->User->id.'/'.$sale->ticket_attachment) : '#'}}" {{ isset($sale->ticket_attachment) ? 'download' : 'disabled'}}>{{isset($sale->ticket_attachment) ? 'Download' : 'No Attachment'}}</a></td>
-                                        <td></td>
+                                        <td><a href="#" class="btn btn-info btn-lg"><span class="glyphicon glyphicon-pencil"></span> Pencil </a></td>
                                     </tr>
                                     @endforeach
                                 </tbody>
