@@ -55,7 +55,7 @@ Route::get('/viewPaymentByID/{id?}','PaymentController@viewPaymentByID')->name('
 //Individual Reports
 Route::get('/myTransactions','IndividualReportController@transactions')->name('mytransactions');
 Route::get('/FinalizedLeads','IndividualReportController@FinalizedLeads')->name('FinalizedLeads');
-Route::get('/saleReport','IndividualReportController@saleReport')->name('saleReport');
+Route::get('/saleReport/{user?}','IndividualReportController@saleReport')->name('saleReport');
 Route::post('/saleReport','IndividualReportController@saleReportSearch')->name('saleReportSearch');
 
 //User Dashboard
@@ -80,6 +80,9 @@ Route::get('/searchcashbook','CashbookController@search')->name('search');
 
 
 Route::get('/viewPendingPayments','PaymentController@viewPendingPayments')->name('viewPendingPayments');
+Route::get('/AllLeads','LeadController@allLeads')->name('AllLeads');
+Route::get('/leadReport','LeadController@leadReport')->name('leadReport');
+Route::post('/leadReport','LeadController@leadReportSearch')->name('leadReportSearch');
 });
 
 

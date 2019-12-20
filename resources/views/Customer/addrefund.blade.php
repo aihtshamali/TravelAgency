@@ -66,7 +66,7 @@
                            <label for="lead_type">Transaction Type</label>
                            {{-- {{dd(Auth::user()->id)}} --}}
                            <div class="input-group">
-                               <select name="lead_type_id" id="lead_type" class="select2 form-control">
+                               <select name="lead_type_id" id="lead_type" class="form-control">
                                    <option value="">-</option>
 
                                    @foreach ($lead_types as $lead_type)

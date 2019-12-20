@@ -154,7 +154,7 @@
           </a>
                 <ul class="nav nav-treeview">
                     <li class="nav-item">
-                        <a href="pages/tables/simple.html" class="nav-link">
+                        <a href="{{ route('AllLeads') }}" class="nav-link">
                 
                 <p>All Working Leads</p>
               </a>
@@ -173,13 +173,13 @@
       </a>
             </li>
             <li class="nav-item">
-                <a href="pages/tables/data.html" class="nav-link">
+                <a href="{{ route('leadReport') }}" class="nav-link">
         
         <p>Lead Report</p>
       </a>
             </li>
             <li class="nav-item">
-                <a href="pages/tables/data.html" class="nav-link">
+                <a href="{{route('saleReport',1)}}" class="nav-link">
         
         <p>Sale Report</p>
       </a>

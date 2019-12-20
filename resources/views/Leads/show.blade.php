@@ -125,7 +125,7 @@
                                 </tr>
                                 <tr>
                                     <td><i class="fa fa-user-circle mr-2"></i>Taken Over By</td>
-                                    <td>{{isset($lead->TakenOverBy->name) ? $lead->TakenOverBy->name .' on '.date('d-M-y (H:i)',strtotime($lead->TakenOverOn)) : "NA"}}</td>
+                                    <td>{{isset($lead->TakenOverByUser->name) ? $lead->TakenOverByUser->name .' on '.date('d-M-y (H:i)',strtotime($lead->TakenOverOn)) : "NA"}}</td>
                                     
                                 </tr>
                                 <tr>

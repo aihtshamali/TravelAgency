@@ -103,7 +103,7 @@ class HomeController extends Controller
         $leads = \App\Lead::all();
         foreach ($leads as $lead) {
             $createdBy = \App\User::where('user_name',$lead->CreatedBy)->first();
-            $takenOverBy = \App\User::where('user_name',$lead->TakenOverBy)->first();
+            $takenOverBy = \App\User::where('user_name',$lead->TakenOverByUser)->first();
             $ClosedBy = \App\User::where('user_name',$lead->ClosedBy)->first();
             $LastUpdatedBy = \App\User::where('user_name',$lead->LastUpdateBy)->first();
 
@@ -174,7 +174,7 @@ class HomeController extends Controller
         $payments = \App\Payment::all();
         foreach ($payments as $payment) {
             $saleBy = \App\User::where('user_name',$payment->saleBy)->first();
-            $postedBy = \App\User::where('user_name',$lead->TakenOverBy)->first();
+            $postedBy = \App\User::where('user_name',$lead->TakenOverByUser)->first();
             // $ClosedBy = \App\User::where('user_name',$lead->ClosedBy)->first();
             // $LastUpdatedBy = \App\User::where('user_name',$lead->LastUpdateBy)->first();
 

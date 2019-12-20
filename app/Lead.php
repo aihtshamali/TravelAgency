@@ -25,7 +25,7 @@ class Lead extends Model
     public function ClosedBy(){
         return $this->belongsTo('App\User','closed_by');
     }
-    public function TakenOverBy(){
+    public function TakenOverByUser(){
         return $this->belongsTo('App\User','taken_over_by');
     }
     public function LeadType(){

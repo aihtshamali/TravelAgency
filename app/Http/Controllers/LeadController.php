@@ -238,4 +238,72 @@ class LeadController extends Controller
     {
         //
     }
+    public function allLeads()
+    {
+        $userLeads = Lead::select(DB::raw('CRM_Leads.user_id,count(LeadID) as lead_count, Login_Users.name, branches.name as branch'))
+                    ->leftJoin('Login_Users','Login_Users.id','CRM_Leads.user_id')
+                    ->leftJoin('user_branches','Login_Users.id','user_branches.user_id')
+                    ->leftJoin('branches','user_branches.branch_id','branches.id')
+                    ->where('LeadStatus', '=', 'Working')
+                    ->groupBy('CRM_Leads.user_id','Login_Users.name','branches.name')
+                    ->get();
+        $leads = Lead::orderBy('LeadID', 'desc')->take(20)->get();
+                    // dd($userLeads);
+        // $branches=Branch::where('status',1)
+        //     ->get();
+            // dd($branches);
+        return view('Leads.allLeads',compact('userLeads','leads'));
+    }
+    public function leadReport(){
+       
+        
+            $transactionTypes = ["Sale","Refunds","Payments"];
+            $users=User::where('status',1)
+            ->get();
+            $branches=Branch::where('status',1)
+            ->get();
+            // dd($branches);
+            return view('Leads.leadReport',compact('users','branches'));
+        
+    }
+    
+    public function leadReportSearch(Request $request){
+        
+        $model = new Lead();
+        if(isset($request->user))
+        {
+            if($request->branch == 1)
+            {
+                // dd("Branches");
+                $createdLeads = $model->hydrate(DB::select('EXEC CRM_BranchLeadReport '.$request->user.',"'.$request->fromDate.'","'.$request->toDate.'",1'));
+                $completedLeads = $model->hydrate(DB::select('EXEC CRM_BranchLeadReport '.$request->user.',"'.$request->fromDate.'","'.$request->toDate.'",2'));
+                $closedLeads = $model->hydrate(DB::select('EXEC CRM_BranchLeadReport '.$request->user.',"'.$request->fromDate.'","'.$request->toDate.'",3'));
+                // dd($createdLeads);
+            }
+            else
+            {
+                // dd("User");
+                $createdLeads=Lead::where('user_id',$request->user)
+                                    ->where('CreatedOn','>=',$request->fromDate)
+                                    ->where('CreatedOn','<=',$request->toDate)
+                                    ->get();
+                $completedLeads=Lead::where('user_id',$request->user)
+                                    ->where('CreatedOn','>=',$request->fromDate)
+                                    ->where('CreatedOn','<=',$request->toDate)
+                                    ->where('LeadStatus','=','Completed')
+                                    ->get();
+                $closedLeads=Lead::where('user_id',$request->user)
+                                    ->where('CreatedOn','>=',$request->fromDate)
+                                    ->where('CreatedOn','<=',$request->toDate)
+                                    ->where('LeadStatus','=','Closed')
+                                    ->get();
+                
+                                    // dd($createdLeads);
+                // $data =  $model->hydrate(DB::select('exec CRM_UserSaleReport '.$request->user.',"'.$request->fromDate.'","'.$request->toDate.'","'.$request->transaction_type.'","'.$request->status.'"'));
+            }
+
+        }
+        
+        return view('Leads.leadReportView',['created'=>$createdLeads,'completed'=>$completedLeads,'closed'=>$closedLeads]);
+    }
 }

@@ -171,17 +171,17 @@ AS
 		
 	BEGIN TRY
 
-		DECLARE @TakenOverBy VARCHAR(30)
+		DECLARE @TakenOverByUser VARCHAR(30)
 		DECLARE @TakenOverOn DATETIME
 		DECLARE @LeadStatus VARCHAR(30)
 
-		SET @TakenOverBy=NULL
+		SET @TakenOverByUser=NULL
 		SET @TakenOverOn=NULL
 		SET @LeadStatus='Open'
 
 		IF @TakeOver=1
 		BEGIN
-			SET @TakenOverBy=@UserRef
+			SET @TakenOverByUser=@UserRef
 			SET @TakenOverOn=GETUTCDATE()
 			SET @LeadStatus='Working'
 		END
@@ -191,9 +191,9 @@ AS
 		SET @LeadID=NEXT VALUE FOR [CRM_Leads_ID]
 
 		INSERT INTO [CRM_Leads]
-		([LeadID], [CustomerIDRef], [LeadType], [LeadSubject], [ServiceDate],[LeadStatus], [CreatedBy], [TakenOverBy], [TakenOverOn], [BranchRestrict])
+		([LeadID], [CustomerIDRef], [LeadType], [LeadSubject], [ServiceDate],[LeadStatus], [CreatedBy], [TakenOverByUser], [TakenOverOn], [BranchRestrict])
 		VALUES
-		(@LeadID, @CustomerID, @LeadType, @LeadSubject, @ServiceDate, @LeadStatus, @UserRef, @TakenOverBy, @TakenOverOn, @BranchRestrict)
+		(@LeadID, @CustomerID, @LeadType, @LeadSubject, @ServiceDate, @LeadStatus, @UserRef, @TakenOverByUser, @TakenOverOn, @BranchRestrict)
 
 		INSERT INTO [CRM_Leads_Text]
 		VALUES
@@ -376,7 +376,7 @@ CREATE PROCEDURE [dbo].[CRM_GetLead]
 
 AS
 SELECT
-[CRM_Leads].[LeadType], [CRM_Leads].[LeadSubject], [CRM_Leads].[ServiceDate], [CRM_Leads].[LeadStatus], [CRM_Leads].[CreatedBy], [CRM_Leads].[TakenOverBy], [CRM_Leads].[ClosedBy], [CRM_Leads].[CreatedOn], [CRM_Leads].[TakenOverOn], [CRM_Leads].[ClosedOn], [CRM_Leads].[LastUpdateBy], [CRM_Leads].[LastUpdatedOn],
+[CRM_Leads].[LeadType], [CRM_Leads].[LeadSubject], [CRM_Leads].[ServiceDate], [CRM_Leads].[LeadStatus], [CRM_Leads].[CreatedBy], [CRM_Leads].[TakenOverByUser], [CRM_Leads].[ClosedBy], [CRM_Leads].[CreatedOn], [CRM_Leads].[TakenOverOn], [CRM_Leads].[ClosedOn], [CRM_Leads].[LastUpdateBy], [CRM_Leads].[LastUpdatedOn],
 [CRM_Customers].[CustomerID], [CRM_Customers].[CustomerName], [CRM_Customers].[CustomerType], [CRM_Customers].[PhoneNumber], [CRM_Customers].[EmailAddress],
  [CRM_Leads_Text].[NotePad], [CRM_Leads_Text].Comments
 FROM [CRM_Leads]
@@ -414,7 +414,7 @@ BEGIN
 	SELECT @Stat=[LeadStatus] FROM [CRM_Leads] WHERE [LeadID]=@LeadID
 	IF @Stat='Open'
 	BEGIN
-		UPDATE [CRM_Leads] SET [LeadStatus]='Working', [TakenOverBy]=@UserRef, [TakenOverOn]=GETUTCDATE() WHERE [LeadID]=@LeadID
+		UPDATE [CRM_Leads] SET [LeadStatus]='Working', [TakenOverByUser]=@UserRef, [TakenOverOn]=GETUTCDATE() WHERE [LeadID]=@LeadID
 		RETURN 1
 	END
 END
@@ -435,14 +435,14 @@ BEGIN
 	END
 
 	DECLARE @Statu VARCHAR(30)
-	DECLARE @TakenOverBy VARCHAR(30)
+	DECLARE @TakenOverByUser VARCHAR(30)
 
-	SELECT @Statu=[LeadStatus], @TakenOverBy=[TakenOverBy] FROM [CRM_Leads] WHERE [LeadID]=@LeadID
+	SELECT @Statu=[LeadStatus], @TakenOverByUser=[TakenOverByUser] FROM [CRM_Leads] WHERE [LeadID]=@LeadID
 		IF NOT @Statu='Working'
 		BEGIN
 			RETURN 0
 		END
-		IF NOT @UserRef=@TakenOverBy
+		IF NOT @UserRef=@TakenOverByUser
 		BEGIN
 			RETURN 2
 		END
@@ -508,8 +508,8 @@ CREATE PROCEDURE [dbo].[CRM_UserReport]
 AS
 SELECT DISTINCT([Login_RoleData].[UserRef]), [CRM_UserBranch].[BranchCode],
 (SELECT COUNT([LeadID]) FROM [CRM_Leads] WHERE [CreatedBy]=[Login_RoleData].[UserRef] AND [CreatedOn]>=@StartDate AND [CreatedOn]<=@EndDate) AS [CreatedLeads],
-(SELECT COUNT([LeadID]) FROM [CRM_Leads] WHERE [TakenOverBy]=[Login_RoleData].[UserRef] AND [LeadStatus]='Completed' AND [ClosedOn]>=@StartDate AND [ClosedOn]<=@EndDate) AS [CompletedLeads],
-(SELECT COUNT([LeadID]) FROM [CRM_Leads] WHERE [TakenOverBy]=[Login_RoleData].[UserRef] AND [LeadStatus]='Closed' AND [ClosedOn]>=@StartDate AND [ClosedOn]<=@EndDate) AS [ClosedLeads],
+(SELECT COUNT([LeadID]) FROM [CRM_Leads] WHERE [TakenOverByUser]=[Login_RoleData].[UserRef] AND [LeadStatus]='Completed' AND [ClosedOn]>=@StartDate AND [ClosedOn]<=@EndDate) AS [CompletedLeads],
+(SELECT COUNT([LeadID]) FROM [CRM_Leads] WHERE [TakenOverByUser]=[Login_RoleData].[UserRef] AND [LeadStatus]='Closed' AND [ClosedOn]>=@StartDate AND [ClosedOn]<=@EndDate) AS [ClosedLeads],
 (SELECT SUM([ProfitAmount]) FROM [CRM_Sale] WHERE [SaleBy]=[Login_RoleData].[UserRef] AND [SaleStatus]='Approved' AND [IssueDate]>=@StartDate AND [IssueDate]<=@EndDate) AS [NetProfit]
 FROM [Login_RoleData]
 JOIN [CRM_UserBranch] ON [Login_RoleData].[UserRef]=[CRM_UserBranch].[UserIDRef]
@@ -1116,17 +1116,17 @@ AS
 		
 	BEGIN TRY
 
-		DECLARE @TakenOverBy VARCHAR(30)
+		DECLARE @TakenOverByUser VARCHAR(30)
 		DECLARE @TakenOverOn DATETIME
 		DECLARE @LeadStatus VARCHAR(30)
 
-		SET @TakenOverBy=NULL
+		SET @TakenOverByUser=NULL
 		SET @TakenOverOn=NULL
 		SET @LeadStatus='Open'
 
 		IF @TakeOver=1
 		BEGIN
-			SET @TakenOverBy=@UserRef
+			SET @TakenOverByUser=@UserRef
 			SET @TakenOverOn=GETUTCDATE()
 			SET @LeadStatus='Working'
 		END
@@ -1137,7 +1137,7 @@ AS
 		INSERT INTO [CRM_Leads]
 		([LeadID], [CustomerIDRef],[lead_type_id],[LeadSubject], [ServiceDate],[LeadStatus], [user_id], [taken_over_by], [TakenOverOn], [branch_id],[source_id],[destination_id])
 		VALUES
-		(@LeadID, @CustomerID,@LeadTypeID, @LeadSubject, @ServiceDate, @LeadStatus, @UserRef, @TakenOverBy, @TakenOverOn, @BranchRestrict,@SourceID,@DestinationID)
+		(@LeadID, @CustomerID,@LeadTypeID, @LeadSubject, @ServiceDate, @LeadStatus, @UserRef, @TakenOverByUser, @TakenOverOn, @BranchRestrict,@SourceID,@DestinationID)
 
 		INSERT INTO [CRM_Leads_Text]
 		VALUES
@@ -1206,14 +1206,14 @@ BEGIN
 	END
 
 	DECLARE @Statu VARCHAR(30)
-	DECLARE @TakenOverBy VARCHAR(30)
+	DECLARE @TakenOverByUser VARCHAR(30)
 
-	SELECT @Statu=[LeadStatus], @TakenOverBy=[taken_over_by] FROM [CRM_Leads] WHERE [LeadID]=@LeadID
+	SELECT @Statu=[LeadStatus], @TakenOverByUser=[taken_over_by] FROM [CRM_Leads] WHERE [LeadID]=@LeadID
 		IF NOT @Statu='Working'
 		BEGIN
 			RETURN 0
 		END
-		IF NOT @UserRef=@TakenOverBy
+		IF NOT @UserRef=@TakenOverByUser
 		BEGIN
 			RETURN 2
 		END
@@ -1395,6 +1395,77 @@ AS
 	
 	  EXECUTE sp_executesql @STR
 
+	  -------- New --------------------
+	  USE [WAC]
+GO
+/****** Object:  StoredProcedure [dbo].[CRM_BranchSaleReport]    Script Date: 19/11/2019 8:24:14 pm ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+Create PROCEDURE [dbo].[CRM_BranchLeadReport]
+(
+@Branch INT,
+@StartDate DATETIME,
+@EndDate DATETIME
+)
+
+AS
+	DECLARE @STR nvarchar(1000)
+	set @Str = ' Select * from CRM_Sale '+ 
+		' where ' +  
+		' CRM_Leads.user_id in (select user_id from user_branches where branch_id = ' + Convert(varchar(10) , @Branch) +
+		' ) AND CRM_Sale.CreatedOn >= ''' + Convert(varchar(10), @StartDate,111) + ''' '+ 
+		' AND  CRM_Sale.CreatedOn <= ''' +Convert(varchar(10),@EndDate,111) + ''' ' 
+    
+	
+	IF @EndDate IS NULL 
+	  BEGIN
+			SET @EndDate = GETDATE()
+	  END
+	
+	
+	
+	  EXECUTE sp_executesql @STR
+------------------------------------------
+
+-------------------- New ----------------------------------
+
+USE [WAC]
+GO
+/****** Object:  StoredProcedure [dbo].[CRM_BranchLeadReport]    Script Date: 19/11/2019 9:17:09 pm ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+ALTER PROCEDURE [dbo].[CRM_BranchLeadReport]
+(
+@Branch INT,
+@StartDate DATETIME,
+@EndDate DATETIME
+)
+
+AS
+	DECLARE @STR nvarchar(1000),@STRCompleted nvarchar(1000),@STRClosed nvarchar(1000)
+	set @Str = ' Select * from CRM_Leads '+ 
+		' where ' +  
+		' CRM_Leads.user_id in (select user_id from user_branches where branch_id = ' + Convert(varchar(10) , @Branch) +
+		' ) AND CRM_Leads.CreatedOn >= ''' + Convert(varchar(10), @StartDate,111) + ''' '+ 
+		' AND  CRM_Leads.CreatedOn <= ''' +Convert(varchar(10),@EndDate,111) + ''' ' 
+    
+	
+	IF @EndDate IS NULL 
+	  BEGIN
+			SET @EndDate = GETDATE()
+	  END
+	SET @STRCompleted = @STR + ' AND CRM_Leads.LeadStatus=''Completed'' '
+	SET @STRClosed = @STR + ' AND CRM_Leads.LeadStatus=''Closed'' '
+	
+	  EXECUTE sp_executesql @STR
+	  EXECUTE sp_executesql @STRCompleted
+	  EXECUTE sp_executesql @STRClosed
+
+	  ---------------------------------------------------
 
 
 

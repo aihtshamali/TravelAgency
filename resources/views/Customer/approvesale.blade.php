@@ -75,7 +75,7 @@
                                 </tr>
                                 <tr>
                                     <td>Details</td> 
-                                    <td>{{$sale->Sector}}</td>
+                                    <td>{{$sale->ProductDetail}}</td>
                                 </tr>
                             </tbody>
                         </table>
