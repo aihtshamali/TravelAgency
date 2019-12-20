@@ -118,6 +118,7 @@ class CustomerController extends Controller
                     ->where('amount','<',0)
                     ->get();
         $payments= Payment::where('CustomerIDRef',$id)->with('PaymentForm')->get();
+        // dd($payments);
         return view('Customer.show',['sales'=>$sales,'refunds'=>$refunds,'customer'=>$customer,'leads'=>$leads,'payments'=>$payments]);
     }
 

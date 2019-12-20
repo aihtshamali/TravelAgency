@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class UserBranch extends Model
 {
-    //
+    protected $table="user_branches";
     public function User(){
         return $this->belongsTo('App\User');
     }

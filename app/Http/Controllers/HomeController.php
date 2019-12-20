@@ -99,9 +99,11 @@ class HomeController extends Controller
     }
 
     // Update CreatedBy,TakenBy,ClosedBy in CRM_Leads
-    private function UpdatedallUsersInLeads(){
+    private function UpdatedallUsersInLeads()
+    {
         $leads = \App\Lead::all();
-        foreach ($leads as $lead) {
+        foreach ($leads as $lead) 
+        {
             $createdBy = \App\User::where('user_name',$lead->CreatedBy)->first();
             $takenOverBy = \App\User::where('user_name',$lead->TakenOverByUser)->first();
             $ClosedBy = \App\User::where('user_name',$lead->ClosedBy)->first();

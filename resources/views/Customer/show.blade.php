@@ -1,6 +1,23 @@
 @extends('layouts.master')
 @section('styleTags')
+
     <style>
+.uppertable tbody td, .uppertable  thead th {
+     text-align: left !important;
+    }
+
+table thead th {
+    font-weight: 400;
+    background-color: rgb(31, 38, 45);
+    color: #ffffff;
+    text-align: center;
+    padding: 0px;
+}
+table tbody td {
+    font-weight: 400;
+    text-align: center;
+    padding: 0px;
+}
         .header-btn{
             font-size: 25px;
             color:white !important;
@@ -12,6 +29,10 @@
             padding:0.5rem 0.4rem;
             min-width:80px;
         }
+        .border_top{
+      border-top: 3px solid white!important;
+        }
+       
     </style>
 @endsection
 @section('content')
@@ -54,24 +75,28 @@
         <div class="row mt-3">
             <div class="col-md-6">
                 <div class="card">
-                    <div class="card-header"><h3 class="card-title">Customer Details<span class="pull-right"><a href="{{route('Customer.edit',$customer->CustomerID)}}">Edit Customer</a> </h3></span></div>
+                    <div class="card-header"><h3 class="card-title">Customer Details
+                    <span class="pull-right">
+                         <a href="{{route('Customer.edit',$customer->CustomerID)}}">Edit</a>
+                        </span>
+                    </div>
                     <div class="card-body">
-                        <table class="table  table-hover  bordered ">
+                        <table class="table uppertable table-hover  bordered ">
                             <tbody>
-                                <tr>
+                                <tr class="border_top">
                                     <td><i class="fas fa-user mr-2"></i>Customer No</td>
                                     <td>{{$customer->CustomerID}}</td>
                                 </tr>
                                 <tr>
-                                    <td><i class="fa fa-info mr-2"></i>Name</td>
+                                    <td><i class="fa fa-info mr-2"></i>Customer Name</td>
                                     <td>{{$customer->CustomerName}}</td>
                                 </tr>
                                 <tr>
-                                    <td><i class="fa fa-mobile mr-2"></i>Phone No.</td>
+                                    <td><i class="fa fa-mobile mr-2"></i>Phone No</td>
                                     <td>{{$customer->PhoneNumber}}</td>
                                 </tr>
                                 <tr>
-                                    <td><i class="fa fa-envelope mr-2"></i>Email Address.</td>
+                                    <td><i class="fa fa-envelope mr-2"></i>Email Address</td>
                                     <td>{{$customer->EmailAddress ?? "NA" }}</td>
                                 </tr>
                             </tbody>
@@ -83,9 +108,9 @@
                 <div class="card">
                     <div class="card-header"><h3 class="card-title">Transactions</h3></div>
                     <div class="card-body">
-                          <table class="table  table-hover  bordered ">
+                          <table class="table uppertable table-hover bordered ">
                             <tbody>
-                                <tr>
+                                <tr class="border_top">
                                     <td><i class="fas fa-coins mr-2"></i>Sales</td>
                                     <td>PKR</td>
                                 </tr>
@@ -129,21 +154,26 @@
                                         <td> <a href="{{route('leads.show',$lead->LeadID)}}">{{$lead->LeadID}}</a></td>
                                         <td>{{$lead->LeadType->name}}</td>
                                         <td>{{$lead->LeadSubject}}</td>
-                                        <td>{{date('d M y  h:i:s a',strtotime($lead->CreatedOn))}}</td>
+                                        <td>{{date('d-M-y (h:i:s a)',strtotime($lead->CreatedOn))}}</td>
                                         <td>{{isset($lead->TakenOverByUser->name) ? $lead->TakenOverByUser->name : 'NA'}}</td>
-                                        <td><span class="badge badge-{{$lead->LeadStatus == "Open" ? 'success' : ($lead->LeadStatus == 'Working' ? 'danger' : '')}}">{{$lead->LeadStatus}}</span></td>
+                                        <td>
+                                        <span class="badge badge-{{$lead->LeadStatus == "Completed" ? 'success' : ($lead->LeadStatus == 'Closed' ? 'danger' : '')}}">{{$lead->LeadStatus}}</span></td>
                                     </tr>
                                     @endforeach
                                 </tbody>
                             </table>
                         </div>
                 </div>
-                <div class="card">
+                  <div class="card">
                     <div class="card-header"><h3 class="card-title font-weight-bold">Sales</h3></div>
                         <div class="card-body">
+                          @php
+                            $totalAmount=array();   
+                            @endphp
                             <table class="table table-responsive-md table-responsive-lg table-responsive-xs table-hover">
                                 <caption>List of Sales</caption>
                                 <thead class="thead-dark">
+                                <th>Action</th>
                                     <th>ID</th>
                                     <th>Issue Date</th>
                                     <th>Type</th>
@@ -152,36 +182,53 @@
                                     <th>Details</th>
                                     <th>Branch</th>
                                     <th>SPO</th>
-                                    <th>Amount</th>
                                     <th>Attachment</th>
-                                    <th>Action</th>
+                                    <th>Amount</th>
                                 </thead>
-                                <tbody>
+                               <tbody>
                                     @foreach($sales as $sale)
                                     <tr>
+                                    <td><a href="{{route('editSale',$sale->SaleID)}}"><i class="fas fa-pen mr-2"></i></a></td>
                                         <td><a href="{{route('approveSale',$sale->SaleID)}}">{{$sale->SaleID}}</a></td>
                                         <td>{{date('d-M-Y',strtotime($sale->IssueDate))}}</td>
-                                        <td>{{$sale->Leadtype->name}}</td>
+                                        <td>
+                                        {{isset($sale->Leadtype->name) ? $sale->Leadtype->name : '-'}}
+                                        </td>
                                         <td>{{$sale->ProductPax}}</td>
                                         <td>{{$sale->ProductNum}}</td>
                                         <td>{{$sale->ProductDetail}}</td>
-                                        <td>{{isset($sale->UserBranch->Branch->name) ? $sale->UserBranch->Branch->name : '-'}}</td>
+                                        <td>
+                                        {{isset($sale->UserBranch->Branch->name) ? $sale->UserBranch->Branch->name : '-'}}</td>
                                         <td><a href="{{route('User.show',$sale->posted_by_user)}}">{{$sale->PostedByUser->name}}</a></td>
-                                        <td>{{$sale->Amount}}</td>
                                         <td><a href="{{$sale->ticket_attachment ? asset('storage/attachments/'.$sale->Customer->User->id.'/'.$sale->ticket_attachment) : '#'}}" {{ isset($sale->ticket_attachment) ? 'download' : 'disabled'}}>{{isset($sale->ticket_attachment) ? 'Download' : 'No Attachment'}}</a></td>
-                                        <td><a href="#" class="btn btn-info btn-lg"><span class="glyphicon glyphicon-pencil"></span> Pencil </a></td>
+                                        <td> 
+                                          @php
+                                            array_push($totalAmount,$sale->Amount);   
+                                            @endphp
+                                        {{number_format($sale->Amount,0)}}
+                                        </td>
                                     </tr>
                                     @endforeach
+                                    <tr>
+                                    <td class="text-center text-bold" colspan="10">Total Amount in PKR</td>
+                                    <td class="text-center text-bold" colspan="1">@php $totalSum=array_sum($totalAmount); 
+                                                    echo number_format($totalSum,0) @endphp</td>
+                                    </tr>
                                 </tbody>
                             </table>
                         </div>
                 </div>
+               
                 <div class="card">
                     <div class="card-header"><h3 class="card-title font-weight-bold">Refunds</h3></div>
                         <div class="card-body">
+                         @php
+                            $totalRefund=array();   
+                            @endphp
                             <table class="table table-responsive-md table-responsive-lg table-responsive-xs table-hover">
                                 <caption>List of Refunds</caption>
                                 <thead class="thead-dark">
+                                <th>Action</th>
                                     <th>ID</th>
                                     <th>Issue Date</th>
                                     <th>Type</th>
@@ -190,24 +237,37 @@
                                     <th>Details</th>
                                     <th>Branch</th>
                                     <th>SPO</th>
-                                    <th>Amount</th>
                                     <th>Attachment</th>
+                                    <th>Amount</th>
                                 </thead>
                                 <tbody>
                                     @foreach($refunds as $refund)
                                     <tr>
+                                      <td><a href="{{route('editRefund',$refund->SaleID)}}"><i class="fas fa-pen mr-2"></i></a></td>
                                         <td><a href="{{route('approveRefund',$refund->SaleID)}}">{{$refund->SaleID}}</a></td>
                                         <td>{{date('d-M-Y',strtotime($refund->IssueDate))}}</td>
-                                        <td>{{$refund->Leadtype->name}}</td>
+                                        <td>
+                                        {{isset($sale->Leadtype->name) ? $sale->Leadtype->name : '-'}}
+                                        </td>
                                         <td>{{$refund->ProductPax}}</td>
                                         <td>{{$refund->ProductNum}}</td>
                                         <td>{{$refund->ProductDetail}}</td>
                                         <td>{{isset($refund->UserBranch->Branch->name) ? $refund->UserBranch->Branch->name : '-'}}</td>
                                         <td><a href="{{route('User.show',$refund->posted_by_user)}}">{{$refund->PostedByUser->name}}</a></td>
-                                        <td>{{$refund->Amount}}</td>
+                                       
                                         <td><a href="{{$refund->ticket_attachment ? asset('storage/attachments/'.$refund->Customer->User->id.'/'.$refund->ticket_attachment) : '#'}}" {{ isset($refund->ticket_attachment) ? 'download' : 'disabled'}}>{{isset($refund->ticket_attachment) ? 'Download' : 'No Attachment'}}</a></td>
+                                     <td>
+                                          @php
+                                            array_push($totalRefund,$refund->Amount);   
+                                            @endphp
+                                        {{$refund->Amount}}</td>
                                     </tr>
                                     @endforeach
+                                     <tr>
+                                    <td class="text-center text-bold" colspan="10">Total Refunds in PKR</td>
+                                    <td class="text-center text-bold" colspan="1">@php $totalrefundSum=array_sum($totalRefund); 
+                                                    echo number_format($totalrefundSum,0) @endphp</td>
+                                    </tr>
                                 </tbody>
                             </table>
                         </div>
@@ -215,31 +275,55 @@
                 <div class="card">
                     <div class="card-header"><h3 class="card-title font-weight-bold">Payments</h3></div>
                         <div class="card-body">
-                            <table class="table table-hover">
+                        <div class="row">
+                            <div class="col-md-12">
+                             @php
+                            $totalPayment=array();   
+                            @endphp
+                            <table class="table table-responsive-md table-responsive-lg table-responsive-xs table-hover">
                                 <caption>List of Payments</caption>
                                 <thead class="thead-dark">
-                                    <th>Receipt No.</th>
+                                   <tr>
+                                    <th>Action</th>
+                                    <th >Receipt No.</th>
                                     <th>FOP</th>
-                                    <th>Date</th>
+                                    <th>FOP Text</th>
+                                    <th >Date</th>
                                     <th>Remarks</th>
                                     <th>Branch</th>
                                     <th>SPO</th>
+                                    <th>Attachment</th>
                                     <th>Amount</th>
+                                   </tr>
                                 </thead>
                                 <tbody>
                                     @foreach($payments as $payment)
                                     <tr>
+                                        <td><a href="{{route('editPayment',$payment->PaymentID)}}"><i class="fas fa-pen mr-2"></i></a></td>
                                         <td><a href="{{route('approvePayment',$payment->PaymentID)}}"> {{$payment->PaymentID}} </a></td>
-                                        <td>{{$payment->PaymentForm->name}}</td>
-                                        <td>{{date('d-M-Y',strtotime($payment->PostedOn))}}</td>
+                                        <td>{{isset($payment->FOP) ? $payment->FOP: 'NA'}}</td>
+                                        <td>{{isset($payment->FOPText) ? $payment->FOPText : 'NA'}}</td>
+                                        <td>{{date('d-M-Y',strtotime($payment->PostedOn))}} | {{date('h:i:a',strtotime($payment->PostedOn))}}</td>
                                         <td>{{$payment->PrintRemark}}</td>
-                                        <td>{{isset($payment->UserBranch->Branch) ? $payment->UserBranch->Branch->name : ''}}</td>
-                                        <td><a href="{{route('User.show',$payment->user_id)}}">{{isset($payment->SaleByUser->name) ? $payment->SaleByUser->name : '-'}}</a></td>
-                                        <td>{{$payment->Amount}}</td>
+                                        <td>{{isset($payment->UserBranch->Branch) ? $payment->UserBranch->Branch->name : 'NA'}}</td>
+                                        <td><a href="{{route('User.show',1)}}">{{isset($payment->SaleByUser->name) ? $payment->SaleByUser->name : '-'}}</a></td>
+                                        <td>No Attachment</td>
+                                        <td>
+                                         @php
+                                            array_push($totalPayment,$payment->Amount);   
+                                            @endphp
+                                        {{$payment->Amount}}</td>
                                     </tr>
                                     @endforeach
+                                     <tr>
+                                    <td class="text-center text-bold" colspan="9">Total Payment in PKR</td>
+                                    <td class="text-center text-bold" colspan="1">@php $totalPaymentSum=array_sum($totalPayment); 
+                                                    echo number_format($totalPaymentSum,0) @endphp</td>
+                                    </tr>
                                 </tbody>
                             </table>
+                            </div>
+                        </div>
                         </div>
                 </div>
             </div>
