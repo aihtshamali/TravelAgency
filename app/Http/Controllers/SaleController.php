@@ -4,6 +4,12 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Sale;
+use App\CustomerType;
+use App\Customer;
+use App\LeadType;
+use App\Lead;
+use App\User;
+use App\Sector;
 class SaleController extends Controller
 {
     //
@@ -46,6 +52,41 @@ class SaleController extends Controller
             // dd($sales[0]->PostedBy);
             return view('Sale.viewDocumentByID',['sales'=>$sales]);
         }
+        
+    }
+    
+    
+    public function editSale($id)
+    {
+        $sale=Sale::where('SaleID',$id)->first();
+        // dd($sale);
+         $customer=Customer::where('CustomerID',$sale->CustomerIDRef)
+                ->first();
+        $leads=Lead::where('CustomerIDRef',$sale->CustomerIDRef)
+                ->where('LeadStatus','!=','Closed')
+                ->get();
+        $users=User::all();
+        $sectors=Sector::all();
+        $lead_types  = LeadType::where('status','1')->get();
+        return view('Sale.editSale',['sale'=>$sale,'lead_types'=>$lead_types,'customer'=>$customer,'leads'=>$leads,'users'=>$users,'sectors'=>$sectors]);
+        
+    }
+    
+    public function editRefund($id)
+    {
+    
+      $refund=Sale::where('SaleID',$id)->where('ProductType','=','REFUND')->where('amount','<',0)->first();
+       $customer=Customer::where('CustomerID',$refund->CustomerIDRef)
+                ->first();
+         
+        $leads=Lead::where('CustomerIDRef',$refund->CustomerIDRef)
+                ->where('LeadStatus','!=','Closed')
+                ->get();
+        $users=User::all();
+        $sectors=Sector::all();
+                // dd($leads);
+        $lead_types  = LeadType::where('status','1')->get();
+        return view('Sale.editRefund',['refund'=>$refund,'lead_types'=>$lead_types,'customer'=>$customer,'leads'=>$leads,'users'=>$users,'sectors'=>$sectors]);
         
     }
 }

@@ -148,7 +148,7 @@ class HomeController extends Controller
         // $this->AddCustomersToUsers();
         // $this->copyProductTypeToSale();
         // $this->CopySaleByPostedByActionByInSale();
-        $this->CopySaleByPostedByAuthByInPayment();
+        // $this->CopySaleByPostedByAuthByInPayment();
         $model = new Customer();
         $data =  $model->hydrate(DB::select('exec CRM_PendingPayments '));
         // return $data;

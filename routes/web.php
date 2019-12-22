@@ -50,8 +50,8 @@ Route::get('/approvePayment/{id}', 'CustomerController@approvePayment')->name('a
 Route::get('/viewSaleByID/{id?}','SaleController@viewSaleByID')->name('viewSaleByID');
 Route::get('/viewDocumentByID/{id?}','SaleController@viewDocumentByID')->name('viewDocumentByID');
 Route::get('/viewPaymentByID/{id?}','PaymentController@viewPaymentByID')->name('viewPaymentByID');
-Route::get('/editSale/{id?}','PaymentController@editSale')->name('editSale');
-Route::get('/editRefund/{id?}','PaymentController@editRefund')->name('editRefund');
+Route::get('/editSale/{id?}','SaleController@editSale')->name('editSale');
+Route::get('/editRefund/{id?}','SaleController@editRefund')->name('editRefund');
 Route::get('/editPayment/{id?}','PaymentController@editPayment')->name('editPayment');
 
 

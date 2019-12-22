@@ -35,6 +35,7 @@ class CustomerController extends Controller
             $customers = collect(DB::select($stmt.($request->phone ?? "NULL").' , '.$name.','.($request->account ?? "NULL").''));
             // $customers = collect(DB::select($stmt));
         }
+       
         return view('Customer.index',compact('customers'));
     }
 
@@ -118,10 +119,11 @@ class CustomerController extends Controller
                     ->where('amount','<',0)
                     ->get();
         $payments= Payment::where('CustomerIDRef',$id)->with('PaymentForm')->get();
-        // dd($payments);
+       
         return view('Customer.show',['sales'=>$sales,'refunds'=>$refunds,'customer'=>$customer,'leads'=>$leads,'payments'=>$payments]);
     }
-
+    
+  
     /**
      * Show the form for editing the specified resource.
      *
@@ -203,11 +205,52 @@ class CustomerController extends Controller
         return view('Customer.addsale',['lead_types'=>$lead_types,'customer'=>$customer,'leads'=>$leads,'users'=>$users,'sectors'=>$sectors]);
     }
     public function saveSale(Request $request)
-    {
-        // echo date('Y-m-d H:i:s.u');
-        // exit;
-        // dd   ($request->all());
-        // dd($request->session()->get('userbranch')->id);
+    { 
+        // dd($request->all());
+        if(Sale::find($request->saleId))
+        {
+        $update=Sale::find($request->saleId);
+          
+       $update->CustomerIDRef = $request->customer_id;
+       $update->LeadIDRef = $request->LeadId;
+        //IT is SaleBy
+       $update->posted_by_user= $request->SaleBy;
+       $update->Amount = $request->amount;
+       $update->NetCost = $request->cost;
+       $update->ProfitAmount = $request->profit;
+       $update->lead_type_id = $request->lead_type_id;
+       $update->IssueDate=$request->IssueDate;
+       $update->ProductNum = $request->ProductNum;
+       $update->ProductPax = $request->ProductPax;
+       $update->source_id = $request->source_id;
+       $update->destination_id = $request->destination_id;
+       $update->ProductDetail = $request->ProductDetail;
+       $update->AccountingText = $request->AccountigText;
+       $update->user_branch_id=$request->session()->get('userbranch')->id;
+       $update->SaleStatus='Pending';
+        
+        $customer = Customer::find($request->customer_id);
+        $user_id = 0;
+        
+        if(isset($customer->User)){
+            $user_id = $customer->User->id;
+        }
+        if(!is_dir('storage/attachments')){
+            mkdir('storage/attachments');
+        }
+        if(!is_dir('storage/attachments/'.$request->saleId)){
+            mkdir('storage/attachments/'.$request->saleId.'/');
+        }
+        if($request->hasFile('ticket_attachment')){
+            $request->file('ticket_attachment')->store('public/attachments/'.$request->saleId.'/');
+           $update->ticket_attachment = $request->file('ticket_attachment')->hashName();
+            $update->document_name='Attachment-'.$request->saleId;
+        }
+       $update->save();
+        
+        return redirect()->back()->with('success','Updated Successfully!!!');
+        }
+        else{    
         $sale=new Sale();
         $sale->CustomerIDRef = $request->customer_id;
         $sale->LeadIDRef = $request->LeadId;
@@ -243,10 +286,13 @@ class CustomerController extends Controller
         if($request->hasFile('ticket_attachment')){
             $request->file('ticket_attachment')->store('public/attachments/'.$user_id.'/');
             $sale->ticket_attachment = $request->file('ticket_attachment')->hashName();
+            //   $sale->document_name='Attachment-'.$request->saleId;
         }
+        $sale->save();
+        
+        return redirect()->route('approveSale', array('id' => $sale->SaleID));
         // $sale->created_at=date('Y-m-d H:i:s');
         // $sale->updated_at=date('Y-m-d H:i:s');
-        $sale->save();
         // return view('Customer.addsale',['lead_types'=>$lead_types,'customer'=>$customer,'leads'=>$leads,'users'=>$users,'sectors'=>$sectors]);
         // echo "hey";
         // dd($request->session()->get('userbranch')->user_id);
@@ -267,7 +313,8 @@ class CustomerController extends Controller
         // return view('Customer.approvesale',['sale'=>$sales]);
         // approveSale($sale->id);
         // dd($request->all());
-        return redirect()->route('approveSale', array('id' => $sale->SaleID));
+    }
+        
     }
     public function approveSale($id)
     {
@@ -330,14 +377,36 @@ class CustomerController extends Controller
     }
     public function saveRefund(Request $request)
     {
-        // dd   ($request->all());
-        // dd($request->session()->get('userbranch')->id);
-        $lastSale=Sale::all()->last();
-        // dd($lastSale->SaleID);
+      if(Sale::find($request->saleId))
+      {
+        $update=Sale::find($request->saleId);
+        $update->CustomerIDRef = $request->customer_id;
+        $update->posted_by_user= $request->CreatedBy;
+        $update->Amount = $request->amount;
+       
+        // $update->PostedBy="";
+        // $update->ProductType = "";
+        $update->NetCost=0;
+        // $update->SaleBy="";
+        $update->ProfitAmount = $request->profit;
+        $update->lead_type_id = $request->lead_type_id;
+        $update->IssueDate=$request->IssueDate;
+        $update->ProductNum = $request->ProductNum;
+        $update->ProductPax = $request->ProductPax;
+    
+        $update->source_id = $request->source_id;
+        $update->destination_id = $request->destination_id;
+        $update->ProductDetail = $request->ProductDetail;
+        $update->AccountingText = $request->AccountigText;
+        $update->user_branch_id=$request->session()->get('userbranch')->id;
+        $update->SaleStatus='Pending';
+        $update->save();
+        // dd($update);
+         return redirect()->back()->with('success','Updated Successfully!!!');
+      }
+      else{
         $sale=new Sale();
-        // $sale->SaleID=$lastSale->SaleID+1;
         $sale->CustomerIDRef = $request->customer_id;
-        // $sale->LeadIDRef = $request->LeadId;
         $sale->posted_by_user= $request->CreatedBy;
         $sale->Amount = "-".$request->amount;
        
@@ -350,8 +419,7 @@ class CustomerController extends Controller
         $sale->IssueDate=$request->IssueDate;
         $sale->ProductNum = $request->ProductNum;
         $sale->ProductPax = $request->ProductPax;
-        // $sale->posted_by_user= $request->CreatedBy;
-        // $sale->sector_id = $request->sector_id;
+    
         $sale->source_id = $request->source_id;
         $sale->destination_id = $request->destination_id;
         $sale->ProductDetail = $request->ProductDetail;
@@ -359,11 +427,11 @@ class CustomerController extends Controller
         $sale->user_branch_id=$request->session()->get('userbranch')->id;
         $sale->SaleStatus='Pending';
         $sale->save();
-        // return redirect()->back();
+         return redirect()->route('approveSale', array('id' => $sale->SaleID));
+      }
         
-        return redirect()->route('approveSale', array('id' => $sale->SaleID));
-        // return redirect()->back()->with('success','Refund added successfully!');
-        // dd($request->all());
+       
+      
     }
     
     public function addPayment($id)
@@ -386,8 +454,41 @@ class CustomerController extends Controller
     }
     public function savePayment(Request $request)
     {
-        // dd($request->all());
-        $lastPayment=Payment::all()->last();
+     
+     if(Payment::find($request->paymemtid))
+     {
+        $updatepaymet=Payment::find($request->paymemtid);
+        $updatepaymet->CustomerIDRef=$request->customer_id;
+        if(isset($request->LeadId) && $request->LeadId !="")
+        {
+            $updatepaymet->LeadIDRef=$request->LeadId;
+        }
+        $updatepaymet->user_id=$request->CreatedBy;
+        $updatepaymet->Amount=$request->amount;
+        $updatepaymet->payment_form_id=$request->payment_form;
+        $updatepaymet->SaleBy=$request->CreatedBy;
+        $updatepaymet->BranchRef="";
+        $updatepaymet->FOP="";
+        $updatepaymet->PostedBy=$request->session()->get('userbranch')->id;
+        $updatepaymet->user_branch_id=$request->session()->get('userbranch')->id;
+        if(isset($request->payment_detail))
+        {
+            $updatepaymet->FOPText=$request->payment_detail;
+        }
+        $updatepaymet->RecFrom=$request->receivedFrom;
+        $updatepaymet->PrintRemark=$request->printRemarks;
+        if(isset($request->confidentialRemarks))
+        {
+            $updatepaymet->AccountingText=$request->confidentialRemarks;
+        }
+        $updatepaymet->StatusCode='Pending';
+        $updatepaymet->FOP='';
+        $updatepaymet->PostedOn=date('Y-m-d H:i:s');
+        $updatepaymet->save();
+          return redirect()->back()->with('success','Updated Successfully!!!');
+     }
+     else
+      {  $lastPayment=Payment::all()->last();
         $payment=new Payment();
         $payment->CustomerIDRef=$request->customer_id;
         if(isset($request->LeadId) && $request->LeadId !="")
@@ -418,6 +519,7 @@ class CustomerController extends Controller
         $payment->save();
         return redirect()->route('approvePayment', array('id' => $payment->PaymentID));
     }
+}
     public function approvePayment($id)
     {
         $payments = Payment::selectRaw('PaymentID,branches.name as Branch,Login_users.name as Uname,CRM_Customers.CustomerName,

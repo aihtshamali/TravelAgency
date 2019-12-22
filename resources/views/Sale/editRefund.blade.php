@@ -1,0 +1,177 @@
+@extends('layouts.master') 
+@section('styleTags')
+    
+    <link rel="stylesheet" href="{{asset('dist/plugins/select2/select2.css')}}">
+@endsection 
+@section('content')
+@php
+ $show ='display:none';   //USING FOR UPDATION
+@endphp
+
+
+<div class="container">
+    <div class="content-wrapper" style="margin-top:2%;">
+        @include('inc/flashMessages')
+        <form role="form" action="{{route('saveRefund')}}" method="POST">
+            @csrf
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card card-primary">
+                    <div class="container">
+                    <h3>Basic Details</h3>
+                    <div class="form-group">
+                        <label for="customer">Customer</label>
+                        <input type="hidden" value="{{$customer->CustomerID}}" name="customer_id">
+                        <input type="text" readonly="readonly" value="<?php if(isset($customer)) { echo $customer->CustomerName." (".$customer->CustomerID.")";} ?>" required  name="customer" class="form-control" autocomplete="off" >
+                    </div>
+                    <div class="form-group">
+                        <label for="CreatedBy">Transaction User</label>
+                        <div class="input-group">
+                            
+                            <select name="CreatedBy" class="form-control">
+                                
+                                @foreach ($users as $user)
+                                    <option <?php if($user->user_name == $refund->SaleBy) echo "selected='selected'"; ?> value="{{$user->id}}">{{$user->user_name}} [{{$user->name}}] </option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    </div>   
+                </div>
+            </div>
+            <div class="col-md-6">
+                    <div class="card card-primary">
+                        <div class="container">
+                        <h3>Amounts</h3>
+                        <div class="form-group">
+                            <label for="Amount">Refund Amount</label>
+                        <input type="number" required id="amount" name="amount" value ="{{$refund->Amount}}" class="form-control" autocomplete="off" >
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="NetCost">Profit</label>
+                            <input type="number"  value="0" id="profit" value ="{{$refund->ProfitAmount}}"  name="profit" required name="ProfitAmount" class="form-control" autocomplete="off" >
+                        </div>
+                        
+                        </div>   
+                    </div>
+                </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card card-primary">
+                    <div class="container">
+                    <h3>Details</h3>
+                       <div class="form-group">
+                           <label for="lead_type">Transaction Type</label>
+                           <input required type="text" name="ProductType" value="{{$refund->ProductType}}"  class="form-control" autocomplete="off" >
+                           
+                           {{-- {{dd(Auth::user()->id)}} --}}
+                           {{-- <div class="input-group">
+                               <select name="lead_type_id" id="lead_type" class="form-control">
+                                   <option value="">-</option>
+
+                                   @foreach ($lead_types as $lead_type)
+                                       <option value="{{$lead_type->id}}">{{$lead_type->name}}</option>
+                                   @endforeach
+                               </select>
+                           </div> --}}
+                       </div>
+                       
+                       <div class="form-group">
+                           <label for="IssueDate">Transaction Date</label>
+                           <input required type="date" name="IssueDate" value="{{$refund->IssueDate}}"  class="form-control" autocomplete="off" >
+                       </div>
+                       <div class="form-group">
+                           <label for="ProductNum">Ticket or Product No.</label>
+                           <input required type="text" name="ProductNum" value="{{$refund->ProductNum}}" class="form-control" autocomplete="off" >
+                       </div>
+                       <div class="form-group">
+                           <label for="ProductPax">Passenger Name</label>
+                           <input type="text" name="ProductPax" value="{{$refund->ProductPax}}" class="form-control" autocomplete="off" >
+                       </div>
+                       <div class="form-group">
+                        <label for="sector_id">Route or Details</label>
+                        <div class="row">
+                                <div class="form-group col-md-6">
+                                    <label for="source_id">Source</label>
+                                    <select name="source_id" id="source_id" class="select2 form-control">
+                                        <option value="">Select Source</option>
+                                        @foreach ($sectors as $sector)
+                                            <option value="{{$sector->id}}">{{$sector->name}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="destination_id">Destination</label>
+                                    <select name="destination_id" id="destination_id" class="select2 form-control">
+                                        <option value="">Select Destination</option>
+                                        @foreach ($sectors as $sector)
+                                            <option value="{{$sector->id}}">{{$sector->name}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="subject">Details</label>
+                            <input type="text" name="ProductDetail" value="{{$refund->ProductDetail}}" id="subject" class="form-control" placeholder="From ---- TO ---">
+                            </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="AccountigText">Accounting Remarks</label>
+                        <input type="text" placeholder="Issued from (Self or Vendor Name)"  value="{{$refund->AccountingText}}"  name="AccountigText" class="form-control" autocomplete="off" >
+                    </div>
+                    </div>   
+                </div>
+            </div>
+            
+        </div>
+        <input  type="hidden" name="saleId"  value="{{$refund->SaleID}}" >
+        <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+    
+           
+         
+</div>
+@endsection
+@section('javascript')
+<script src="{{asset('dist/plugins/select2/select2.js')}}"></script>
+    <script>
+        $(document).ready(function(){
+            $('select[name="customer_type"]').on('change',function(){
+                var type=$(this).children('option:selected').text()
+                console.log(type);
+                if(type == "Individual"){
+                    $(".gender").show();
+                }else{
+                    $(".gender").hide();
+                }
+            });
+            
+        });
+        function ValidateAmount()
+        {
+            var profit=$( "#amount" ).val()-$( "#cost" ).val();
+            console.log(profit);
+            $("#profit").val(profit);
+            // alert("Hey");
+        }
+        $(document).ready(function(){
+            $('.select2').select2();
+            $('#destination_id,#source_id').change(function(){
+                var dest = $('option:selected','#destination_id')
+                var src = $('option:selected','#source_id')
+                if(dest.val())
+                    dest = dest.text();
+                else
+                    dest = '';
+                if(src.val())
+                    src = src.text()
+                else
+                    src = ''
+                $('#subject').val(src +" - "+ dest)
+            });
+        })
+    </script>
+@endsection
