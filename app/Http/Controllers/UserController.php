@@ -6,28 +6,153 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 use App\UserDetail;
 use App\User;
+use App\LoginLog;
+use App\LoginAudit;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Traits\HasRoles;
+use DB;
+use Auth;
 class UserController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    
+      use HasRoles;
+    
     public function index()
     {
-        //
+        $active_users=User::where('status','=',true)->get()->count();
+        $block_users=User::where('status','=',false)->get()->count();
+       return view("User.index",compact('active_users','block_users'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+    public function create(Request $request)
     {
-        //
+     return view("User.create");
+    }
+    
+    public function assignRole(Request $request)
+    {
+        $user=User::find($request->user_id);
+        $user=$user->assignRole($request->role_id);
+       return redirect()->back()->with('success','Role has been assigned.');
+    }
+    public function removerole(Request $request)
+    {
+    
+        $user=User::find($request->user_id);
+        $user=$user->removeRole($request->role_id);
+       return redirect()->back()->with('success','Role has been removed.');
+    }
+    
+    public function searchUserView()
+    {
+         return view("User.searchUserView");
+    }
+    
+     public function searchUser(Request $request)
+    {
+        $search="";
+        if($request->SearchIn == "name")
+        {
+          if($request->Criteria == "contains")
+        {
+            $search=User::where("name","like","%".$request->searchtext."%")->get();
+        }
+        elseif($request->Criteria == "exact")
+         {
+         $search=User::where('name','=',$request->searchtext)->get();
+         }
+        elseif($request->Criteria == "starts")
+        {
+        $search=User::where("name","like",$request->searchtext."%")->get();
+        }
+        elseif($request->Criteria == "ends")
+        {
+         $search=User::where("name","like","%".$request->searchtext)->get();
+        }
+        else{
+         $search="No match Found";
+         return view("User.searchUserView",compact('search'));
+        }
+        return view("User.searchUserView",compact('search'));
+            
+        }
+        elseif($request->SearchIn == "uname")
+        {
+          if($request->Criteria == "contains")
+        {
+            $search=User::where("user_name","like","%".$request->searchtext."%")->get();
+        }
+        elseif($request->Criteria == "exact")
+         {
+         $search=User::where('user_name','=',$request->searchtext)->get();
+         }
+        elseif($request->Criteria == "starts")
+        {
+        $search=User::where("user_name","like",$request->searchtext."%")->get();
+        }
+        elseif($request->Criteria == "ends")
+        {
+         $search=User::where("user_name","like","%".$request->searchtext)->get();
+        }
+          else{
+         $search="No match Found";
+         return view("User.searchUserView",['search'=>$search]);
+        }
+      return view("User.searchUserView",['search'=>$search]);
+         
+    }
+       
+         
+    }
+      public function activeUser(Request $request)
+    {
+       $active_users=User::where('status','=',true)->get();
+         return view("User.activeUser",compact('active_users'));
+    }
+    
+    public function blockUser(Request $request)
+    {
+       $block_users=User::where('status','=',false)->get();
+         return view("User.blockUser",compact('block_users'));
     }
 
+    public function userActivitylogView(){
+    
+      $loginAuditdetails=LoginAudit::all();
+         return view("User.userActivitylogView",compact('loginAuditdetails'));
+    }
+
+      public function rolesAuthorityView(){
+      $roles =Role::all();
+   
+         return view("User.rolesAuthorityView",compact('roles'));
+    }
+     public function assignedUsertoRoles($id)
+     {
+         $roles =Role::all();
+         $searched_Role=Role::find($id);
+         $assigned_rolesUsers=DB::table('model_has_roles')->where('role_id',$id)
+         ->leftjoin('Login_Users','Login_Users.id','=','model_has_roles.model_id')
+         ->get();
+          return view("User.rolesAuthorityView",compact('assigned_rolesUsers','roles','searched_Role'));
+     }
+     
+     public function showDetailByUserName($username)
+    {
+      $username=User::where('user_name','=',$username)->first();
+      return redirect()->route('userDetails',$username->id);
+      
+    }
+    public function userDetails($id)
+    {
+    $user= User::find($id);
+    $user_Roles=$user->roles;
+    $roles =Role::all();
+    $logindetails=LoginLog::where('UserRef','=',$user->user_name)->get();
+    $loginAuditdetails=LoginAudit::where('ActionOn','=',$user->user_name)->get();
+      return view("User.userDetails",compact('user','roles','user_Roles','logindetails','loginAuditdetails'));
+    }
+    
     /**
      * Store a newly created resource in storage.
      *
@@ -36,7 +161,17 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //
+          $request->validate([
+          'user_name' => 'required|unique:Login_Users',
+          'email' => 'required|unique:Login_Users|email',
+          'name' => 'required|unique:Login_Users',
+         
+        ]);
+        $data = DB::select('exec sp_Login_CreateUser "'.$request->user_name.'","'.$request->email.'","'.$request->name.'","'.Hash::make($request->password).'","'.Auth::user()->name.'"');
+        if($data[0]->status==0)        
+            return redirect()->back()->with('success','User has been created.');
+        if($data[0]->status==1)        
+            return redirect()->back()->with('error','User already Exist.');
     }
 
     /**
@@ -70,6 +205,24 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
+    public function updateDetails(Request $request)
+    {
+         $user = User::find($request->id);
+         if($user){
+             $user->name = $request->name; 
+             $user->email = $request->email; 
+             if($request->password != null)
+             {
+                $user->password = Hash::make($request->password);
+             }
+            $user->status=$request->update_status;
+            $user->update();
+          return redirect()->back()->with('success','Updated Successfully!');
+
+        }
+        return redirect()->back()->with('error','No User Found!');
+    }
+    
     public function update(Request $request, $id)
     {
         $user = User::find($id);

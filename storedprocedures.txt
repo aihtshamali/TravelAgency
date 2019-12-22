@@ -1467,3 +1467,43 @@ AS
 
 	  ---------------------------------------------------
 
+
+
+
+--------------NEW -----------------------
+
+USE [WAC]
+GO
+/****** Object:  StoredProcedure [dbo].[sp_Login_CreateUser]    Script Date: 11/28/2019 1:28:02 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+--------------------------- STORED PROCEDURES -----------------------------
+
+ALTER PROCEDURE [dbo].[sp_Login_CreateUser]
+(
+ @UserName VARCHAR(100),
+ @Email VARCHAR(100),
+ @FullName VARCHAR(100),
+ @PWD VARCHAR(255),
+ @CreatedBy VARCHAR(100)
+ )
+ 
+ AS
+
+IF EXISTS (SELECT @UserName FROM [Login_Users] WHERE user_name=@UserName)
+BEGIN
+RETURN '1' -- USER EXISTS
+END
+
+INSERT INTO [Login_Users] ([user_name],[Email],[name],[Password])
+VALUES
+(@UserName, @Email, @FullName, @PWD)
+
+INSERT INTO [Login_Audit] VALUES
+(NEXT VALUE FOR [Login_Audit_ID], @UserName, @CreatedBy, GETUTCDATE(), 'New User', 'Created New User')
+
+RETURN '0' -- SUCCESS
+

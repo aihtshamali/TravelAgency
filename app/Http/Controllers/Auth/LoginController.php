@@ -47,8 +47,11 @@ class LoginController extends Controller
      */
     protected function authenticated(Request $request, $user)
     {
-        if($user)
-           $request->session()->put(['userbranch'=>$user->UserBranch->first()]);
+        if($user){
+            $user->login_count++;
+            $user->update();
+            $request->session()->put(['userbranch'=>$user->UserBranch->first()]);
+        }
     }
 
     public function logout(Request $request)

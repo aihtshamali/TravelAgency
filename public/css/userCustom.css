@@ -1,0 +1,76 @@
+.greentick div {
+    float: left;
+    background-color: rgb(116, 116, 116);
+    padding: 15px;
+    border-radius: 50%;
+    background-color: rgb(40, 183, 121);
+}
+
+.greentick div img {
+    height: 32px;
+    width: 32px;
+}
+
+.greentick span {
+    display: block;
+    float: right;
+    margin-right: 10px;
+    margin-top: 10px;
+    text-align: right;
+    font-size: 1.2em;
+}
+
+.redtick div {
+    float: left;
+    background-color: rgb(116, 116, 116);
+    padding: 12px;
+    border-radius: 50%;
+    background-color: rgb(199, 74, 72);
+}
+
+.redtick div img {
+    height: 32px;
+    width: 32px;
+}
+
+.redtick span {
+    display: block;
+    float: right;
+    margin-right: 10px;
+    margin-top: 10px;
+    text-align: right;
+    font-size: 1.2em;
+}
+
+table thead th {
+    font-weight: 400;
+    background-color: rgb(31, 38, 45);
+    color: #ffffff;
+    text-align: center;
+    padding: 4px;
+}
+
+table tbody td {
+    font-weight: 400;
+    text-align: center;
+    padding: 4px;
+}
+
+td img,
+th img {
+    height: 16px;
+    width: 16px;
+}
+
+.summarytable tbody td {
+    padding: 5px !important;
+    vertical-align: -webkit-baseline-middle !important;
+}
+
+.label {
+    font-weight: 500 !important;
+}
+
+.card-footer {
+    background: white !important;
+}

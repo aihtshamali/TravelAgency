@@ -1,0 +1,100 @@
+    table thead th {
+        font-weight: 400;
+        background-color: rgb(31, 38, 45);
+        color: #ffffff;
+        text-align: center;
+        padding: 4px;
+    }
+    
+    table tbody td {
+        font-weight: 400;
+        text-align: center;
+        padding: 4px;
+    }
+    
+    .cardwidth {
+        margin-left: 1%;
+        max-width: 49%
+    }
+    
+    .date div {
+        float: left;
+        padding: 15px;
+        border-radius: 50%;
+        background-color: rgb(116, 116, 116);
+    }
+    
+    .date div img {
+        height: 32px;
+        width: 32px;
+    }
+    
+    .date span strong {
+        display: block;
+        float: right;
+        margin-right: 0px;
+        margin-top: 10px;
+        text-align: right;
+        font-size: 1.3em;
+    }
+    
+    .date span {
+        float: right;
+        margin-right: 10px;
+        text-align: right;
+    }
+    
+    .branch div {
+        float: left;
+        background-color: rgb(116, 116, 116);
+        padding: 12px;
+        border-radius: 50%;
+        background-color: rgb(116, 116, 116);
+    }
+    
+    .branch div img {
+        height: 32px;
+        width: 32px;
+    }
+    
+    .branch span strong {
+        display: block;
+        float: right;
+        margin-right: 0px;
+        margin-top: 10px;
+        text-align: right;
+        font-size: 1.3em;
+    }
+    
+    .branch span {
+        float: right;
+        margin-right: 10px;
+        text-align: right;
+    }
+    
+    .activeshadow span {
+        color: black;
+    }
+    
+    a:hover {
+        color: black;
+        -webkit-box-shadow: 0px -1px 28px -4px rgba(28, 34, 102, 0.46);
+        -moz-box-shadow: 0px -1px 28px -4px rgba(28, 34, 102, 0.46);
+        box-shadow: 0px -1px 28px -4px rgba(28, 34, 102, 0.46);
+    }
+    
+    .margindiv {
+        margin-top: 1%;
+        margin-bottom: 1%;
+        margin-left: 1%;
+    }
+    
+    .label {
+        font-size: 20px;
+        font-weight: 500 !important;
+    }
+    
+    .label1 {
+        font-size: 17px;
+        font-weight: 500 !important;
+    }

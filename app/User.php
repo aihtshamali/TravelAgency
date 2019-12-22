@@ -5,15 +5,19 @@ namespace App;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\ModelHasRole;
 
 class User extends Authenticatable
 {
     use HasRoles;
+    
     protected $guard_name = 'web'; // or whatever guard you want to use
 
     use Notifiable;
     protected $table = "Login_Users";
-
+    
     /**
      * The attributes that are mass assignable.
      *
@@ -58,5 +62,17 @@ class User extends Authenticatable
     public function Customer(){
         return $this->hasOne('App\Customer','CustomerID');
     }
+     public function LoginLog(){
+        return $this->hasMany('App\LoginLog');
+    }
+     public function LoginAuditOn(){
+        return $this->hasMany('App\LoginAudit','ActionOn');
+    }
     
+    public function LoginAuditBy(){
+        return $this->hasMany('App\LoginAudit','ActionBy');
+    }
+    //  public function ModelHasRole(){
+    //     return $this->hasMany('App\ModelHasRole','model_id');
+    // }
 }
