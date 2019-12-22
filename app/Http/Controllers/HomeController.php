@@ -6,6 +6,11 @@ use Illuminate\Http\Request;
 use App\Lead;
 use App\Customer;
 use App\User;
+use App\Sale;
+use App\Payment;
+use App\PaymentForm;
+use App\UserBranch;
+use App\LeadType;
 use Illuminate\Support\Facades\Hash;
 use DB;
 class HomeController extends Controller
@@ -135,12 +140,15 @@ class HomeController extends Controller
      */
     public function index()
     {
+        // $this->CopyUserToUserBranch();
         // $this->copyAllUsers();
         // $this->replaceLeadType();
         // $this->replaceCustomerType();
         // $this->UpdatedallUsersInLeads();
         // $this->AddCustomersToUsers();
-
+        // $this->copyProductTypeToSale();
+        // $this->CopySaleByPostedByActionByInSale();
+        $this->CopySaleByPostedByAuthByInPayment();
         $model = new Customer();
         $data =  $model->hydrate(DB::select('exec CRM_PendingPayments '));
         // return $data;
@@ -216,5 +224,68 @@ class HomeController extends Controller
             }
         }
         dump('AddCustomersToUsers');
+    }
+
+    private function copyProductTypeToSale(){
+        
+        $sales = Sale::all();
+        foreach($sales as $sale){
+            $search=LeadType::where("name","like","%".ucfirst($sale->ProductType)."%")->first();
+            if(!$search)
+                dd($sale->ProductType);
+
+            $sale->lead_type_id = $search->id;
+            $sale->save();
+        }
+        dump("PRoduct Type Copied");
+    }
+
+    //ByDefault HDQ
+    private function CopyUserToUserBranch(){
+        $users = User::all();
+        foreach($users as $user){
+            if(!UserBranch::where('user_id',$user->id)->first())
+            {
+                $userbranch = new UserBranch();
+                $userbranch->user_id = $user->id;
+                $userbranch->branch_id = 1;
+                $userbranch->save(); 
+            }
+        }
+        dump("User Copied in UserBranches");
+    }
+
+    //postedByUSer is SaleBy and SaleBy is in USerBranchID 
+    private function CopySaleByPostedByActionByInSale(){
+        $sales = Sale::all();
+        foreach($sales as $sale){
+            $actionBy = User::where("user_name",$sale->ActionBy)->first();
+            $saleBy = User::where("user_name",$sale->SaleBy)->first();
+            $postedBy = UserBranch::where('user_id',User::where("user_name",$sale->PostedBy)->first()->id)->first();
+            
+            if($actionBy)
+                $sale->action_by = $actionBy->id; 
+            if($saleBy)
+                $sale->posted_by_user = $saleBy->id; 
+            $sale->user_branch_id = $postedBy->id;
+            $sale->save(); 
+        }
+        dump("Copy SaleBy PostedBy ActionBy In Sale Done");
+    }
+
+    private function CopySaleByPostedByAuthByInPayment(){
+        $payments = Payment::all();
+        foreach($payments as $payment){
+            $saleBy = User::where("user_name",$payment->SaleBy)->first();
+            $PostedBy = UserBranch::where('user_id',User::where("user_name",$payment->PostedBy)->first()->id)->first();
+            $authBy = User::where("user_name",$payment->AuthBy)->first();
+            $payment_form = PaymentForm::where('name',$payment->FOP)->first();
+            $payment->payment_form_id = $payment_form->id;
+            $payment->auth_by = $authBy->id;
+            $payment->user_id = $saleBy->id;
+            $payment->user_branch_id = $PostedBy->id;
+            $payment->save();
+        }
+        dump("CopySaleByPostedByAuthByInPayment Done");
     }
 }

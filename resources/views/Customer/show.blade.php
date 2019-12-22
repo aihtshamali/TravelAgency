@@ -197,9 +197,19 @@ table tbody td {
                                         <td>{{$sale->ProductPax}}</td>
                                         <td>{{$sale->ProductNum}}</td>
                                         <td>{{$sale->ProductDetail}}</td>
+<<<<<<< HEAD
                                         <td>
                                         {{isset($sale->UserBranch->Branch->name) ? $sale->UserBranch->Branch->name : '-'}}</td>
                                         <td><a href="{{route('User.show',$sale->posted_by_user)}}">{{$sale->PostedByUser->name}}</a></td>
+=======
+                                        <td>{{isset($sale->UserBranch->Branch->name) ? $sale->UserBranch->Branch->name : '-'}}</td>
+                                        @if(isset($sale->PostedByUser->name))
+                                        <td><a href="{{route('User.show',$sale->posted_by_user)}}">{{$sale->PostedByUser->name}}</a></td>
+                                        @else
+                                        <td>-</td>
+                                        @endif
+                                        <td>{{$sale->Amount}}</td>
+>>>>>>> 61ebec900b2421d69c50364ca45d31f1aa9942ed
                                         <td><a href="{{$sale->ticket_attachment ? asset('storage/attachments/'.$sale->Customer->User->id.'/'.$sale->ticket_attachment) : '#'}}" {{ isset($sale->ticket_attachment) ? 'download' : 'disabled'}}>{{isset($sale->ticket_attachment) ? 'Download' : 'No Attachment'}}</a></td>
                                         <td> 
                                           @php
@@ -253,8 +263,19 @@ table tbody td {
                                         <td>{{$refund->ProductNum}}</td>
                                         <td>{{$refund->ProductDetail}}</td>
                                         <td>{{isset($refund->UserBranch->Branch->name) ? $refund->UserBranch->Branch->name : '-'}}</td>
+<<<<<<< HEAD
                                         <td><a href="{{route('User.show',$refund->posted_by_user)}}">{{$refund->PostedByUser->name}}</a></td>
                                        
+=======
+                                        <td>
+                                        @if(isset($refund->PostedByUser->name))
+                                            <a href="{{route('User.show',$refund->posted_by_user)}}">{{$refund->PostedByUser->name}}</a>
+                                        @else
+                                            <span> - </span>
+                                        @endif    
+                                        </td>
+                                        <td>{{$refund->Amount}}</td>
+>>>>>>> 61ebec900b2421d69c50364ca45d31f1aa9942ed
                                         <td><a href="{{$refund->ticket_attachment ? asset('storage/attachments/'.$refund->Customer->User->id.'/'.$refund->ticket_attachment) : '#'}}" {{ isset($refund->ticket_attachment) ? 'download' : 'disabled'}}>{{isset($refund->ticket_attachment) ? 'Download' : 'No Attachment'}}</a></td>
                                      <td>
                                           @php
@@ -305,6 +326,7 @@ table tbody td {
                                         <td>{{isset($payment->FOPText) ? $payment->FOPText : 'NA'}}</td>
                                         <td>{{date('d-M-Y',strtotime($payment->PostedOn))}} | {{date('h:i:a',strtotime($payment->PostedOn))}}</td>
                                         <td>{{$payment->PrintRemark}}</td>
+<<<<<<< HEAD
                                         <td>{{isset($payment->UserBranch->Branch) ? $payment->UserBranch->Branch->name : 'NA'}}</td>
                                         <td><a href="{{route('User.show',1)}}">{{isset($payment->SaleByUser->name) ? $payment->SaleByUser->name : '-'}}</a></td>
                                         <td>No Attachment</td>
@@ -313,6 +335,17 @@ table tbody td {
                                             array_push($totalPayment,$payment->Amount);   
                                             @endphp
                                         {{$payment->Amount}}</td>
+=======
+                                        <td>{{isset($payment->UserBranch->Branch) ? $payment->UserBranch->Branch->name : ''}}</td>
+                                        <td>
+                                        @if(isset($payment->SaleByUser->name))
+                                            <a href="{{route('User.show',$payment->user_id)}}">{{isset($payment->SaleByUser->name) ? $payment->SaleByUser->name : '-'}}</a>
+                                        @else
+                                            <span>-</span>
+                                        @endif
+                                        </td>
+                                        <td>{{$payment->Amount}}</td>
+>>>>>>> 61ebec900b2421d69c50364ca45d31f1aa9942ed
                                     </tr>
                                     @endforeach
                                      <tr>

@@ -211,6 +211,7 @@ class CustomerController extends Controller
         $sale=new Sale();
         $sale->CustomerIDRef = $request->customer_id;
         $sale->LeadIDRef = $request->LeadId;
+        //IT is SaleBy
         $sale->posted_by_user= $request->CreatedBy;
         $sale->Amount = $request->amount;
         $sale->NetCost = $request->cost;
