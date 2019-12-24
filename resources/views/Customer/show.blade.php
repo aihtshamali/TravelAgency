@@ -205,7 +205,7 @@ table tbody td {
                                         @endif
                                         <td>
                                         @if($sale->ticket_attachment != null)
-                                        <a href="{{asset('storage/app/public/attachments/'.$sale->SaleID.'/'.$sale->ticket_attachment)}}" download>{{$sale->document_name}}</a>
+                                        <a href="{{asset('/storage/attachments/'.$sale->SaleID.'/'.$sale->ticket_attachment)}}" download>{{$sale->document_name}}</a>
                                         @else
                                         No Attachment
                                         @endif
