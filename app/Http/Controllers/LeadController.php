@@ -68,17 +68,27 @@ class LeadController extends Controller
         return redirect()->back();
     }
     public function saveNotePad(Request $request){
-        $lead = LeadText::find($request->lead_id);
-        $lead->NotePad = $request->notepad;
+        $leadText = LeadText::find($request->lead_id);
+        $leadText->NotePad = $request->notepad;
+        $leadText->update();
+        
+        $lead = Lead::find($request->lead_id);
+        $lead->LastUpdatedOn= date('Y-m-d H:i:s');
         $lead->update();
         return redirect()->back()->with('success','NotePad added successfully!');
     }
     
-    public function saveComment(Request $request){
-        $lead = LeadText::find($request->lead_id);
-        if($lead->Comments == "<comments/>")
-            $lead->Comments=str_replace("<comments/>","",$lead->Comments);
-        $lead->Comments = $lead->Comments.''.date('Y-m-d H:i:s')." #$$ ".Auth::user()->name." #$$ ".$request->comment." $%$ ";
+    public function saveComment(Request $request)
+    {
+        // dd($request);
+        $leadText = LeadText::find($request->lead_id);
+        if($leadText->Comments == "<comments/>")
+           $leadText->Comments=str_replace("<comments/>","",$leadText->Comments);
+        $leadText->Comments = $leadText->Comments.''.date('Y-m-d H:i:s')." #$$ ".Auth::user()->name." #$$ ".$request->comment." $%$ ";
+        $leadText->update();
+        
+        $lead = Lead::find($request->lead_id);
+        $lead->LastUpdatedOn= date('Y-m-d H:i:s');
         $lead->update();
         return redirect()->back()->with('success','Comment has been added successfully!');
     }
@@ -237,6 +247,7 @@ class LeadController extends Controller
         $lead->LeadSubject = $request->subject;
         $lead->ServiceDate = $request->service_date;
         $lead->branch_id = $request->branch_id;
+        $lead->LastUpdatedOn= date('Y-m-d H:i:s');
         $lead->update();
 
         return redirect()->route('leads.show',$lead->LeadID)->with('success','Updated Successfully!');

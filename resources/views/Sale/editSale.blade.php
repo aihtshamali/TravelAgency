@@ -106,7 +106,7 @@
                         <div class="form-group">
                             <label for="">Ticket Attachment</label>
                         <a href="{{asset('/storage/attachments/'.$sale->SaleID.'/'.$sale->ticket_attachment)}}" download>{{$sale->document_name}}</a>
-                            <input type="file" name="ticket_attachment"  class="form-control pd-0" >
+                            <input type="file" name="ticket_attachment[]"  multiple="multiple" class="form-control pd-0" >
                         </div>
                         
                        <div class="form-group">

@@ -206,115 +206,120 @@ class CustomerController extends Controller
     }
     public function saveSale(Request $request)
     { 
-        // dd($request->all());
+    
+        // dd($request->file('ticket_attachment'));
         if(Sale::find($request->saleId))
         {
-        $update=Sale::find($request->saleId);
-          
-       $update->CustomerIDRef = $request->customer_id;
-       $update->LeadIDRef = $request->LeadId;
-        //IT is SaleBy
-       $update->posted_by_user= $request->SaleBy;
-       $update->Amount = $request->amount;
-       $update->NetCost = $request->cost;
-       $update->ProfitAmount = $request->profit;
-       $update->lead_type_id = $request->lead_type_id;
-       $update->IssueDate=$request->IssueDate;
-       $update->ProductNum = $request->ProductNum;
-       $update->ProductPax = $request->ProductPax;
-       $update->source_id = $request->source_id;
-       $update->destination_id = $request->destination_id;
-       $update->ProductDetail = $request->ProductDetail;
-       $update->AccountingText = $request->AccountigText;
-       $update->user_branch_id=$request->session()->get('userbranch')->id;
-       $update->SaleStatus='Approved';
-        
-        $customer = Customer::find($request->customer_id);
-        $user_id = 0;
-        
-        if(isset($customer->User)){
-            $user_id = $customer->User->id;
-        }
-        if(!is_dir('storage/attachments')){
-            mkdir('storage/attachments');
-        }
-        if(!is_dir('storage/attachments/'.$request->saleId)){
-            mkdir('storage/attachments/'.$request->saleId.'/');
-        }
-        if($request->hasFile('ticket_attachment')){
-            $request->file('ticket_attachment')->store('public/attachments/'.$request->saleId.'/');
-           $update->ticket_attachment = $request->file('ticket_attachment')->hashName();
-            $update->document_name='Attachment-'.$request->saleId;
-        }
-       $update->save();
-        
-        return redirect()->back()->with('success','Updated Successfully!!!');
-        }
-        else{    
-        $sale=new Sale();
-        $sale->CustomerIDRef = $request->customer_id;
-        $sale->LeadIDRef = $request->LeadId;
-        //IT is SaleBy
-        $sale->posted_by_user= $request->CreatedBy;
-        $sale->Amount = $request->amount;
-        $sale->NetCost = $request->cost;
-        $sale->ProfitAmount = $request->profit;
-        $sale->lead_type_id = $request->lead_type_id;
-        $sale->IssueDate=$request->IssueDate;
-        $sale->ProductNum = $request->ProductNum;
-        $sale->ProductPax = $request->ProductPax;
-        // $sale->sector_id = $request->sector_id;
-        $sale->source_id = $request->source_id;
-        $sale->destination_id = $request->destination_id;
-        $sale->ProductDetail = $request->ProductDetail;
-        $sale->AccountingText = $request->AccountigText;
-        $sale->user_branch_id=$request->session()->get('userbranch')->id;
-        $sale->SaleStatus='Approved';
-        
-        $customer = Customer::find($request->customer_id);
-        $user_id = 0;
-        
-        if(isset($customer->User)){
-            $user_id = $customer->User->id;
-        }
-        if(!is_dir('storage/attachments')){
-            mkdir('storage/attachments');
-        }
-        if(!is_dir('storage/attachments/'.$user_id)){
-            mkdir('storage/attachments/'.$user_id);
-        }
-        if($request->hasFile('ticket_attachment')){
-            $request->file('ticket_attachment')->store('public/attachments/'.$user_id.'/');
-            $sale->ticket_attachment = $request->file('ticket_attachment')->hashName();
-            //   $sale->document_name='Attachment-'.$request->saleId;
-        }
-        $sale->save();
-        
-        return redirect()->route('approveSale', array('id' => $sale->SaleID));
-        // $sale->created_at=date('Y-m-d H:i:s');
-        // $sale->updated_at=date('Y-m-d H:i:s');
-        // return view('Customer.addsale',['lead_types'=>$lead_types,'customer'=>$customer,'leads'=>$leads,'users'=>$users,'sectors'=>$sectors]);
-        // echo "hey";
-        // dd($request->session()->get('userbranch')->user_id);
-        // dd($sale->SaleID);
-        // $sales = Sale::selectRaw('SaleID,branches.name as Branch,Login_users.name as Uname,CRM_Customers.CustomerName,
-        // CRM_Sale.CustomerIDRef,LeadIDRef,CRM_Sale.created_at,Amount,NetCost,ProfitAmount,
-        // AccountingText,lead_types.name as Type,IssueDate,ProductPax,ProductNum,sectors.name as Sector')
-        // ->leftJoin('CRM_Customers','CRM_Sale.CustomerIDRef','CRM_Customers.CustomerID')
-        // ->leftJoin('CRM_Leads','CRM_Sale.LeadIDRef','CRM_Leads.LeadID')
-        // ->leftJoin('user_branches','CRM_Sale.user_branch_id','user_branches.id')
-        // ->leftJoin('Login_Users','Login_Users.id','user_branches.user_id')
-        // ->leftJoin('branches','branches.id','user_branches.branch_id')
-        // ->leftJoin('lead_types','CRM_Sale.lead_type_id','lead_types.id')
-        // ->leftJoin('sectors','CRM_Sale.sector_id','sectors.id')
-        // ->where('SaleID',$sale->SaleID)->first();
+            $update=Sale::find($request->saleId);
+        $update->CustomerIDRef = $request->customer_id;
+        $update->LeadIDRef = $request->LeadId;
+            //IT is SaleBy
+        $update->posted_by_user= $request->SaleBy;
+        $update->Amount = $request->amount;
+        $update->NetCost = $request->cost;
+        $update->ProfitAmount = $request->profit;
+        $update->lead_type_id = $request->lead_type_id;
+        $update->IssueDate=$request->IssueDate;
+        $update->ProductNum = $request->ProductNum;
+        $update->ProductPax = $request->ProductPax;
+        $update->source_id = $request->source_id;
+        $update->destination_id = $request->destination_id;
+        $update->ProductDetail = $request->ProductDetail;
+        $update->AccountingText = $request->AccountigText;
+        $update->user_branch_id=$request->session()->get('userbranch')->id;
+        $update->SaleStatus='Approved';
+            
+            $customer = Customer::find($request->customer_id);
+            $user_id = 0;
+            
+            if(isset($customer->User)){
+                $user_id = $customer->User->id;
+            }
+         
+            if($request->hasFile('ticket_attachment'))
+            {
+               if(!is_dir('storage/attachments')){
+                     mkdir('storage/attachments');
+                 }
+                if(!is_dir('storage/attachments/'.$request->saleId)){
+                    mkdir('storage/attachments/'.$request->saleId.'/');
+                }
+              foreach($request->file('ticket_attachment') as $fileIterator)
+              {
+                  $fileIterator->store('public/attachments/'.$request->saleId.'/');
+                $update->ticket_attachment = $fileIterator->hashName();
+                $update->document_name='Attachment-'.$request->saleId;
+              }
+            }
+        $update->save();
+            
+            return redirect()->back()->with('success','Updated Successfully!!!');
+            }
+            else{    
+            $sale=new Sale();
+            $sale->CustomerIDRef = $request->customer_id;
+            $sale->LeadIDRef = $request->LeadId;
+            //IT is SaleBy
+            $sale->posted_by_user= $request->CreatedBy;
+            $sale->Amount = $request->amount;
+            $sale->NetCost = $request->cost;
+            $sale->ProfitAmount = $request->profit;
+            $sale->lead_type_id = $request->lead_type_id;
+            $sale->IssueDate=$request->IssueDate;
+            $sale->ProductNum = $request->ProductNum;
+            $sale->ProductPax = $request->ProductPax;
+            // $sale->sector_id = $request->sector_id;
+            $sale->source_id = $request->source_id;
+            $sale->destination_id = $request->destination_id;
+            $sale->ProductDetail = $request->ProductDetail;
+            $sale->AccountingText = $request->AccountigText;
+            $sale->user_branch_id=$request->session()->get('userbranch')->id;
+            $sale->SaleStatus='Approved';
+            
+            $customer = Customer::find($request->customer_id);
+            $user_id = 0;
+            
+            if(isset($customer->User)){
+                $user_id = $customer->User->id;
+            }
+            if(!is_dir('storage/attachments')){
+                mkdir('storage/attachments');
+            }
+            if(!is_dir('storage/attachments/'.$user_id)){
+                mkdir('storage/attachments/'.$user_id);
+            }
+            if($request->hasFile('ticket_attachment')){
+                $request->file('ticket_attachment')->store('public/attachments/'.$user_id.'/');
+                $sale->ticket_attachment = $request->file('ticket_attachment')->hashName();
+                //   $sale->document_name='Attachment-'.$request->saleId;
+            }
+            $sale->save();
+            
+            return redirect()->route('approveSale', array('id' => $sale->SaleID));
+            // $sale->created_at=date('Y-m-d H:i:s');
+            // $sale->updated_at=date('Y-m-d H:i:s');
+            // return view('Customer.addsale',['lead_types'=>$lead_types,'customer'=>$customer,'leads'=>$leads,'users'=>$users,'sectors'=>$sectors]);
+            // echo "hey";
+            // dd($request->session()->get('userbranch')->user_id);
+            // dd($sale->SaleID);
+            // $sales = Sale::selectRaw('SaleID,branches.name as Branch,Login_users.name as Uname,CRM_Customers.CustomerName,
+            // CRM_Sale.CustomerIDRef,LeadIDRef,CRM_Sale.created_at,Amount,NetCost,ProfitAmount,
+            // AccountingText,lead_types.name as Type,IssueDate,ProductPax,ProductNum,sectors.name as Sector')
+            // ->leftJoin('CRM_Customers','CRM_Sale.CustomerIDRef','CRM_Customers.CustomerID')
+            // ->leftJoin('CRM_Leads','CRM_Sale.LeadIDRef','CRM_Leads.LeadID')
+            // ->leftJoin('user_branches','CRM_Sale.user_branch_id','user_branches.id')
+            // ->leftJoin('Login_Users','Login_Users.id','user_branches.user_id')
+            // ->leftJoin('branches','branches.id','user_branches.branch_id')
+            // ->leftJoin('lead_types','CRM_Sale.lead_type_id','lead_types.id')
+            // ->leftJoin('sectors','CRM_Sale.sector_id','sectors.id')
+            // ->where('SaleID',$sale->SaleID)->first();
 
-        //         // dd($sales);
-        // return view('Customer.approvesale',['sale'=>$sales]);
-        // approveSale($sale->id);
-        // dd($request->all());
-         }
-        
+            //         // dd($sales);
+            // return view('Customer.approvesale',['sale'=>$sales]);
+            // approveSale($sale->id);
+            // dd($request->all());
+            }
+            
     }
     public function approveSale($id)
     {
