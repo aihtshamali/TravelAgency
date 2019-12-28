@@ -47,14 +47,21 @@ Route::get('/changePaymentStatus/{id}/{status}', 'CustomerController@changePayme
 Route::get('/approveSale/{id}', 'CustomerController@approveSale')->name('approveSale');
 Route::get('/approveRefund/{id}', 'CustomerController@approveRefund')->name('approveRefund');
 Route::get('/approvePayment/{id}', 'CustomerController@approvePayment')->name('approvePayment');
+
+Route::get('/userperformance', 'CustomerController@userperformance')->name('userperformance');
+
+Route::post('/userPerformanceReportIndividual', 'CustomerController@userPerformanceReportIndividual')->name('userPerformanceReportIndividual');
+
+Route::post('/userPerformanceReportDouble', 'CustomerController@userPerformanceReportDouble')->name('userPerformanceReportDouble');
+
 Route::get('/viewSaleByID/{id?}','SaleController@viewSaleByID')->name('viewSaleByID');
 Route::get('/viewDocumentByID/{id?}','SaleController@viewDocumentByID')->name('viewDocumentByID');
 Route::get('/viewPaymentByID/{id?}','PaymentController@viewPaymentByID')->name('viewPaymentByID');
 Route::get('/editSale/{id?}','SaleController@editSale')->name('editSale');
 Route::get('/editRefund/{id?}','SaleController@editRefund')->name('editRefund');
 Route::get('/editPayment/{id?}','PaymentController@editPayment')->name('editPayment');
-
-
+Route::get('userLeadsbyId/{id?}','LeadController@userLeadsbyId')->name('userLeadsbyId');
+Route::get('/leadStatusreport' ,'LeadController@leadStatusreport')->name('leadStatusreport');
 //Individual Reports
 Route::get('/myTransactions','IndividualReportController@transactions')->name('mytransactions');
 Route::get('/FinalizedLeads','IndividualReportController@FinalizedLeads')->name('FinalizedLeads');

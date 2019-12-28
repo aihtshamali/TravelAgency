@@ -40,4 +40,7 @@ class Lead extends Model
     public function LeadText(){
         return $this->hasOne('App\LeadText','LeadRef');
     }
+     public function Priority(){
+        return $this->belongsTo('App\Priority');
+    }
 }

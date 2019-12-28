@@ -41,6 +41,7 @@
                         <th>Subject</th>
                         <th>Service Date</th>
                         <th>Working Since</th>
+                        <th>Priority</th>
                     </thead>
                     <tbody>
                         @forelse ($leads as $lead)
@@ -55,10 +56,21 @@
                                 <td>{{$lead->ServiceDate}}</td>
                                 <td> @php
                                     $datetime1 = new DateTime($lead->CreatedOn);
-$datetime2 = new DateTime();
-$interval = $datetime1->diff($datetime2);
-echo $interval->format('%d days');
+                                    $datetime2 = new DateTime();
+                                    $interval = $datetime1->diff($datetime2);
+                                    echo $interval->format("%m Month %d Day %h Hours ");
                                 @endphp</td>
+                                <td>
+                                  @if($lead->priority_id =='1')
+                                         <span class="badge badge-danger">{{$lead->Priority->name}}</span>
+                                     @elseif($lead->priority_id=='2')
+                                         <span class="badge badge-warning">{{$lead->Priority->name}}</span>
+                                     @elseif($lead->priority_id=='3')
+                                         <span class="badge badge-info">{{$lead->Priority->name}}</span>
+                                     @endif
+                                         <span class="badge badge-default">Not Assigned</span>
+                                     
+                                </td>
                             </tr>
                         @empty
                             <tr>

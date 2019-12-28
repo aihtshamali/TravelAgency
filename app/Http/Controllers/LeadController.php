@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Lead;
 use App\LeadText;
 use App\LeadType;
+use App\Priority;
 use Illuminate\Http\Request;
 use DB;
 use Redirect;
@@ -40,7 +41,9 @@ class LeadController extends Controller
         $branches = Branch::where('status',1)->get();
         $sectors = Sector::where('status',1)->get();
         $customer = Customer::find($request->account);
-        return view('Leads.create',['customer'=>$customer,'lead_types'=>$lead_types,'sectors'=>$sectors,'branches'=>$branches]);
+        $priority= Priority::where('status','1')->get();
+        // dd($priority);
+        return view('Leads.create',['priority'=>$priority,'customer'=>$customer,'lead_types'=>$lead_types,'sectors'=>$sectors,'branches'=>$branches]);
     }
 
     public function transferLead(Request $request){
@@ -87,13 +90,21 @@ class LeadController extends Controller
      */
     public function store(Request $request)
     {
-       $updated = DB::update('exec CRM_AddLead "'.$request->customer_id.'",'.Session()->get('userbranch')->user_id.','.$request->lead_type.','.$request->source_id.','.$request->destination_id.',"'.$request->subject.'","'.date('Y-m-d',strtotime($request->service_date)).'","'.$request->details.'",'.$request->create_for_others.','.$request->branch_id);
+       $updated = DB::update('exec CRM_AddLead "'.$request->customer_id.'",'.Session()->get('userbranch')->user_id.','.$request->lead_type.','.$request->lead_priority.','.$request->source_id.','.$request->destination_id.',"'.$request->subject.'","'.date('Y-m-d',strtotime($request->service_date)).'","'.$request->details.'",'.$request->create_for_others.','.$request->branch_id);
         // dd($updated);
         if(!$updated)
             return redirect()->back()->with('error','Something went Wrong!');
         
         $lead = Lead::latest()->first();
         return redirect()->route('leads.show',$lead->LeadID);
+    }
+    
+    public function userLeadsbyId($id)
+    {
+        // dd($id);
+        $user_leads=Lead::where('user_id',$id)->get();
+        // dd($user_leads[0]);
+       return view('Leads.userLeadsbyId',['user_leads'=>$user_leads]);
     }
     /**
      * phoneSearch search phoneNumber in storage.
@@ -153,6 +164,7 @@ class LeadController extends Controller
      */
     public function show($id)
     {
+    // dd($id);
        $leads = Lead::findOrFail($id);
         $lead = LeadText::find($id);
         //its a very bad practice but i have to follow the previous table structure
@@ -202,7 +214,9 @@ class LeadController extends Controller
         $lead_types  = LeadType::where('status','1')->get();
         $branches = Branch::where('status',1)->get();
         $sectors = Sector::where('status',1)->get();
-        return view('Leads.edit',compact('lead','lead_types','branches','sectors'));
+        $priority= Priority::where('status','1')->get();
+        
+        return view('Leads.edit',compact('priority','lead','lead_types','branches','sectors'));
     }
 
     /**
@@ -217,6 +231,7 @@ class LeadController extends Controller
         $lead = Lead::find($lead);
         $lead->LeadSubject = $request->subject;
         $lead->lead_type_id = $request->lead_type;
+          $lead->priority_id = $request->lead_priority;
         $lead->source_id = $request->source_id;
         $lead->destination_id = $request->destination_id;
         $lead->LeadSubject = $request->subject;
@@ -267,6 +282,12 @@ class LeadController extends Controller
         
     }
     
+    public function leadStatusreport()
+    {
+        
+        $leadStatus=Lead::all();
+        return view('Leads.statusReport',['leadStatus'=>$leadStatus]);
+    }
     public function leadReportSearch(Request $request){
         
         $model = new Lead();

@@ -56,12 +56,6 @@
                         </p>
                     </a>
                     <ul class="nav nav-treeview">
-                     <li class="nav-item">
-                            <a href="{{route('leads.searchPhone')}}" class="nav-link">
-
-                                <p>Create New Lead</p>
-                            </a>
-                        </li>
                         <li class="nav-item">
                             <a href="{{route('myLeads')}}" class="nav-link">
 
@@ -85,19 +79,12 @@
                                 <p>View Lead by ID</p>
                             </a>
                         </li>
-                         <li class="nav-item">
-                            <a href="{{ route('leadReport') }}" class="nav-link">
-
-                                <p>Lead Report</p>
-                            </a>
-                        </li>
                         <li class="nav-item">
-                            <a href="{{ route('leadStatusreport') }}" class="nav-link">
+                            <a href="{{route('leads.searchPhone')}}" class="nav-link">
 
-                                <p>Lead Status Report</p>
+                                <p>Create New Lead</p>
                             </a>
                         </li>
-                       
                     </ul>
                 </li>
                 <li class="nav-item has-treeview">
@@ -175,12 +162,17 @@
                         </li>
 
                         <li class="nav-item">
-                        <a href="{{route('userperformance')}}" class="nav-link">
+                            <a href="pages/tables/data.html" class="nav-link">
 
                                 <p>User Performance</p>
                             </a>
                         </li>
-                       
+                        <li class="nav-item">
+                            <a href="{{ route('leadReport') }}" class="nav-link">
+
+                                <p>Lead Report</p>
+                            </a>
+                        </li>
                         <li class="nav-item">
                             <a href="{{route('saleReport',1)}}" class="nav-link">
 

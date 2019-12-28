@@ -40,6 +40,7 @@
                         <th>Service Date</th>
                         <th>Created By</th>
                         <th>Open Since</th>
+                            <th>Priority</th>
                     </thead>
                     <tbody>
                         @forelse ($leads as $lead)
@@ -52,12 +53,26 @@
                                 <td>{{$lead->LeadSubject}}</td>
                                 <td>{{$lead->ServiceDate}}</td>
                                 <td>{{$lead->User->name}}</td>
-                                <td> @php
+                                <td> 
+                                    @php
                                     $datetime1 = new DateTime($lead->CreatedOn);
-$datetime2 = new DateTime();
-$interval = $datetime1->diff($datetime2);
-echo $interval->format('%d days');
-                                @endphp</td>
+                                    $datetime2 = new DateTime();
+                                    $interval = $datetime1->diff($datetime2);
+                                    echo $interval->format("%m Month %d Day %h Hours ");
+                                 @endphp
+                                 </td>
+                                 <td>
+                                        @if($lead->priority_id =='1')
+                                         <span class="badge badge-danger">{{$lead->Priority->name}}</span>
+                                     @elseif($lead->priority_id=='2')
+                                         <span class="badge badge-warning">{{$lead->Priority->name}}</span>
+                                     @elseif($lead->priority_id=='3')
+                                         <span class="badge badge-info">{{$lead->Priority->name}}</span>
+                                    @else
+                                    <strong >Not Assigned</strong>
+                                     @endif
+                                         
+                                 </td>
                             </tr>
                         @empty
                             <tr>

@@ -50,7 +50,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
     @include('layouts.sidebar') 
     @yield('content')
         <!-- Footer -->
-    @include('layouts.footer')
     </div>
     <!-- ./wrapper -->
     @endguest 

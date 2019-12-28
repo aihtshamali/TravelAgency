@@ -2,14 +2,7 @@
 @section('styleTags')
     <link rel="stylesheet" href="{{asset('dist/plugins/datepicker/datepicker3.css')}}">
     <style>
-        .badge{
-            color:white;
-            font-weight: bold;
-        }
-         td > span.badge{
-            padding:0.5rem 0.4rem;
-            min-width:80px;
-        }
+        
     </style>
 @endsection
 @section('content')
@@ -45,11 +38,12 @@
                 <div class="card">
                     <div class="card-header"><h3 class="card-title">Details <span class="pull-right"><a href="{{route('leads.edit',$lead->LeadID)}}">Edit</a></span></h3></div>
                     <div class="card-body">
-                        <table class="table  table-hover  bordered ">
+                        <table class="table table-bordered ">
                             <thead class="thead-dark">
                                 <th>Type</th>
                                 <th>Details</th>
                                 <th>Service Date</th>
+                                <th>Priority</th>
                             </thead>
                             <tbody>
                                 <tr>
@@ -67,6 +61,17 @@
                                                 </div>
                                             </div>
                                         </form>
+                                    </td>
+                                    <td>
+                                     @if($lead->priority_id =='1')
+                                         <span class="badge badge-danger">{{$lead->Priority->name}}</span>
+                                     @elseif($lead->priority_id=='2')
+                                         <span class="badge badge-warning">{{$lead->Priority->name}}</span>
+                                     @elseif($lead->priority_id=='3')
+                                         <span class="badge badge-info">{{$lead->Priority->name}}</span>
+                                     @else    
+                                         <strong >Not Assigned</strong>
+                                    @endif
                                     </td>
                                 </tr>
                               

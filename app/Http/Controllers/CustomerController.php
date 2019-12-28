@@ -227,7 +227,7 @@ class CustomerController extends Controller
        $update->ProductDetail = $request->ProductDetail;
        $update->AccountingText = $request->AccountigText;
        $update->user_branch_id=$request->session()->get('userbranch')->id;
-       $update->SaleStatus='Pending';
+       $update->SaleStatus='Approved';
         
         $customer = Customer::find($request->customer_id);
         $user_id = 0;
@@ -269,7 +269,7 @@ class CustomerController extends Controller
         $sale->ProductDetail = $request->ProductDetail;
         $sale->AccountingText = $request->AccountigText;
         $sale->user_branch_id=$request->session()->get('userbranch')->id;
-        $sale->SaleStatus='Pending';
+        $sale->SaleStatus='Approved';
         
         $customer = Customer::find($request->customer_id);
         $user_id = 0;
@@ -313,7 +313,7 @@ class CustomerController extends Controller
         // return view('Customer.approvesale',['sale'=>$sales]);
         // approveSale($sale->id);
         // dd($request->all());
-    }
+         }
         
     }
     public function approveSale($id)
@@ -358,6 +358,8 @@ class CustomerController extends Controller
         return redirect('/Customer');
         // dd(Session()->get('userbranch')->user_id);
     }
+    
+    
     public function addRefund($id)
     {
         // $id = Auth::id();
@@ -399,7 +401,7 @@ class CustomerController extends Controller
         $update->ProductDetail = $request->ProductDetail;
         $update->AccountingText = $request->AccountigText;
         $update->user_branch_id=$request->session()->get('userbranch')->id;
-        $update->SaleStatus='Pending';
+        $update->SaleStatus='Approved';
         $update->save();
         // dd($update);
          return redirect()->back()->with('success','Updated Successfully!!!');
@@ -425,7 +427,7 @@ class CustomerController extends Controller
         $sale->ProductDetail = $request->ProductDetail;
         $sale->AccountingText = $request->AccountigText;
         $sale->user_branch_id=$request->session()->get('userbranch')->id;
-        $sale->SaleStatus='Pending';
+        $sale->SaleStatus='Approved';
         $sale->save();
          return redirect()->route('approveSale', array('id' => $sale->SaleID));
       }
@@ -481,7 +483,7 @@ class CustomerController extends Controller
         {
             $updatepaymet->AccountingText=$request->confidentialRemarks;
         }
-        $updatepaymet->StatusCode='Pending';
+        $updatepaymet->StatusCode='Approved';
         $updatepaymet->FOP='';
         $updatepaymet->PostedOn=date('Y-m-d H:i:s');
         $updatepaymet->save();
@@ -513,13 +515,37 @@ class CustomerController extends Controller
         {
             $payment->AccountingText=$request->confidentialRemarks;
         }
-        $payment->StatusCode='Pending';
+        $payment->StatusCode='Approved';
         $payment->FOP='';
         $payment->PostedOn=date('Y-m-d H:i:s');
         $payment->save();
         return redirect()->route('approvePayment', array('id' => $payment->PaymentID));
     }
 }
+
+    public function userperformance()
+    {
+        return view('Reports.UserPerformance');
+    }
+    
+    public function userPerformanceReportIndividual(Request $request)
+    {
+        $dateFrom=$request->dateFrom;
+        $dateTo=$request->dateTo;
+         $new_dateFrom=null;
+        $new_dateTo=null;
+         return view('Reports.userPerformanceReport',['dateFrom'=>$dateFrom,'dateTo'=>$dateTo,'new_dateFrom'=>$new_dateFrom,'new_dateTo'=>$new_dateTo]);
+    }
+    
+    public function userPerformanceReportDouble(Request $request)
+    {
+        $dateFrom=$request->previous_dateFrom;
+        $dateTo=$request->previous_dateTo;
+        $new_dateFrom=$request->dateFrom;
+        $new_dateTo=$request->dateTo;
+      return view('Reports.userPerformanceReport',['dateFrom'=>$dateFrom,'dateTo'=>$dateTo,
+                                                   'new_dateFrom'=>$new_dateFrom,'new_dateTo'=>$new_dateTo]);
+    }
     public function approvePayment($id)
     {
         $payments = Payment::selectRaw('PaymentID,branches.name as Branch,Login_users.name as Uname,CRM_Customers.CustomerName,

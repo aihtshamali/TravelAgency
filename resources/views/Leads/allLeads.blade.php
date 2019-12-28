@@ -35,12 +35,13 @@
                         <?php $leadCount=0; ?>
                         @forelse ($userLeads as $lead)
                             <?php $leadCount=$leadCount+$lead->lead_count; ?>
+                            
                             <tr>
                                 
                                 <td>{{$lead->branch}}</td>
                                 <td>{{$lead->name}}</td>
                                 <td>
-                                    {{$lead->lead_count}}
+                                   <a href="{{route('userLeadsbyId',$lead->user_id)}}"> {{$lead->lead_count}}</a>
                                 </td>
                                 
                             </tr>
@@ -67,7 +68,7 @@
     <div class="card">
         <div class="card-header"><h3 class="card-title font-weight-bold">Top 20 Old Leads</h3></div>
             <div class="card-body">
-                <table class="table table-hover">
+                <table class="table table-bordered">
                     
                     <thead class="thead-dark">
                         <th>Lead ID</th>
@@ -92,9 +93,9 @@
                                 <td>@if(isset($lead->TakenOverByUser->user_name)){{$lead->TakenOverByUser->user_name}}@endif</td>
                                 <td> @php
                                     $datetime1 = new DateTime($lead->CreatedOn);
-$datetime2 = new DateTime();
-$interval = $datetime1->diff($datetime2);
-echo $interval->format('%d days');
+                                    $datetime2 = new DateTime();
+                                    $interval = $datetime1->diff($datetime2);
+                                     echo $interval->format("%m Month %d Day %h Hours ");
                                 @endphp</td>
                             </tr>
                         @empty

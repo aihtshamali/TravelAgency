@@ -67,6 +67,15 @@
                                     @endforeach
                                 </select>
                             </div>
+                            <div class="form-group">
+                                <label for="lead_priority">Lead Priority</label>
+                                <select name="lead_priority" id="lead_priority" class="select2 form-control">
+                                    <option value="">Select Lead Priority</option>
+                                    @foreach ( $priority as $prior)
+                                        <option value="{{$prior->id}}">{{$prior->name}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
                             <div class="row">
                                 <div class="form-group col-md-6">
                                     <label for="source_id">Source</label>
