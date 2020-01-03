@@ -23,5 +23,8 @@ class Customer extends Model
     public function User(){
         return $this->belongsTo('App\User');
     }
-
+    
+         public function CustomerAttachment(){   
+        return $this->hasMany('App\CustomerAttachment','CustomerID');
+    }
 }

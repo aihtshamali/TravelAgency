@@ -47,6 +47,7 @@ Route::get('/changePaymentStatus/{id}/{status}', 'CustomerController@changePayme
 Route::get('/approveSale/{id}', 'CustomerController@approveSale')->name('approveSale');
 Route::get('/approveRefund/{id}', 'CustomerController@approveRefund')->name('approveRefund');
 Route::get('/approvePayment/{id}', 'CustomerController@approvePayment')->name('approvePayment');
+Route::post('/Customer/uploadattachments', 'CustomerController@uploadattachments')->name('uploadattachments');
 
 Route::get('/userperformance', 'CustomerController@userperformance')->name('userperformance');
 

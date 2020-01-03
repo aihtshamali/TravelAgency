@@ -16,7 +16,7 @@
     </div>
     <div class="card card-primary">
         @if(isset($customer))
-            <form role="form" action="{{route('Customer.update',$customer->CustomerID)}}" method="POST">
+            <form role="form" action="{{route('Customer.update',$customer->CustomerID)}}" method="POST" enctype="multipart/form-data">
                     @method('PUT')
         @else
             <form role="form" action="{{route('Customer.store')}}" method="POST">
@@ -60,7 +60,7 @@
                 </div>
             </div>
             <div class="form-group " >
-                <label for="remarks">Email Optional</label>
+                <label for="remarks">Email Address</label>
                 <div class="input-group">
                     <input value="<?php if(isset($customer)) { echo $customer->EmailAddress;} ?>" type="email" class="form-control" placeholder="Optional Email..." name="EmailAddress" >
                 </div>
@@ -70,7 +70,18 @@
                 <div class="input-group">
                     <input value="<?php if(isset($customer)) { echo $customer->Remarks;} ?>" type="text" class="form-control" placeholder="Optional Remarks..." name="remarks" >
                 </div>
+            </div> 
+             {{-- <div class="form-group " >
+                <label for="remarks">Document(s) Name <small> ( Can Upload multiple documents at once )</small></label>
+                <div class="input-group">
+                    <input value="" type="text" class="form-control" placeholder="" name="customerDocName" >
+                </div>
             </div>
+            <div class="form-group " >
+                <label for="remarks">Upload Document</label>
+                <input type="file" name="customerDocs[]" multiple="multiple" class="pd-0" >
+            </div>  --}}
+           
         </div>
         <div class="card-footer">
             <button type="submit" class="btn btn-success pull-right">Submit</button>

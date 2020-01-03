@@ -104,8 +104,12 @@
                        <input required type="text" name="ProductNum" value="{{$sale->ProductNum}}" class="form-control" autocomplete="off" >
                        </div>
                         <div class="form-group">
+                            <label for="">Attachment Name</label>
+                        <input type="text" name="document_name" value="" class="form-control pd-0" >
+                        </div>
+                        <div class="form-group">
                             <label for="">Ticket Attachment</label>
-                        <a href="{{asset('/storage/attachments/'.$sale->SaleID.'/'.$sale->ticket_attachment)}}" download>{{$sale->document_name}}</a>
+                        {{-- <a href="{{asset('/storage/attachments/'.$customer->CustomerID.'/'.$sale->SaleAttachment->ticket_attachment)}}" download>{{$sale->SaleAttachment->document_name}}</a> --}}
                             <input type="file" name="ticket_attachment[]"  multiple="multiple" class="form-control pd-0" >
                         </div>
                         

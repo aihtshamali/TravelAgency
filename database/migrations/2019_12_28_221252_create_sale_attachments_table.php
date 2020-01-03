@@ -16,12 +16,11 @@ class CreateSaleAttachmentsTable extends Migration
     {
         Schema::create('sale_attachments', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->Integer('SaleID')->unsigned()->index()->nullable();
-            $table->foreign('SaleID')->references('id')->on('CRM_Sale')->onDelete('no action');
+            $table->bigInteger('SaleID')->unsigned()->index()->nullable();
+            $table->foreign('SaleID')->references('SaleID')->on('CRM_Sale')->onDelete('no action');
             $table->string('ticket_attachment')->nullable();
             $table->string('document_name')->nullable();
             $table->boolean('status')->nullable();
-              
             $table->timestamps();
         });
     }

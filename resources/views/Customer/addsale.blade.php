@@ -24,7 +24,7 @@
                     <div class="form-group">
                         <label for="customer">Customer</label>
                         <input type="hidden" value="{{$customer->CustomerID}}" name="customer_id">
-                        <input type="text" readonly="readonly" value="<?php if(isset($customer)) { echo $customer->CustomerName." (".$customer->CustomerID.")";} ?>" required  name="customer" class="form-control" autocomplete="off" >
+                        <input type="text" readonly="readonly" value="<?php if(isset($customer)) { echo $customer->CustomerName."(".$customer->CustomerID.")";} ?>" required  name="customer" class="form-control" autocomplete="off" >
                     </div>
                     <div class="form-group">
                         <label for="LeadId">Lead Reference</label>
@@ -102,9 +102,13 @@
                            <label for="ProductNum">Ticket or Product No.</label>
                            <input required type="text" name="ProductNum" class="form-control" autocomplete="off" >
                        </div>
+                       <div class="form-group">
+                            <label for="">Attachment Name</label>
+                       <input type="text" name="document_name" value="" class="form-control pd-0" >
+                        </div>
                         <div class="form-group">
                             <label for="">Ticket Attachment</label>
-                            <input type="file" name="ticket_attachment[]" multiple="multiple" class="form-control pd-0" >
+                            <input type="file" namxe="ticket_attachment[]" multiple="multiple" class="form-control pd-0" >
                         </div>
                        <div class="form-group">
                            <label for="ProductPax">Passenger Name</label>

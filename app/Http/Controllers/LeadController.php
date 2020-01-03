@@ -174,7 +174,7 @@ class LeadController extends Controller
      */
     public function show($id)
     {
-    // dd($id);
+       // dd($id);
        $leads = Lead::findOrFail($id);
         $lead = LeadText::find($id);
         //its a very bad practice but i have to follow the previous table structure

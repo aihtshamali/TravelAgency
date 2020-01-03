@@ -65,12 +65,17 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
     @yield('javascript')
     <script>
+    // $('.leadtable').DataTable({paging:false,searching:false});
+// $('#payment').DataTable();
+$('#sales').DataTable();
     $('#pendingbalance').DataTable( {
      dom: 'Bfrtip',
      buttons: [
             'copy', 'csv', 'excel', 'pdf', 'print'
         ]
 } );
+$('#refund').DataTable();
+
     </script>
 </body>
 </html>

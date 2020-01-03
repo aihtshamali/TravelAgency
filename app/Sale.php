@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Sale extends Model
 {
     protected $table ="CRM_Sale";
-    protected $primaryKey = "SaleID";
+    protected $primaryKey ="SaleID";
 
     //
     public function Customer(){
@@ -31,7 +31,7 @@ class Sale extends Model
     public function Leadtype(){   
         return $this->belongsTo('App\LeadType','lead_type_id','id');
     }
-     public function SaleAttachment(){   
-        return $this->hasMany('App\SaleAttachment','Sale_id');
+    public function SaleAttachment(){   
+        return $this->hasMany('App\SaleAttachment','SaleID');
     }
 }

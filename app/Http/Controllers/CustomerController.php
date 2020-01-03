@@ -12,6 +12,8 @@ use App\Sector;
 use App\Sale;
 use App\PaymentForm;
 use App\Payment;
+use App\SaleAttachment;
+use App\CustomerAttachment;
 use App\User;
 use Session;
 use Auth;
@@ -46,7 +48,7 @@ class CustomerController extends Controller
      */
     public function create(Request $request)
     {
-        // dd($request->all());
+      
         $phoneNumber = "";
         if(isset($request->PhoneNumber)){
             $phoneNumber = $request->PhoneNumber;
@@ -62,31 +64,61 @@ class CustomerController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {
-        $request->validate([
+    {     
+         $request->validate([
             'PhoneNumber' => 'numeric|regex:/^03\d{2}\d{7}$/|required|unique:CRM_Customers',
         ]);
-        // $request->validate([
-        //     'PhoneNumber' => 'required|unique:CRM_Customers',
-        //     // 'EmailAddress' => 'required|unique:CRM_Customers|email'
-        // ]);
-        if($request->EmailAddress){
+      
+    //    dd($request->all());
+        if($request->EmailAddress)
+        {
             $customer = new User();
             $customer->name = $request->name;
             $customer->user_name = $request->PhoneNumber;
             $customer->email = $request->EmailAddress;
             $customer->password = Hash::make($request->PhoneNumber);
             $customer->save();
+            
         }
         if(CustomerType::find($request->customer_type)->name == "Individual"){
-            DB::select('exec CRM_CreateCustomer "'.$request->name.'", "'.$request->customer_type.'","'.$request->PhoneNumber.'","'.($request->EmailAddress ?? "NULL").'","'.($request->remarks ?? "NULL").'","'.$request->gender.'","'.Auth::user()->name.'","'.Session::get('userbranch')->branch_id.'", 1000');
+           $id= DB::select('exec CRM_CreateCustomer "'.$request->name.'", "'.$request->customer_type.'","'.$request->PhoneNumber.'","'.($request->EmailAddress ?? "NULL").'","'.($request->remarks ?? "NULL").'","'.$request->gender.'","'.Auth::user()->name.'","'.Session::get('userbranch')->branch_id.'", 1000');
+           dd($id);
         }
         else
         {
-            DB::select('exec CRM_CreateCustomer "'.$request->name.'", "'.$request->customer_type.'","'.$request->phone_no.'","'.($request->customer_email ?? "NULL").'","'.$request->remarks.'","NULL","'.Auth::user()->name.'","'.Session::get('userbranch')->branch_id.'",1000');
+          $id=  DB::select('exec CRM_CreateCustomer "'.$request->name.'", "'.$request->customer_type.'","'.$request->phone_no.'","'.($request->customer_email ?? "NULL").'","'.$request->remarks.'","NULL","'.Auth::user()->name.'","'.Session::get('userbranch')->branch_id.'",1000');
+         dd($id);
         }
         
-        return redirect()->back()>with('success','Customer added successfully!');
+        return redirect()->back()->with('success','Customer added successfully!');
+    }
+    
+    public function uploadattachments(Request $request  )
+    {
+                
+          if(!is_dir('storage/customer_attachments')){
+                mkdir('storage/customer_attachments');
+            }
+            if(!is_dir('storage/customer_attachments/'.$request->id.'-'.$request->name)){
+                mkdir('storage/customer_attachments/'.$request->id.'-'.$request->name);
+            }
+            if($request->hasFile('customerDocs'))
+            {  
+                foreach($request->file('customerDocs') as $iterator)
+                {   
+                    $customerAttachmemts=new CustomerAttachment();
+                    $iterator->store('public/customer_attachments/'.$request->id.'-'.$request->name.'/');
+                    $customerAttachmemts->CustomerID = $request->id;
+                    $customerAttachmemts->customerDocs = $iterator->hashName();
+                    $customerAttachmemts->customerDocName=$request->customerDocName;
+                    $customerAttachmemts->status=true;
+                    $customerAttachmemts->save();
+                }
+                  return redirect()->back()->with('success','Attachments Added Successfully!');
+            }
+            else{
+              return redirect()->back()->with('error','Error occured, kindly check !');
+            }
     }
     
     /**
@@ -119,7 +151,6 @@ class CustomerController extends Controller
                     ->where('amount','<',0)
                     ->get();
         $payments= Payment::where('CustomerIDRef',$id)->with('PaymentForm')->get();
-       
         return view('Customer.show',['sales'=>$sales,'refunds'=>$refunds,'customer'=>$customer,'leads'=>$leads,'payments'=>$payments]);
     }
     
@@ -163,6 +194,7 @@ class CustomerController extends Controller
         $customer->Remarks = $request->remarks;
         $customer->CreatedBy = Auth::user()->name;
         $customer->EmailAddress = $request->customer_email;
+       
         $customer->save();
         return redirect()->back()->with('success','Customer Added Successfully!');
         // dd($id);
@@ -206,75 +238,25 @@ class CustomerController extends Controller
     }
     public function saveSale(Request $request)
     { 
-    
-        // dd($request->file('ticket_attachment'));
-        if(Sale::find($request->saleId))
+        if(Sale::where('SaleID',$request->saleId)->exists())
         {
-            $update=Sale::find($request->saleId);
-        $update->CustomerIDRef = $request->customer_id;
-        $update->LeadIDRef = $request->LeadId;
-            //IT is SaleBy
-        $update->posted_by_user= $request->SaleBy;
-        $update->Amount = $request->amount;
-        $update->NetCost = $request->cost;
-        $update->ProfitAmount = $request->profit;
-        $update->lead_type_id = $request->lead_type_id;
-        $update->IssueDate=$request->IssueDate;
-        $update->ProductNum = $request->ProductNum;
-        $update->ProductPax = $request->ProductPax;
-        $update->source_id = $request->source_id;
-        $update->destination_id = $request->destination_id;
-        $update->ProductDetail = $request->ProductDetail;
-        $update->AccountingText = $request->AccountigText;
-        $update->user_branch_id=$request->session()->get('userbranch')->id;
-        $update->SaleStatus='Approved';
-            
-            $customer = Customer::find($request->customer_id);
-            $user_id = 0;
-            
-            if(isset($customer->User)){
-                $user_id = $customer->User->id;
-            }
-         
-            if($request->hasFile('ticket_attachment'))
-            {
-               if(!is_dir('storage/attachments')){
-                     mkdir('storage/attachments');
-                 }
-                if(!is_dir('storage/attachments/'.$request->saleId)){
-                    mkdir('storage/attachments/'.$request->saleId.'/');
-                }
-              foreach($request->file('ticket_attachment') as $fileIterator)
-              {
-                  $fileIterator->store('public/attachments/'.$request->saleId.'/');
-                $update->ticket_attachment = $fileIterator->hashName();
-                $update->document_name='Attachment-'.$request->saleId;
-              }
-            }
-        $update->save();
-            
-            return redirect()->back()->with('success','Updated Successfully!!!');
-            }
-            else{    
-            $sale=new Sale();
-            $sale->CustomerIDRef = $request->customer_id;
-            $sale->LeadIDRef = $request->LeadId;
-            //IT is SaleBy
-            $sale->posted_by_user= $request->CreatedBy;
-            $sale->Amount = $request->amount;
-            $sale->NetCost = $request->cost;
-            $sale->ProfitAmount = $request->profit;
-            $sale->lead_type_id = $request->lead_type_id;
-            $sale->IssueDate=$request->IssueDate;
-            $sale->ProductNum = $request->ProductNum;
-            $sale->ProductPax = $request->ProductPax;
-            // $sale->sector_id = $request->sector_id;
-            $sale->source_id = $request->source_id;
-            $sale->destination_id = $request->destination_id;
-            $sale->ProductDetail = $request->ProductDetail;
-            $sale->AccountingText = $request->AccountigText;
-            $sale->user_branch_id=$request->session()->get('userbranch')->id;
-            $sale->SaleStatus='Approved';
+            $update=Sale::where('SaleID',$request->saleId)->first();
+            $update->CustomerIDRef = $request->customer_id;
+            $update->LeadIDRef = $request->LeadId;
+            $update->posted_by_user= $request->SaleBy;
+            $update->Amount = $request->amount;
+            $update->NetCost = $request->cost;
+            $update->ProfitAmount = $request->profit;
+            $update->lead_type_id = $request->lead_type_id;
+            $update->IssueDate=$request->IssueDate;
+            $update->ProductNum = $request->ProductNum;
+            $update->ProductPax = $request->ProductPax;
+            $update->source_id = $request->source_id;
+            $update->destination_id = $request->destination_id;
+            $update->ProductDetail = $request->ProductDetail;
+            $update->AccountingText = $request->AccountigText;
+            $update->user_branch_id=$request->session()->get('userbranch')->id;
+            $update->SaleStatus='Approved';
             
             $customer = Customer::find($request->customer_id);
             $user_id = 0;
@@ -285,39 +267,82 @@ class CustomerController extends Controller
             if(!is_dir('storage/attachments')){
                 mkdir('storage/attachments');
             }
-            if(!is_dir('storage/attachments/'.$user_id)){
-                mkdir('storage/attachments/'.$user_id);
+            if(!is_dir('storage/attachments/'.$request->saleId)){
+                mkdir('storage/attachments/'.$request->saleId);
             }
-            if($request->hasFile('ticket_attachment')){
-                $request->file('ticket_attachment')->store('public/attachments/'.$user_id.'/');
-                $sale->ticket_attachment = $request->file('ticket_attachment')->hashName();
-                //   $sale->document_name='Attachment-'.$request->saleId;
+            if($request->hasFile('ticket_attachment'))
+            {  
+                foreach($request->file('ticket_attachment') as $iterator)
+                {   
+                    $saleAttachmemts=new SaleAttachment();
+                    $iterator->store('public/attachments/'.$request->saleId.'/');
+                    $saleAttachmemts->SaleID = $request->saleId;
+                    $saleAttachmemts->ticket_attachment = $iterator->hashName();
+                    $saleAttachmemts->document_name=$request->document_name;
+                    $saleAttachmemts->status=true;
+                    $saleAttachmemts->save();
+                    // dd($saleAttachmemts);
+                }
             }
-            $sale->save();
+            $update->save();
+            return redirect()->back()->with('success','Updated Successfully!!!');
+        }
+        else
+        {    
+                $sale=new Sale();
+                $sale->CustomerIDRef = $request->customer_id;
+                $sale->LeadIDRef = $request->LeadId;
+                //IT is SaleBy
+                $sale->posted_by_user= $request->CreatedBy;
+                $sale->Amount = $request->amount;
+                $sale->NetCost = $request->cost;
+                $sale->ProfitAmount = $request->profit;
+                $sale->lead_type_id = $request->lead_type_id;
+                $sale->IssueDate=$request->IssueDate;
+                $sale->ProductNum = $request->ProductNum;
+                $sale->ProductPax = $request->ProductPax;
+                // $sale->sector_id = $request->sector_id;
+                $sale->source_id = $request->source_id;
+                $sale->destination_id = $request->destination_id;
+                $sale->ProductDetail = $request->ProductDetail;
+                $sale->AccountingText = $request->AccountigText;
+                $sale->user_branch_id=$request->session()->get('userbranch')->id;
+                $sale->SaleStatus='Approved';
+              $sale->save();
+                $customer = Customer::find($request->customer_id);
+                $user_id = 0;
+                
+                if(isset($customer->User)){
+                    $user_id = $customer->User->id;
+                }
+              
+                if(!is_dir('storage/attachments')){
+                    mkdir('storage/attachments');
+                }
+                if(!is_dir('storage/attachments/'.$sale->SaleID)){
+                    mkdir('storage/attachments/'.$sale->SaleID);
+                }
+               
+                  if($request->hasFile('ticket_attachment'))
+                    {
+                        foreach($request->file('ticket_attachment') as $iterator)
+                        {   
+                                // dd($iterator);
+                                $saleAttachmemts=new SaleAttachment();
+                                $iterator->store('public/attachments/'.$sale->SaleID.'/');
+                                $saleAttachmemts->SaleID = $sale->SaleID;
+                                $saleAttachmemts->ticket_attachment = $iterator->hashName();
+                                $saleAttachmemts->document_name=$request->document_name;
+                                $saleAttachmemts->status=true;
+                                $saleAttachmemts->save();
+                        // dd($saleAttachmemts);
+                        }
+                    }
+                
+                
             
-            return redirect()->route('approveSale', array('id' => $sale->SaleID));
-            // $sale->created_at=date('Y-m-d H:i:s');
-            // $sale->updated_at=date('Y-m-d H:i:s');
-            // return view('Customer.addsale',['lead_types'=>$lead_types,'customer'=>$customer,'leads'=>$leads,'users'=>$users,'sectors'=>$sectors]);
-            // echo "hey";
-            // dd($request->session()->get('userbranch')->user_id);
-            // dd($sale->SaleID);
-            // $sales = Sale::selectRaw('SaleID,branches.name as Branch,Login_users.name as Uname,CRM_Customers.CustomerName,
-            // CRM_Sale.CustomerIDRef,LeadIDRef,CRM_Sale.created_at,Amount,NetCost,ProfitAmount,
-            // AccountingText,lead_types.name as Type,IssueDate,ProductPax,ProductNum,sectors.name as Sector')
-            // ->leftJoin('CRM_Customers','CRM_Sale.CustomerIDRef','CRM_Customers.CustomerID')
-            // ->leftJoin('CRM_Leads','CRM_Sale.LeadIDRef','CRM_Leads.LeadID')
-            // ->leftJoin('user_branches','CRM_Sale.user_branch_id','user_branches.id')
-            // ->leftJoin('Login_Users','Login_Users.id','user_branches.user_id')
-            // ->leftJoin('branches','branches.id','user_branches.branch_id')
-            // ->leftJoin('lead_types','CRM_Sale.lead_type_id','lead_types.id')
-            // ->leftJoin('sectors','CRM_Sale.sector_id','sectors.id')
-            // ->where('SaleID',$sale->SaleID)->first();
-
-            //         // dd($sales);
-            // return view('Customer.approvesale',['sale'=>$sales]);
-            // approveSale($sale->id);
-            // dd($request->all());
+                 return redirect()->route('approveSale', array('id' => $sale->SaleID));
+            
             }
             
     }

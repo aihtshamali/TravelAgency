@@ -29,6 +29,10 @@ table tbody td {
             padding:0.5rem 0.4rem;
             min-width:80px;
         }
+        td> ol{
+            padding-left: 25px !important;
+    margin-bottom: 0px !important;
+        }
         .border_top{
       border-top: 3px solid white!important;
         }
@@ -99,9 +103,11 @@ table tbody td {
                                     <td><i class="fa fa-envelope mr-2"></i>Email Address</td>
                                     <td>{{$customer->EmailAddress ?? "NA" }}</td>
                                 </tr>
+                               
                             </tbody>
                         </table>
                     </div>
+                    
                 </div>
             </div>
             <div class="col-md-6">
@@ -133,12 +139,67 @@ table tbody td {
             </div>
             {{-- End --}}
         </div>
-        <div class="row mr-2">
+          <div class="row mt-3">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header"><h3 class="card-title">Customer Attachments </h3>
+                    </div>
+                     <div class="card-body" style="padding-bottom: 0px;">
+                    @if($customer->CustomerAttachment->count())
+                    
+                        <ol>
+                            @foreach($customer->CustomerAttachment as $attachment)
+                            <li><a href="{{asset('/storage/customer_attachments/'.$customer->CustomerID.'-'.$customer->CustomerName.'/'.$attachment->customerDocs)}}" download='{{$attachment->customerDocName}}'>{{$attachment->customerDocName}}</a></li>
+                            @endforeach
+                            </ol>
+                              @else
+                    No Attachment
+                    @endif
+                     </div>
+                     
+                    <div class="card-body">
+                   <form role="form" action="{{route('uploadattachments',$customer->CustomerID)}}" method="POST" enctype="multipart/form-data">
+                     @csrf
+                    <input type="hidden" name="id" value="{{$customer->CustomerID}}" >
+                    <input type="hidden" name="name" value="{{$customer->CustomerName}}">
+                        <table class="table  table-responsive-md table-responsive-lg compact table-responsive-xs table-hover table-bordered">
+                            <thead>
+                                <th>
+                                    <i class="fas fa-book mr-2"></i>Document Name
+                                </th>
+                                     <th>
+                                <i class="fa fa-upload mr-2"></i>Attach Document
+                                </th>
+                                     <th>
+                                    
+                                </th>
+                            </thead>
+                            <tbody>
+                                <tr class="">
+                                    <td><input value="" type="text" class="form-control" placeholder="" name="customerDocName" >
+                                        </td>
+                                    <td><input type="file" name="customerDocs[]" multiple="multiple" class="pd-0" >
+                                        </td>
+                                        <td>
+                                           <button type="submit" class="btn btn-success">Submit</button>
+                                        </td>
+                                </tr>
+                               
+                            </tbody>
+                        </table>
+                         </form>
+                    </div>
+                    
+                </div>
+            </div>
+         
+        </div>
+        <div class="row mt-2 mr-2">
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header"><h3 class="card-title font-weight-bold">Leads</h3></div>
                         <div class="card-body">
-                            <table class="table table-hover">
+                            <table  id="" class="table leadtable table-responsive-md table-responsive-lg compact table-responsive-xs table-hover table-bordered">
                                 <caption>List of Lead</caption>
                                 <thead class="thead-dark">
                                     <th>Lead ID</th>
@@ -170,7 +231,7 @@ table tbody td {
                           @php
                             $totalAmount=array();   
                             @endphp
-                            <table class="table table-responsive-md table-responsive-lg table-responsive-xs table-hover">
+                            <table id="sales" class="table table-responsive-md table-responsive-lg compact table-responsive-xs table-hover table-bordered" >
                                 <caption>List of Sales</caption>
                                 <thead class="thead-dark">
                                 <th>Action</th>
@@ -204,9 +265,13 @@ table tbody td {
                                         <td>-</td>
                                         @endif
                                         <td>
-                                        @if($sale->ticket_attachment != null)
-                                        <a href="{{asset('/storage/attachments/'.$sale->SaleID.'/'.$sale->ticket_attachment)}}" download>{{$sale->document_name}}</a>
-                                        @else
+                                            @if($sale->SaleAttachment->count())
+                                            <ol>
+                                                @foreach($sale->SaleAttachment as $attachment)
+                                                <li><a href="{{asset('/storage/attachments/'.$sale->SaleID.'/'.$attachment->ticket_attachment)}}" download='{{$attachment->document_name}}'>{{$attachment->document_name}}</a></li>
+                                                @endforeach
+                                                </ol>
+                                            @else
                                         No Attachment
                                         @endif
                                         </td>
@@ -219,7 +284,7 @@ table tbody td {
                                     </tr>
                                     @endforeach
                                     <tr>
-                                    <td class="text-center text-bold" colspan="9">Total Amount in PKR</td>
+                                    <td class="text-center text-bold" colspan="10">Total Amount in PKR</td>
                                     <td class="text-center text-bold" colspan="1">@php $totalSum=array_sum($totalAmount); 
                                                     echo number_format($totalSum,0) @endphp</td>
                                     </tr>
@@ -234,10 +299,11 @@ table tbody td {
                          @php
                             $totalRefund=array();   
                             @endphp
-                            <table class="table table-responsive-md table-responsive-lg table-responsive-xs table-hover">
+                            <table id="refund" class="table table-responsive-md table-responsive-lg compact table-responsive-xs table-hover table-bordered">
                                 <caption>List of Refunds</caption>
                                 <thead class="thead-dark">
-                                <th>Action</th>
+                                  <tr>
+                                   <th>Action</th>
                                     <th>ID</th>
                                     <th>Issue Date</th>
                                     <th>Type</th>
@@ -247,6 +313,7 @@ table tbody td {
                                     <th>Branch</th>
                                     <th>SPO</th>
                                     <th>Amount</th>
+                                  </tr>
                                 </thead>
                                 <tbody>
                                     @foreach($refunds as $refund)
@@ -255,24 +322,25 @@ table tbody td {
                                         <td><a href="{{route('approveRefund',$refund->SaleID)}}">{{$refund->SaleID}}</a></td>
                                         <td>{{date('d-M-Y',strtotime($refund->IssueDate))}}</td>
                                         <td>
-                                        {{isset($sale->Leadtype->name) ? $sale->Leadtype->name : '-'}}
+                                          {{isset($sale->Leadtype->name) ? $sale->Leadtype->name : '-'}}
                                         </td>
                                         <td>{{$refund->ProductPax}}</td>
                                         <td>{{$refund->ProductNum}}</td>
                                         <td>{{$refund->ProductDetail}}</td>
                                         <td>{{isset($refund->UserBranch->Branch->name) ? $refund->UserBranch->Branch->name : '-'}}</td>
                                         <td>
-                                        @if(isset($refund->PostedByUser->name))
-                                            <a href="{{route('User.show',$refund->posted_by_user)}}">{{$refund->PostedByUser->name}}</a>
-                                        @else
-                                            <span> - </span>
-                                        @endif    
+                                                @if(isset($refund->PostedByUser->name))
+                                                    <a href="{{route('User.show',$refund->posted_by_user)}}">{{$refund->PostedByUser->name}}</a>
+                                                @else
+                                                    <span> - </span>
+                                                @endif    
                                         </td>
-                                     <td>
-                                          @php
-                                            array_push($totalRefund,$refund->Amount);   
-                                            @endphp
-                                        {{number_format($refund->Amount,0)}}</td>
+                                        <td>
+                                            @php
+                                                array_push($totalRefund,$refund->Amount);   
+                                                @endphp
+                                            {{number_format($refund->Amount,0)}}
+                                        </td>
                                     </tr>
                                     @endforeach
                                      <tr>
@@ -292,7 +360,7 @@ table tbody td {
                              @php
                             $totalPayment=array();   
                             @endphp
-                            <table class="table table-responsive-md table-responsive-lg table-responsive-xs table-hover">
+                            <table id="payment" class=" table table-responsive-md table-responsive-lg compact table-responsive-xs table-hover table-bordered">
                                 <caption>List of Payments</caption>
                                 <thead class="thead-dark">
                                    <tr>
@@ -332,7 +400,7 @@ table tbody td {
                                     </tr>
                                     @endforeach
                                      <tr>
-                                    <td class="text-center text-bold" colspan="9">Total Payment in PKR</td>
+                                    <td class="text-center text-bold" colspan="8">Total Payment in PKR</td>
                                     <td class="text-center text-bold" colspan="1">@php $totalPaymentSum=array_sum($totalPayment); 
                                                     echo number_format($totalPaymentSum,0) @endphp</td>
                                     </tr>
@@ -345,4 +413,9 @@ table tbody td {
             </div>
         </div>
     </div>
+@endsection
+@section('javascript')
+<script>
+
+</script>
 @endsection
