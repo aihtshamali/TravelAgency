@@ -261,8 +261,14 @@ class HomeController extends Controller
         foreach($sales as $sale){
             $actionBy = User::where("user_name",$sale->ActionBy)->first();
             $saleBy = User::where("user_name",$sale->SaleBy)->first();
-            $postedBy = UserBranch::where('user_id',User::where("user_name",$sale->PostedBy)->first()->id)->first();
+            if($sale->PostedBy == null)
+            {
+                $sale->delete();
+            }
+            else{
             
+            $postedBy = UserBranch::where('user_id',User::where("user_name",$sale->PostedBy)->first()->id)->first();
+            }
             if($actionBy)
                 $sale->action_by = $actionBy->id; 
             if($saleBy)
@@ -277,7 +283,9 @@ class HomeController extends Controller
         $payments = Payment::all();
         foreach($payments as $payment){
             $saleBy = User::where("user_name",$payment->SaleBy)->first();
+          
             $PostedBy = UserBranch::where('user_id',User::where("user_name",$payment->PostedBy)->first()->id)->first();
+            
             $authBy = User::where("user_name",$payment->AuthBy)->first();
             $payment_form = PaymentForm::where('name',$payment->FOP)->first();
             $payment->payment_form_id = $payment_form->id;

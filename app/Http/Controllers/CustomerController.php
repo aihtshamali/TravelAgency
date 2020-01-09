@@ -308,7 +308,7 @@ class CustomerController extends Controller
                 $sale->AccountingText = $request->AccountigText;
                 $sale->user_branch_id=$request->session()->get('userbranch')->id;
                 $sale->SaleStatus='Approved';
-              $sale->save();
+                $sale->save();
                 $customer = Customer::find($request->customer_id);
                 $user_id = 0;
                 
@@ -560,11 +560,14 @@ class CustomerController extends Controller
     
     public function userPerformanceReportIndividual(Request $request)
     {
-        $dateFrom=$request->dateFrom;
-        $dateTo=$request->dateTo;
+        $dateFrom=date('Y-m-d h:i:s',strtotime($request->dateFrom));
+        $dateTo=date('Y-m-d h:i:s',strtotime($request->dateTo));
          $new_dateFrom=null;
         $new_dateTo=null;
-         return view('Reports.userPerformanceReport',['dateFrom'=>$dateFrom,'dateTo'=>$dateTo,'new_dateFrom'=>$new_dateFrom,'new_dateTo'=>$new_dateTo]);
+        $Userdata =  collect(DB::select('exec CRM_UserReport "'.$dateFrom.'","'.$dateTo.'"'));
+         dd($Userdata);   
+       
+         return view('Reports.userPerformanceReport',['Userdata'=>$$Userdata,'dateFrom'=>$dateFrom,'dateTo'=>$dateTo,'new_dateFrom'=>$new_dateFrom,'new_dateTo'=>$new_dateTo]);
     }
     
     public function userPerformanceReportDouble(Request $request)
