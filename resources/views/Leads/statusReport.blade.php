@@ -8,61 +8,61 @@
 </style>
 @endsection 
 @section('content')
-    <div class="content-wrapper" style="margin-top:2%;">
+    <div class="content-wrapper" >
         @include('inc/flashMessages')
-       
-        <div class="row">
-            <div class="card col-md-12">
-                <div class="card-header">
-                    <h3><b>Lead Status Report</b></h3>
+        
+       <div class="row">
+            <div class="card col-md-6 offset-md-3 ">
+           <h5><b>Lead Status Report</b></h5>
+            <form action="{{route('leadStatusReportsearch')}}" method="POST">
+                @csrf
+                <div class="card-body row">
+                     <div class="form-group col-md-6">
+                        <label for="Datefrom">Date From</label>
+                        <div class="input-group">
+                           <input type="date" name="dateFrom" required class="form-control">
+                        </div>
+                    </div>
+                     <div class="form-group col-md-6">
+                        <label for="Dateto">Date To</label>
+                        <div class="input-group">
+                           <input type="date" name="dateTo" required class="form-control">
+                        </div>
+                    </div>
                 </div>
-                <div class="card-body">
-                    <table class="table table-bordered" data-page-length="100" id="statusReport">
-                        <thead class="table-dark">
-                            <tr>
-                                <th>Lead ID</th>
-                                <th>Customer</th>
-                                <th>Lead Subject</th>
-                                <th>Status</th>
-                                <th>User</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($leadStatus as $leadS )
-                            <tr>
-                             <td> <a href="{{route('leads.show',$leadS->LeadID)}}">{{$leadS->LeadID}}</a></td>
-                            <td>{{$leadS->Customer->CustomerName}}</td>
-                            <td>{{$leadS->LeadSubject}}</td>
+                <div class="card-body row">
+                <div class="form-group col-md-6">
+                        <label for="Dateto">User</label>
+                         <div class="input-group">
+                           <select name="CreatedBy" required class="form-control">
+                           <option value="" selected    >Choose Option</option>
+                                @foreach ($users as $user)
+                                    <option value="{{$user->id}}">{{$user->user_name}} [{{$user->name}}] </option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                      <div class="form-group col-md-6">
+                        <label for="Dateto">Status</label>
+                          <select name="leadStatus" class="form-control">
+                           <option value="" selected    >Choose Option</option>
+                           <option value="All">All</option>
+                           <option value="Completed">Completed</option>
+                           <option value="Closed">Closed</option>
+                           <option value="Open">Open</option>
+                           <option value="Working">Working</option>
                            
-                            <td>
-                                @if($leadS->LeadStatus=='Completed')
-                                <span class="badge badge-success">{{$leadS->LeadStatus}}</span>
-                                @elseif($leadS->LeadStatus=='Closed')
-                                <span class="badge badge-danger">{{$leadS->LeadStatus}}</span>
-                                  @elseif($leadS->LeadStatus=='Open')
-                                <span class="badge badge-warning">{{$leadS->LeadStatus}}</span>
-                                 @elseif($leadS->LeadStatus=='Working')
-                                <span class="badge badge-info">{{$leadS->LeadStatus}}</span>
-                                @endif
-                            </td>
-                                <td>{{$leadS->User->name}}</td>
-                            </tr>
-                            @endforeach
-                            
-                        </tbody>
-                    </table>
+                            </select>
+                    </div>
                 </div>
+                <div class="form-group row">
+                    <button type="submit" class="btn btn-md btn-info col-md-4 offset-md-4"> Generate Report</button>
+                </div>
+            </form>
             </div>
         </div>
     </div>   
 @endsection
 @section('javascript')
-<script>
- $('#statusReport').DataTable( {
-     dom: 'Bfrtip',
-     buttons: [
-            'copy', 'csv', 'excel', 'pdf', 'print'
-        ]
-} );
-</script>
+
 @endsection

@@ -295,9 +295,54 @@ class LeadController extends Controller
     
     public function leadStatusreport()
     {
-        
+         $users=User::all();
         $leadStatus=Lead::all();
-        return view('Leads.statusReport',['leadStatus'=>$leadStatus]);
+      
+        return view('Leads.statusReport',['leadStatus'=>$leadStatus,'users'=>$users]);
+    }
+    public function leadStatusReportsearch( Request $request)
+    {
+    //    dd($request->all());
+        $dateFrom=date('Y-m-d h:i:s',strtotime($request->dateFrom));
+        $dateTo=date('Y-m-d h:i:s',strtotime($request->dateTo));
+        $createdby=$request->CreatedBy;
+        $status=$request->leadStatus;
+        
+        $new_dateFrom=null;
+        $new_dateTo=null;
+        $users=User::all();
+        $leadStatus=Lead::all();
+        $Userdatanew=array();
+        $Userdata = collect ( DB::select('exec CRM_LeadStatusReport "'.$createdby.'","'.$dateFrom.'","'.$dateTo.'","'.$status.'"'));
+         
+         return view('Leads.statusReportDouble',['status'=>$status,'createdby'=>$createdby,'Userdatanew'=> $Userdatanew,'Userdata'=> $Userdata,
+         'leadStatus'=>$leadStatus,
+         'users'=>$users,
+         'dateFrom'=>$dateFrom,'dateTo'=>$dateTo,
+         'new_dateFrom'=>$new_dateFrom,'new_dateTo'=>$new_dateTo]);
+    }
+    
+    public function statusReportDouble(Request $request)
+    {
+        $new_dateFrom=date('Y-m-d h:i:s',strtotime($request->new_dateFrom));
+        $new_dateTo=date('Y-m-d h:i:s',strtotime($request->new_dateTo));
+        $new_user=$request->newCreatedBy;
+        $new_status=$request->newleadStatus;
+        
+        $dateFrom=$request->previous_dateFrom;
+        $dateTo=$request->previous_dateTo;
+        $createdby=$request->previous_user;
+        $status=$request->previous_status;
+        
+        $users=User::all();
+        $leadStatus=Lead::all();
+        $Userdatanew= collect ( DB::select('exec CRM_LeadStatusReport "'.$new_user.'","'.$new_dateFrom.'","'.$new_dateTo.'","'.$new_status.'"'));
+        $Userdata = collect ( DB::select('exec CRM_LeadStatusReport "'.$createdby.'","'.$dateFrom.'","'.$dateTo.'","'.$status.'"'));
+        // dd($Userdatanew);
+         return view('Leads.statusReportDouble',['new_status'=>$new_status,'status'=>$status,'createdby'=>$createdby,'Userdatanew'=> $Userdatanew,'Userdata'=> $Userdata,
+         'leadStatus'=>$leadStatus,
+         'users'=>$users,
+         'dateFrom'=>$dateFrom,'dateTo'=>$dateTo,'new_dateFrom'=>$new_dateFrom,'new_dateTo'=>$new_dateTo]);
     }
     public function leadReportSearch(Request $request){
         

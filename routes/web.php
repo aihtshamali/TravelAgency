@@ -63,6 +63,12 @@ Route::get('/editRefund/{id?}','SaleController@editRefund')->name('editRefund');
 Route::get('/editPayment/{id?}','PaymentController@editPayment')->name('editPayment');
 Route::get('userLeadsbyId/{id?}','LeadController@userLeadsbyId')->name('userLeadsbyId');
 Route::get('/leadStatusreport' ,'LeadController@leadStatusreport')->name('leadStatusreport');
+
+Route::post('/leadStatusReportsearch' ,'LeadController@leadStatusReportsearch')->name('leadStatusReportsearch');
+Route::post('/statusReportDouble' ,'LeadController@statusReportDouble')->name('statusReportDouble');
+
+// Route::get('/username' ,'CustomerController@username')->name('username');
+
 //Individual Reports
 Route::get('/myTransactions','IndividualReportController@transactions')->name('mytransactions');
 Route::get('/FinalizedLeads','IndividualReportController@FinalizedLeads')->name('FinalizedLeads');
@@ -78,11 +84,16 @@ Route::get('/blockUser','UserController@blockUser')->name('blockUser');
 Route::get('/rolesAuthorityView','UserController@rolesAuthorityView')->name('rolesAuthorityView');
 Route::get('/userActivitylogView','UserController@userActivitylogView')->name('userActivitylogView');
 Route::get('/userDetails/{id}','UserController@userDetails')->name('userDetails');
+
+Route::get('/Details/{id}','UserController@Details')->name('Details');
+
 Route::post('/assignRole','UserController@assignRole')->name('assignRole');
 Route::post('/removerole','UserController@removerole')->name('removerole');
 Route::post('/updateDetails','UserController@updateDetails')->name('updateDetails');
 Route::get('/assignedUsertoRoles/{id}','UserController@assignedUsertoRoles')->name('assignedUsertoRoles');
 Route::get('/showDetailByUserName/{usernamw}','UserController@showDetailByUserName')->name('showDetailByUserName');
+
+Route::get('/showDetailByUserNameCRM/{usernamw}','UserController@showDetailByUserNameCRM')->name('showDetailByUserNameCRM');
 
 // Cashbook
 Route::get('/CashbookHome','CashbookController@index')->name('cashbookIndex');

@@ -558,25 +558,33 @@ class CustomerController extends Controller
         return view('Reports.UserPerformance');
     }
     
-    public function userPerformanceReportIndividual(Request $request)
+    public  function userPerformanceReportIndividual(Request $request)
     {
         $dateFrom=date('Y-m-d h:i:s',strtotime($request->dateFrom));
         $dateTo=date('Y-m-d h:i:s',strtotime($request->dateTo));
-         $new_dateFrom=null;
+        $new_dateFrom=null;
         $new_dateTo=null;
-        $Userdata =  collect(DB::select('exec CRM_UserReport "'.$dateFrom.'","'.$dateTo.'"'));
-         dd($Userdata);   
+        $Userdata =  collect(DB::select('exec CRM_UserPerformanceReport "'.$dateFrom.'","'.$dateTo.'"'));
+        //  dd($Userdata[0]);
        
-         return view('Reports.userPerformanceReport',['Userdata'=>$$Userdata,'dateFrom'=>$dateFrom,'dateTo'=>$dateTo,'new_dateFrom'=>$new_dateFrom,'new_dateTo'=>$new_dateTo]);
+         return view('Reports.userPerformanceReport',['Userdata'=>$Userdata,'dateFrom'=>$dateFrom,'dateTo'=>$dateTo,'new_dateFrom'=>$new_dateFrom,'new_dateTo'=>$new_dateTo]);
     }
-    
+    public static function username($id)
+    {
+        $username=User::where('id','=',$id)->first();
+        
+      return  $username->user_name;
+    }
     public function userPerformanceReportDouble(Request $request)
     {
         $dateFrom=$request->previous_dateFrom;
         $dateTo=$request->previous_dateTo;
         $new_dateFrom=$request->dateFrom;
         $new_dateTo=$request->dateTo;
-      return view('Reports.userPerformanceReport',['dateFrom'=>$dateFrom,'dateTo'=>$dateTo,
+        $Userdata =  collect(DB::select('exec CRM_UserPerformanceReport "'.$dateFrom.'","'.$dateTo.'"'));
+        $Userdatanew =  collect(DB::select('exec CRM_UserPerformanceReport "'.$new_dateFrom.'","'.$new_dateTo.'"'));
+        
+      return view('Reports.userPerformanceReport',['Userdata'=>$Userdata,'Userdatanew'=>$Userdatanew,'dateFrom'=>$dateFrom,'dateTo'=>$dateTo,
                                                    'new_dateFrom'=>$new_dateFrom,'new_dateTo'=>$new_dateTo]);
     }
     public function approvePayment($id)

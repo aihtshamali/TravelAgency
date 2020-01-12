@@ -143,6 +143,18 @@ class UserController extends Controller
       return redirect()->route('userDetails',$username->id);
       
     }
+      public function showDetailByUserNameCRM($username)
+    {
+      $username=User::where('user_name','=',$username)->first();
+      return redirect()->route('Details',$username->id);
+      
+    }
+    public function Details($id)
+    {
+       $user= User::find($id);
+      return view("User.details",compact('user'));
+    }
+    
     public function userDetails($id)
     {
     $user= User::find($id);

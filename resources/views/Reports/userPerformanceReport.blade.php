@@ -47,7 +47,7 @@ margin-left:5%;
         <div class="row">
             <div class="card olddate col-md-12">
                 <div class=" card-header">
-                    <h6><b>Showing Results from [{{date('d-M-y',strtotime($dateFrom))}}] to[{{date('d-M-y',strtotime($dateTo))}}]  </b></h6>
+                    <h6>Showing Results from <b>[{{date('d-M-y',strtotime($dateFrom))}}]</b> to <b>[{{date('d-M-y',strtotime($dateTo))}}]  </b></h6>
                 </div>
                 <div class="card-body">
                 <table class="table table-bordered ">
@@ -59,22 +59,45 @@ margin-left:5%;
                         </tr>
                     </thead>
                     <tbody>
+                      @php
+                  $count=array();   
+                 @endphp
+                      @foreach ($Userdata as $Userd )
                         <tr>
-                            <td></td>
-                            <td></td>
-                            <td></td>
+                             <td>
+                                @if($Userd->branch_id=='1')
+                                 HDQ
+                                 @else
+                                 NAN
+                                @endif
+                             </td>
+                            <td>
+                           @php
+                                $name=App\Http\Controllers\CustomerController::username($Userd->model_id);
+                            @endphp
+                             <a href="{{route('showDetailByUserNameCRM',$name)}}"> {{$name}}</a>  
+                            
+                            </td>
+                            <td>PKR/- {{number_format($Userd->NetProfit,0)}}
+                                 @php
+                        array_push($count,$Userd->NetProfit);   
+                        @endphp
+                            </td>
                         </tr>
-                        <tr>
+                      
+                    @endforeach
+                         <tr>
                             <td colspan="2">Total</td>
-                            <td>{{number_format('123456',2)}}</td>
-                        </tr>
+                            <td>PKR/- <b> @php $cash=array_sum($count); 
+                    echo number_format($cash,0) @endphp </b></td>
+                        </tr> 
                     </tbody>
                     </table>
                 </div>
             </div>
             <div class="newdate card cardgap col-md-5" style="display: none;">
                 <div class="card-header">
-                    <h6><b>Showing Results from [<span id="newdatetext">{{date('d-M-y',strtotime($new_dateFrom))}}</span>] to[{{date('d-M-y',strtotime($new_dateFrom))}}]  </b></h6>
+                    <h6>Showing Results from <b>[<span id="newdatetext">{{date('d-M-y',strtotime($new_dateFrom))}}</span>]</b> to <b>[{{date('d-M-y',strtotime($new_dateTo))}}]  </b></h6>
                 </div>
                 @if(isset($new_dateFrom) && $new_dateFrom!=null)
                 <div class="card-body">
@@ -87,15 +110,38 @@ margin-left:5%;
                     </tr>
                      </thead>
                     <tbody>
-                    <tr>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td colspan="2">Total</td>
-                        <td>{{number_format('123456',2)}}</td>
-                    </tr>
+                      @php
+                  $count=array();   
+                 @endphp
+                    @foreach ($Userdatanew as $Userd )
+                        <tr>
+                             <td>
+                                @if($Userd->branch_id=='1')
+                                 HDQ
+                                 @else
+                                 NAN
+                                @endif
+                             </td>
+                            <td>
+                                @php
+                                $name=App\Http\Controllers\CustomerController::username($Userd->model_id);
+                            @endphp
+                             <a href="{{route('showDetailByUserNameCRM',$name)}}"> {{$name}}</a>  
+                            
+                            </td>
+                            <td>PKR/- {{number_format($Userd->NetProfit,0)}}
+                                 @php
+                        array_push($count,$Userd->NetProfit);   
+                        @endphp
+                            </td>
+                        </tr>
+                      
+                    @endforeach
+                         <tr>
+                            <td colspan="2">Total</td>
+                            <td>PKR/- <b> @php $cash=array_sum($count); 
+                    echo number_format($cash,0) @endphp </b></td>
+                        </tr> 
                     </tbody>
                         </table>
                 </div>
