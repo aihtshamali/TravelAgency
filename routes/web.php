@@ -67,8 +67,13 @@ Route::get('/leadStatusreport' ,'LeadController@leadStatusreport')->name('leadSt
 Route::post('/leadStatusReportsearch' ,'LeadController@leadStatusReportsearch')->name('leadStatusReportsearch');
 Route::post('/statusReportDouble' ,'LeadController@statusReportDouble')->name('statusReportDouble');
 
-// Route::get('/username' ,'CustomerController@username')->name('username');
+Route::get('/takeLeads' ,'LeadController@takeLeads')->name('takeLeads');
+Route::get('/getClosedLeads' ,'LeadController@getClosedLeads')->name('getClosedLeads');
+Route::get('/getOpenLeads' ,'LeadController@getOpenLeads')->name('getOpenLeads');
+Route::get('/getCompletedLeads' ,'LeadController@getCompletedLeads')->name('getCompletedLeads');
+Route::get('/getWorkingLeads' ,'LeadController@getWorkingLeads')->name('getWorkingLeads');
 
+// 
 //Individual Reports
 Route::get('/myTransactions','IndividualReportController@transactions')->name('mytransactions');
 Route::get('/FinalizedLeads','IndividualReportController@FinalizedLeads')->name('FinalizedLeads');

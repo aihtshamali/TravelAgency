@@ -15,7 +15,9 @@ margin-left:4%;
         @include('inc/flashMessages')
        <div class="row">
             <div class="card col-md-12 ">
-               
+              <div class="card-header">
+                     <h5><b>Lead Status Report</b></h5>
+              </div>
             <form action="{{route('statusReportDouble')}}" method="POST">
                 @csrf
                 {{-- {{dd(date('Y-m-d',strtotime($new_dateFrom)))}} --}}
@@ -60,7 +62,7 @@ margin-left:4%;
                         <input type="hidden" name="previous_dateFrom" value="{{$dateFrom}}">
                          <input type="hidden" name="previous_dateTo" value="{{$dateTo}}">
                           <input type="hidden" name="previous_status" value="{{$status}}">
-                <input type="hidden" name="previous_user" value="{{$createdby}}">
+                         <input type="hidden" name="previous_user" value="{{$createdby}}">
                     <button type="submit" class="btn btn-md btn-info col-md-4 offset-md-4"> Generate Report</button>
                 </div>
             </form>
@@ -87,7 +89,7 @@ margin-left:4%;
                                         </td>
                                     </tr>
                                     <tr>
-                                    <th>Branch Code</th>
+                                        <th>Branch Code</th>
                                         <td>
                                             @if($Userdata->branch_id=='1')
                                             HDQ
@@ -100,7 +102,19 @@ margin-left:4%;
                                         <tr>
                                             <th>Created Leads</th>
                                             <td>
-                                                 {{$Userdata->CreatedLeads}}
+                                            @if($Userdata->CreatedLeads)
+                                             <form action="{{route('takeLeads')}}" method="GET">
+                                                @csrf
+                                                  <input type="hidden" name="previous_dateFrom" value="{{$dateFrom}}">
+                                                 <input type="hidden" name="previous_dateTo" value="{{$dateTo}}">
+                                                <input type="hidden" name="previous_status" value="{{$status}}">
+                                                <input type="hidden" name="previous_user" value="{{$createdby}}">
+                                                 <input type="hidden" name="status" value="CreatedLeads">
+                                                <button class="btn btn-sm btn-default" type="submit"><b>{{$Userdata->CreatedLeads}}</b></button>
+                                             </form> 
+                                            @else
+                                            {{$Userdata->CreatedLeads}}
+                                            @endif
                                             </td>
                                         </tr>
                                       @endif
@@ -109,17 +123,40 @@ margin-left:4%;
                                         <tr>
                                             <th>Completed Leads</th>
                                             <td>
-                                             {{$Userdata->CompletedLeads}}
+                                            @if($Userdata->CompletedLeads)
+                                              <form action="{{route('takeLeads')}}" method="GET">
+                                                @csrf
+                                                  <input type="hidden" name="previous_dateFrom" value="{{$dateFrom}}">
+                                                 <input type="hidden" name="previous_dateTo" value="{{$dateTo}}">
+                                                <input type="hidden" name="previous_status" value="{{$status}}">
+                                                <input type="hidden" name="previous_user" value="{{$createdby}}">
+                                                 <input type="hidden" name="status" value="CompletedLeads">
+                                                <button class="btn btn-sm btn-success" type="submit"><b>{{$Userdata->CompletedLeads}}</b></button>
+                                             </form> 
+                                             @else
+                                              {{$Userdata->CompletedLeads}}
+                                             @endif
                                             </td>
                                             </tr>
-                                    @endif
+                                        @endif
                                     
                                      @if(isset($Userdata->ClosedLeads))
                                         <tr>
                                             <th>Closed Leads</th>
                                              <td>
-                                                {{$Userdata->ClosedLeads}}
-                                                
+                                             @if($Userdata->ClosedLeads)
+                                               <form action="{{route('takeLeads')}}" method="GET">
+                                                @csrf
+                                                  <input type="hidden" name="previous_dateFrom" value="{{$dateFrom}}">
+                                                 <input type="hidden" name="previous_dateTo" value="{{$dateTo}}">
+                                                <input type="hidden" name="previous_status" value="{{$status}}">
+                                                <input type="hidden" name="previous_user" value="{{$createdby}}">
+                                                 <input type="hidden" name="status" value="ClosedLeads">
+                                                <button class="btn btn-sm btn-danger" type="submit"><b>{{$Userdata->ClosedLeads}}</b></button>
+                                             </form> 
+                                             @else
+                                             {{$Userdata->ClosedLeads}}
+                                             @endif
                                               </td>
                                         </tr>
                                     @endif
@@ -128,7 +165,19 @@ margin-left:4%;
                                         <tr>
                                           <th>Open Leads</th>
                                           <td>
-                                            {{$Userdata->OpenLeads}}
+                                          @if($Userdata->OpenLeads)
+                                              <form action="{{route('takeLeads')}}" method="GET">
+                                                @csrf
+                                                  <input type="hidden" name="previous_dateFrom" value="{{$dateFrom}}">
+                                                 <input type="hidden" name="previous_dateTo" value="{{$dateTo}}">
+                                                <input type="hidden" name="previous_status" value="{{$status}}">
+                                                <input type="hidden" name="previous_user" value="{{$createdby}}">
+                                                 <input type="hidden" name="status" value="OpenLeads">
+                                                <button class="btn btn-sm btn-warning" type="submit"><b>{{$Userdata->OpenLeads}}</b></button>
+                                             </form> 
+                                             @else 
+                                             {{$Userdata->OpenLeads}}
+                                             @endif
                                          </td>
                                         </tr>
                                     @endif
@@ -137,12 +186,24 @@ margin-left:4%;
                                             <tr>
                                             <th>Working Leads</th>
                                             <td>
-                                                {{$Userdata->WorkingLeads}}
+                                                @if($Userdata->WorkingLeads)
+                                                 <form action="{{route('takeLeads')}}" method="GET">
+                                                @csrf
+                                                  <input type="hidden" name="previous_dateFrom" value="{{$dateFrom}}">
+                                                 <input type="hidden" name="previous_dateTo" value="{{$dateTo}}">
+                                                <input type="hidden" name="previous_status" value="{{$status}}">
+                                                <input type="hidden" name="previous_user" value="{{$createdby}}">
+                                                 <input type="hidden" name="status" value="WorkingLeads">
+                                                <button class="btn btn-sm btn-info" type="submit"><b>{{$Userdata->WorkingLeads}}</b></button>
+                                             </form>
+                                                 
+                                                 @else
+                                                 {{$Userdata->WorkingLeads}}
+                                                 @endif
                                             </td>
                                         </tr>
                                         @endif
                                 @endforeach
-                                
                                 </tbody>
                             </table>
                         </div>
@@ -159,8 +220,8 @@ margin-left:4%;
                         <table class="table table-bordered compact" id="statusReport2" >
                             
                             <tbody>
-                            @foreach ($Userdatanew as $Userdata)
-                              <tr>
+                          @foreach ($Userdatanew as $Userdata)
+                                    <tr>
                                         <th>User Name</th>
                                         <td>   
                                             @php
@@ -171,7 +232,7 @@ margin-left:4%;
                                         </td>
                                     </tr>
                                     <tr>
-                                    <th>Branch Code</th>
+                                        <th>Branch Code</th>
                                         <td>
                                             @if($Userdata->branch_id=='1')
                                             HDQ
@@ -184,7 +245,19 @@ margin-left:4%;
                                         <tr>
                                             <th>Created Leads</th>
                                             <td>
-                                                 {{$Userdata->CreatedLeads}}
+                                            @if($Userdata->CreatedLeads)
+                                             <form action="{{route('takeLeads')}}" method="GET">
+                                                @csrf
+                                                  <input type="hidden" name="previous_dateFrom" value="{{$new_dateFrom}}">
+                                                 <input type="hidden" name="previous_dateTo" value="{{$new_dateTo}}">
+                                                <input type="hidden" name="previous_status" value="{{$new_status}}">
+                                                <input type="hidden" name="previous_user" value="{{$Userdata->userId}}">
+                                                 <input type="hidden" name="status" value="CreatedLeads">
+                                                <button class="btn btn-sm btn-default" type="submit"><b>{{$Userdata->CreatedLeads}}</b></button>
+                                             </form> 
+                                            @else
+                                            {{$Userdata->CreatedLeads}}
+                                            @endif
                                             </td>
                                         </tr>
                                       @endif
@@ -193,17 +266,40 @@ margin-left:4%;
                                         <tr>
                                             <th>Completed Leads</th>
                                             <td>
-                                             {{$Userdata->CompletedLeads}}
+                                            @if($Userdata->CompletedLeads)
+                                              <form action="{{route('takeLeads')}}" method="GET">
+                                                @csrf
+                                                  <input type="hidden" name="previous_dateFrom" value="{{$new_dateFrom}}">
+                                                 <input type="hidden" name="previous_dateTo" value="{{$new_dateTo}}">
+                                                <input type="hidden" name="previous_status" value="{{$new_status}}">
+                                                <input type="hidden" name="previous_user" value="{{$Userdata->userId}}">
+                                                 <input type="hidden" name="status" value="CompletedLeads">
+                                                <button class="btn btn-sm btn-success" type="submit"><b>{{$Userdata->CompletedLeads}}</b></button>
+                                             </form> 
+                                             @else
+                                              {{$Userdata->CompletedLeads}}
+                                             @endif
                                             </td>
                                             </tr>
-                                    @endif
+                                        @endif
                                     
                                      @if(isset($Userdata->ClosedLeads))
                                         <tr>
                                             <th>Closed Leads</th>
                                              <td>
-                                                {{$Userdata->ClosedLeads}}
-                                                
+                                             @if($Userdata->ClosedLeads)
+                                               <form action="{{route('takeLeads')}}" method="GET">
+                                                @csrf
+                                                  <input type="hidden" name="previous_dateFrom" value="{{$new_dateFrom}}">
+                                                 <input type="hidden" name="previous_dateTo" value="{{$new_dateTo}}">
+                                                <input type="hidden" name="previous_status" value="{{$new_status}}">
+                                                <input type="hidden" name="previous_user" value="{{$Userdata->userId}}">
+                                                 <input type="hidden" name="status" value="ClosedLeads">
+                                                <button class="btn btn-sm btn-danger" type="submit"><b>{{$Userdata->ClosedLeads}}</b></button>
+                                             </form> 
+                                             @else
+                                             {{$Userdata->ClosedLeads}}
+                                             @endif
                                               </td>
                                         </tr>
                                     @endif
@@ -212,7 +308,19 @@ margin-left:4%;
                                         <tr>
                                           <th>Open Leads</th>
                                           <td>
-                                            {{$Userdata->OpenLeads}}
+                                          @if($Userdata->OpenLeads)
+                                              <form action="{{route('takeLeads')}}" method="GET">
+                                                @csrf
+                                                  <input type="hidden" name="previous_dateFrom" value="{{$new_dateFrom}}">
+                                                 <input type="hidden" name="previous_dateTo" value="{{$new_dateTo}}">
+                                                <input type="hidden" name="previous_status" value="{{$new_status}}">
+                                                <input type="hidden" name="previous_user" value="{{$Userdata->userId}}">
+                                                 <input type="hidden" name="status" value="OpenLeads">
+                                                <button class="btn btn-sm btn-warning" type="submit"><b>{{$Userdata->OpenLeads}}</b></button>
+                                             </form> 
+                                             @else 
+                                             {{$Userdata->OpenLeads}}
+                                             @endif
                                          </td>
                                         </tr>
                                     @endif
@@ -221,12 +329,24 @@ margin-left:4%;
                                             <tr>
                                             <th>Working Leads</th>
                                             <td>
-                                                {{$Userdata->WorkingLeads}}
+                                                @if($Userdata->WorkingLeads)
+                                                 <form action="{{route('takeLeads')}}" method="GET">
+                                                @csrf
+                                                  <input type="hidden" name="previous_dateFrom" value="{{$new_dateFrom}}">
+                                                 <input type="hidden" name="previous_dateTo" value="{{$new_dateTo}}">
+                                                <input type="hidden" name="previous_status" value="{{$new_status}}">
+                                                <input type="hidden" name="previous_user" value="{{$Userdata->userId}}">
+                                                 <input type="hidden" name="status" value="WorkingLeads">
+                                                <button class="btn btn-sm btn-info" type="submit"><b>{{$Userdata->WorkingLeads}}</b></button>
+                                             </form>
+                                                 
+                                                 @else
+                                                 {{$Userdata->WorkingLeads}}
+                                                 @endif
                                             </td>
                                         </tr>
                                         @endif
-                            @endforeach
-                            
+                                @endforeach
                             </tbody>
                         </table>
                     </div>

@@ -383,4 +383,78 @@ class LeadController extends Controller
         
         return view('Leads.leadReportView',['created'=>$createdLeads,'completed'=>$completedLeads,'closed'=>$closedLeads]);
     }
+    
+    public function takeLeads(Request $request)
+    {
+       dd($request->All());  
+        $dateFrom=$request->previous_dateFrom;
+        $dateTo=$request->previous_dateTo;
+        $createdby=$request->previous_user;
+        $status=$request->previous_status;
+        $getleads=null;$getClosedleads=null;$getOpenleads=null;$getWorkleads=null;$getCompleads=null;
+      if($request->status=='CreatedLeads')
+       { 
+           $getleads=Lead::where('user_id',$request->previous_user)
+              ->where('CreatedOn','>',$request->previous_dateFrom)
+             ->where('CreatedOn','<',$request->previous_dateTo)->get();
+          //    dump('getCreatedleads');
+       }
+       elseif($request->status=='ClosedLeads')
+       {
+            $getClosedleads=Lead::where('taken_over_by',$request->previous_user)
+                ->where('CreatedOn','>',$request->previous_dateFrom)
+            ->where('CreatedOn','<',$request->previous_dateTo)
+            ->where('LeadStatus','Closed')
+            ->get();
+            // dump('getClosedLeads');
+       }
+       elseif($request->status=='OpenLeads')
+       {
+             $getOpenleads=Lead::where('taken_over_by',$request->previous_user)
+            ->where('CreatedOn','<',$request->previous_dateFrom)
+            ->where('CreatedOn','<',$request->previous_dateTo)
+            ->where('LeadStatus','Open')
+            ->get();
+            // dump('getOpenleads');
+       }
+       elseif($request->status=='WorkingLeads')
+       {
+             $getWorkleads=Lead::where('taken_over_by',$request->previous_user)
+         ->where('CreatedOn','<',$request->previous_dateFrom)
+        ->where('CreatedOn','<',$request->previous_dateTo)
+        ->where('LeadStatus','Working')
+        ->get();
+        // dump('getWorkleads');
+       }
+        elseif($request->status=='CompletedLeads')
+       {
+        $getCompleads=Lead::where('taken_over_by',$request->previous_user)
+        ->where('CreatedOn','>',$request->previous_dateFrom)
+        ->where('CreatedOn','<',$request->previous_dateTo)
+        ->where('LeadStatus','Completed')
+        ->get();
+        // dump('getCompleads');
+       }
+       
+      return view('Leads.getLeads',['getCompleads'=>$getCompleads,'getWorkleads'=>$getWorkleads,'getleads'=>$getleads,
+      'getClosedleads'=>$getClosedleads,'getOpenleads'=>$getOpenleads,
+      'dateFrom'=>$dateFrom,'dateTo'=>$dateTo,'status'=>$status,'createdby'=>$createdby]);
+    }
+     
+    public function getClosedLeads(Request $request)
+    {
+    }
+     
+    public function getOpenLeads(Request $request)
+    {
+    }
+     
+    public function getCompletedLeads(Request $request)
+    {
+        
+    }
+      public function getWorkingLeads(Request $request)
+    {
+    }
+     
 }
