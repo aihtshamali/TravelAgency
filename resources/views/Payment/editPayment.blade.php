@@ -8,7 +8,7 @@
 <div class="container">
     <div class="content-wrapper" style="margin-top:2%;">
         @include('inc/flashMessages')
-        <form role="form" action="{{route('savePayment')}}" method="POST">
+        <form role="form" action="{{route('saveEditedPayment')}}" method="POST">
             @csrf
         <div class="row">
             <div class="col-md-6">
@@ -26,7 +26,7 @@
                             <select name="LeadId" class="form-control">
                                 <option value="">-</option>
                                 @foreach ($leads as $lead)
-                                    <option value="{{$lead->LeadID}}">[Lead{{$lead->LeadID}}] </option>
+                                    <option  <?php if($payment->LeadIDRef == $lead->LeadID) echo "selected='selected'"; ?> value="{{$lead->LeadID}}">[Lead{{$lead->LeadID}}] </option>
                                 @endforeach
                             </select>
                         </div>
@@ -56,7 +56,6 @@
                         <div class="form-group">
                         <label id="paymentLabel" for="paymentForm">Form of Payment</label>
                             <div class="input-group">
-                                
                                 <select name="payment_form" id="paymentForm" class="form-control">
                                     <option value="">-</option>
                                     @foreach ($paymentForms as $paymentForm)
@@ -65,6 +64,15 @@
                                 </select>
                             </div>
                         </div>
+                            <div class="form-group bank_select" style="display:none;">
+                                    <label for="" class="label"> Bank</label>
+                                    <select name="bank" class="form-control" id="">
+                                    <option value="" selected disabled>Choose One</option>
+                                        @foreach($banks as $bank)
+                                    <option value="{{$bank->id}}">{{$bank->bank_name}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
                         <div class="form-group">
                             <label for="FopText" id="FopLabel">Payment Details</label>
                             <input type="text" readonly="readonly" id="Foptext" value="{{$payment->FOPText}}}" name="payment_detail" class="form-control" >
@@ -92,7 +100,18 @@
                            <label for="ProductPax">Confidential Remarks</label>
                            <input type="text" name="confidentialRemarks" class="form-control" value="{{$payment->AccountingText}}" autocomplete="off" placeholder="This will NOT print">
                        </div>
-                       
+                       <div class="form-group">
+                           <label for="ProductPax">Payment Status</label>
+                           @if($payment->StatusCode=="Approved")
+                           <input type="text"  readonly="readonly" name="paymentStatus" class="bg-success form-control" value="{{$payment->StatusCode}}" autocomplete="off" placeholder="This will NOT print">
+                            @elseif($payment->StatusCode=="Pending")
+                           <input type="text"  readonly="readonly" name="paymentStatus" class="bg-warning form-control" value="{{$payment->StatusCode}}" autocomplete="off" placeholder="This will NOT print">
+                            @elseif($payment->StatusCode=="Rejected")
+                           <input type="text"  readonly="readonly" name="paymentStatus" class="bg-danger form-control" value="{{$payment->StatusCode}}" autocomplete="off" placeholder="This will NOT print">
+                             @else
+                           <input type="text"  readonly="readonly" name="paymentStatus" class=" form-control" value="{{$payment->StatusCode}}" autocomplete="off" placeholder="This will NOT print">
+                             @endif
+                       </div>
                    
                     </div>   
                 </div>
@@ -116,26 +135,34 @@
                 console.log(type);
                 if(type == 'CASH ')
                 {
+                    $(".bank_select").hide("fast");
+                
                     $('#FopLabel').text('Details Not Required');
                     $('#Foptext').attr("readonly",true);
                 }
                 if(type == 'CHEQUE ')
                 {
+                    $(".bank_select").hide("fast");
+                
                     $('#FopLabel').text('Cheque Number & Bank Name');
                     $('#Foptext').attr("readonly",false);
                 }
                 if(type == 'CREDIT CARD ')
                 {
+                    $(".bank_select").hide("fast");
+                
                     $('#FopLabel').text('Last 4 Digits of CC');
                     $('#Foptext').attr("readonly",false);
                 }
                 if(type == 'BANK TRANSFER ')
                 {
-                    $('#FopLabel').text('Bank Name & Transaction Info');
+                    $(".bank_select").show("fast");
+                    $('#FopLabel').text('Transaction Info');
                     $('#Foptext').attr("readonly",false);
                 }
                 if(type == 'OTHER ')
                 {
+                    $(".bank_select").hide("fast");
                     $('#FopLabel').text('Payment Details');
                     $('#Foptext').attr("readonly",false);
                 }

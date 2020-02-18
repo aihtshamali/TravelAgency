@@ -15,7 +15,12 @@ class CreatePermissionTables extends Migration
     {
         $tableNames = config('permission.table_names');
         $columnNames = config('permission.column_names');
-
+        
+        Schema::rename('Login_RoleData', 'Login_RoleData_Old');
+        Schema::rename('Login_RoleIndex', 'Login_RoleIndex_Old');
+        
+        
+        
         Schema::create($tableNames['permissions'], function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
@@ -26,6 +31,7 @@ class CreatePermissionTables extends Migration
         Schema::create($tableNames['roles'], function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
+            $table->string('discription')->nullable();
             $table->string('guard_name');
             $table->timestamps();
         });

@@ -13,7 +13,15 @@ if (!function_exists('classActivePath')) {
         return '';
     }
 }
+if (!function_exists('getUserNameById')) {
+     function getUserNameById($id)
+    {
+        $username=App\User::find($id);
+        
+      return  $username->user_name;
+    }
 
+}
 if (!function_exists('classActiveSegment')) {
     function classActiveSegment($segment, $value)
     {
@@ -55,4 +63,13 @@ if (!function_exists('getRefund')) {
                 ->where('Amount','<',0)->first();
         return $sale->refund;
     }
+}
+if (!function_exists('getFOPNameById')) {
+     function getFOPNameById($id)
+    {
+        $fop=App\PaymentForm::find($id);
+        
+      return  $fop->name;
+    }    
+
 }

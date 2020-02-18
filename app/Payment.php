@@ -11,7 +11,7 @@ class Payment extends Model
     protected $primaryKey = "PaymentID";
     const CREATED_AT = 'PostedOn';
 
-    public function AuthBy(){
+    public function AuthByUser(){
         return $this->belongsTo('App\User','auth_by');
     }
 
@@ -23,5 +23,8 @@ class Payment extends Model
     }
     public function UserBranch(){
         return $this->belongsTo('App\UserBranch');
+    }
+     public function Bank(){
+        return $this->belongsTo('App\Bank');
     }
 }

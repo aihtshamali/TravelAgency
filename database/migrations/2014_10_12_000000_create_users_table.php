@@ -12,15 +12,27 @@ class CreateUsersTable extends Migration
      * @return void
      */
     public function up()
-    {
-        Schema::create('users', function (Blueprint $table) {
+    { 
+        Schema::rename('Login_Users', 'Login_Users_Old');
+        
+        Schema::create('Login_Users', function (Blueprint $table) {
             $table->increments('id');
+            $table->bigInteger('login_count')->nullable();
+            $table->string('user_name');
             $table->string('name');
-            $table->string('email')->unique();
             $table->string('password');
+            $table->string('email')->nullable();
+            $table->integer('phone')->nullable();
+            $table->boolean('login_status')->default(0);
+            $table->boolean('status')->default(1);
+            $table->string('browser_id')->nullable();
+            $table->string('email_verified_at')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });
+      
+     
+    
     }
 
     /**

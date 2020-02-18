@@ -66,20 +66,22 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
     <script>
-$('#activitylogtable').DataTable( {
-     dom: 'Bfrtip',
-     buttons: [
-            'copy', 'csv', 'excel', 'pdf', 'print'
-        ]
-} );
-$('#loginRecordtable').DataTable( {
-     dom: 'Bfrtip',
-     buttons: [
-            'copy', 'csv', 'excel', 'pdf', 'print'
-        ]
-} );
+   
+      
+        $('#activitylogtable').DataTable( {
+            dom: 'Bfrtip',
+            buttons: [
+                    'copy', 'csv', 'excel', 'pdf', 'print'
+                ]
+        } );
+        $('#loginRecordtable').DataTable( {
+            dom: 'Bfrtip',
+            buttons: [
+                    'copy', 'csv', 'excel', 'pdf', 'print'
+                ]
+        } );
 
-</script>
+    </script>
     @yield('javascript')
 </body>
 </html>

@@ -42,6 +42,9 @@ Route::get('/Customer/addrefund/{customer}', 'CustomerController@addRefund')->na
 Route::post('/Customer/saverefund', 'CustomerController@saveRefund')->name('saveRefund');
 Route::get('/Customer/addpayment/{customer}', 'CustomerController@addPayment')->name('addPayment');
 Route::post('/Customer/savepayment', 'CustomerController@savePayment')->name('savePayment');
+
+Route::post('/Customer/saveEditedPayment', 'CustomerController@saveEditedPayment')->name('saveEditedPayment');
+
 Route::get('/changeSaleStatus/{id}/{status}', 'CustomerController@changeSaleStatus')->name('changeSaleStatus');
 Route::get('/changePaymentStatus/{id}/{status}', 'CustomerController@changePaymentStatus')->name('changePaymentStatus');
 Route::get('/approveSale/{id}', 'CustomerController@approveSale')->name('approveSale');
@@ -104,7 +107,13 @@ Route::get('/showDetailByUserNameCRM/{usernamw}','UserController@showDetailByUse
 Route::get('/CashbookHome','CashbookController@index')->name('cashbookIndex');
 Route::get('/summarydetails','CashbookController@summary')->name('summarydetails');
 Route::get('/searchcashbook','CashbookController@search')->name('search');
+Route::post('/cashIn','CashbookController@cashIn')->name('cashIn');
+Route::post('/cashOut','CashbookController@cashOut')->name('cashOut');
+Route::post('/close_cashbook','CashbookController@close_cashbook')->name('close_cashbook');
+Route::get('/bank','CashbookController@bank')->name('bank');
+Route::post('/addbank','CashbookController@addbank')->name('addbank');
 
+Route::post('/delete_bank/{id}','CashbookController@delete_bank')->name('delete_bank');
 
 Route::get('/viewPendingPayments','PaymentController@viewPendingPayments')->name('viewPendingPayments');
 Route::get('/AllLeads','LeadController@allLeads')->name('AllLeads');

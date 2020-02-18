@@ -10,6 +10,7 @@ use App\PaymentForm;
 use App\CustomerType;
 use App\LeadType;
 use App\Lead;
+use App\Bank;
 use App\User;
 use App\Sector;
 class PaymentController extends Controller
@@ -55,7 +56,8 @@ class PaymentController extends Controller
         $sectors=Sector::all();
                 // dd($leads);
         $lead_types  = LeadType::where('status','1')->get();
-        return view('Payment.editPayment',['payment'=>$payment,'lead_types'=>$lead_types,'customer'=>$customer,'leads'=>$leads,'users'=>$users,'sectors'=>$sectors,'paymentForms'=>$paymentForms]);
+        $banks=Bank::all();
+        return view('Payment.editPayment',['banks'=>$banks,'payment'=>$payment,'lead_types'=>$lead_types,'customer'=>$customer,'leads'=>$leads,'users'=>$users,'sectors'=>$sectors,'paymentForms'=>$paymentForms]);
     
     }
 }

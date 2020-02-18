@@ -82,7 +82,7 @@ margin-left:4%;
                                         <th>User Name</th>
                                         <td>   
                                             @php
-                                                $name=App\Http\Controllers\CustomerController::username($Userdata->userId);
+                                                $name=getUserNameById($Userdata->userId);
                                             @endphp
                                             <a href="{{route('showDetailByUserNameCRM',$name)}}"> {{$name}}</a>  
                                                 </a>

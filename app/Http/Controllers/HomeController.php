@@ -13,6 +13,8 @@ use App\UserBranch;
 use App\LeadType;
 use Illuminate\Support\Facades\Hash;
 use DB;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Traits\HasRoles;
 class HomeController extends Controller
 {
     /**
@@ -86,7 +88,8 @@ class HomeController extends Controller
     }
     // Copy all Users
     private function copyAllUsers(){
-        $oldUsers= \App\Login_UserOLD::all();
+        $oldUsers= \App\Login_User_OLD::all();
+        // dd($oldUsers);
         foreach ($oldUsers as $Olduser) {
             $user = new \App\User();
             $user->name =  $Olduser->FullName;
@@ -138,10 +141,10 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
+     
     public function index()
     {
-        // $this->CopyUserToUserBranch();
-        // $this->copyAllUsers();
+        
         // $this->replaceLeadType();
         // $this->replaceCustomerType();
         // $this->UpdatedallUsersInLeads();
@@ -149,8 +152,10 @@ class HomeController extends Controller
         // $this->copyProductTypeToSale();
         // $this->CopySaleByPostedByActionByInSale();
         // $this->CopySaleByPostedByAuthByInPayment();
+        
         $model = new Customer();
-        $data =  $model->hydrate(DB::select('exec CRM_PendingPayments '));
+        $data =  $model->hydrate(DB::select('exec CRM_PendingPayments'));
+        // dd($data);
         // return $data;
         return view('home',['payments'=>$data]);
         // return view('home');
@@ -209,6 +214,7 @@ class HomeController extends Controller
     }
 
     private function AddCustomersToUsers(){
+     $role =Role::where('name','Customer')->first();
         $customers = \App\Customer::all();
          set_time_limit(3000);
         foreach($customers as $customer){
@@ -218,6 +224,7 @@ class HomeController extends Controller
                 $user->user_name = $customer->PhoneNumber;
                 $user->email = $customer->EmailAddress;
                 $user->password = Hash::make($customer->PhoneNumber);
+                $user=$user->assignRole($role->id);
                 $user->save();
                 $customer->user_id = $user->id;
                 $customer->save(); 
@@ -266,8 +273,14 @@ class HomeController extends Controller
                 $sale->delete();
             }
             else{
-            
-            $postedBy = UserBranch::where('user_id',User::where("user_name",$sale->PostedBy)->first()->id)->first();
+            $ok=User::where("user_name",$sale->PostedBy)->first();
+            if($ok==null)
+            {
+            dd($sale->PostedBy);
+            }
+            else
+                  $postedBy = UserBranch::where('user_id',$ok->id)->first();
+            // dd($postedBy);
             }
             if($actionBy)
                 $sale->action_by = $actionBy->id; 
@@ -283,15 +296,15 @@ class HomeController extends Controller
         $payments = Payment::all();
         foreach($payments as $payment){
             $saleBy = User::where("user_name",$payment->SaleBy)->first();
-          
             $PostedBy = UserBranch::where('user_id',User::where("user_name",$payment->PostedBy)->first()->id)->first();
-            
             $authBy = User::where("user_name",$payment->AuthBy)->first();
             $payment_form = PaymentForm::where('name',$payment->FOP)->first();
-            $payment->payment_form_id = $payment_form->id;
-            $payment->auth_by = $authBy->id;
-            $payment->user_id = $saleBy->id;
+            
             $payment->user_branch_id = $PostedBy->id;
+            $payment->user_id = $saleBy->id;
+            $payment->payment_form_id = $payment_form->id;
+            // $payment->bank_id=null;
+            $payment->auth_by = $authBy->id;
             $payment->save();
         }
         dump("CopySaleByPostedByAuthByInPayment Done");

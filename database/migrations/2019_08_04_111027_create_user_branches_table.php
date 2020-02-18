@@ -13,6 +13,7 @@ class CreateUserBranchesTable extends Migration
      */
     public function up()
     {
+    Schema::rename('CRM_UserBranch', 'CRM_UserBranch_Old');
         Schema::create('user_branches', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('user_id')->unsigned()->index()->nullable();

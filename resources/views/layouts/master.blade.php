@@ -75,7 +75,7 @@ $('#sales').DataTable();
         ]
 } );
 $('#refund').DataTable();
-
+$('#leads').DataTable();
     </script>
 </body>
 </html>

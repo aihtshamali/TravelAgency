@@ -16,6 +16,7 @@ use App\SaleAttachment;
 use App\CustomerAttachment;
 use App\User;
 use Session;
+use App\Bank;
 use Auth;
 use DB;
 class CustomerController extends Controller
@@ -482,76 +483,93 @@ class CustomerController extends Controller
         $sectors=Sector::all();
                 // dd($leads);
         $lead_types  = LeadType::where('status','1')->get();
-        return view('Customer.addpayment',['lead_types'=>$lead_types,'customer'=>$customer,'leads'=>$leads,'users'=>$users,'sectors'=>$sectors,'paymentForms'=>$paymentForms]);
+          $banks=Bank::all();
+        return view('Customer.addpayment',['banks'=>$banks,'lead_types'=>$lead_types,'customer'=>$customer,'leads'=>$leads,'users'=>$users,'sectors'=>$sectors,'paymentForms'=>$paymentForms]);
     }
     public function savePayment(Request $request)
     {
-     
-     if(Payment::find($request->paymemtid))
-     {
-        $updatepaymet=Payment::find($request->paymemtid);
-        $updatepaymet->CustomerIDRef=$request->customer_id;
-        if(isset($request->LeadId) && $request->LeadId !="")
-        {
-            $updatepaymet->LeadIDRef=$request->LeadId;
-        }
-        $updatepaymet->user_id=$request->CreatedBy;
-        $updatepaymet->Amount=$request->amount;
-        $updatepaymet->payment_form_id=$request->payment_form;
-        $updatepaymet->SaleBy=$request->CreatedBy;
-        $updatepaymet->BranchRef="";
-        $updatepaymet->FOP="";
-        $updatepaymet->PostedBy=$request->session()->get('userbranch')->id;
-        $updatepaymet->user_branch_id=$request->session()->get('userbranch')->id;
-        if(isset($request->payment_detail))
-        {
-            $updatepaymet->FOPText=$request->payment_detail;
-        }
-        $updatepaymet->RecFrom=$request->receivedFrom;
-        $updatepaymet->PrintRemark=$request->printRemarks;
-        if(isset($request->confidentialRemarks))
-        {
-            $updatepaymet->AccountingText=$request->confidentialRemarks;
-        }
-        $updatepaymet->StatusCode='Approved';
-        $updatepaymet->FOP='';
-        $updatepaymet->PostedOn=date('Y-m-d H:i:s');
-        $updatepaymet->save();
-          return redirect()->back()->with('success','Updated Successfully!!!');
-     }
-     else
-      {  $lastPayment=Payment::all()->last();
+        // dd($request->All());
+    
+        $lastPayment=Payment::all()->last();
         $payment=new Payment();
         $payment->CustomerIDRef=$request->customer_id;
         if(isset($request->LeadId) && $request->LeadId !="")
         {
             $payment->LeadIDRef=$request->LeadId;
         }
-        $payment->user_id=$request->CreatedBy;
-        $payment->Amount=$request->amount;
-        $payment->payment_form_id=$request->payment_form;
-        $payment->SaleBy=$request->CreatedBy;
-        $payment->BranchRef="";
-        $payment->FOP="";
-        $payment->PostedBy=$request->session()->get('userbranch')->id;
-        $payment->user_branch_id=$request->session()->get('userbranch')->id;
-        if(isset($request->payment_detail))
-        {
-            $payment->FOPText=$request->payment_detail;
-        }
-        $payment->RecFrom=$request->receivedFrom;
-        $payment->PrintRemark=$request->printRemarks;
-        if(isset($request->confidentialRemarks))
-        {
-            $payment->AccountingText=$request->confidentialRemarks;
-        }
-        $payment->StatusCode='Approved';
-        $payment->FOP='';
-        $payment->PostedOn=date('Y-m-d H:i:s');
-        $payment->save();
+           $payment->SaleBy=getUserNameById($request->CreatedBy);
+            $payment->Amount=$request->amount;
+            $payment->BranchRef="HDQ";
+            $payment->FOP=getFOPNameById($request->payment_form);
+            if(isset($request->payment_detail))
+            {
+                $payment->FOPText=$request->payment_detail;
+            }
+             $payment->RecFrom=$request->receivedFrom;
+             $payment->PrintRemark=$request->printRemarks;
+            if(isset($request->confidentialRemarks))
+            {
+                 $payment->AccountingText=$request->confidentialRemarks;
+            }
+            $payment->PostedBy=getUserNameById($request->session()->get('userbranch')->id);
+            $payment->PostedOn=date('Y-m-d H:i:s');
+            $payment->AuthBy=getUserNameById($request->session()->get('userbranch')->id);
+            $payment->AuthOn=date('Y-m-d H:i:s');
+            //status Code
+            $payment->StatusCode="Pending";
+            //new id based colums
+            $payment->user_branch_id=$request->session()->get('userbranch')->id;
+            $payment->user_id=$request->CreatedBy;
+            $payment->payment_form_id=$request->payment_form;
+            $payment->bank_id=$request->bank;
+            $payment->auth_by=$request->session()->get('userbranch')->id;
+            $payment->save();
         return redirect()->route('approvePayment', array('id' => $payment->PaymentID));
+   }
+   
+   public function saveEditedPayment(Request $request)
+   {
+        // dd($request->All());
+        if(Payment::find($request->paymemtid))
+        {
+            $updatepaymet=Payment::find($request->paymemtid);
+            $updatepaymet->CustomerIDRef=$request->customer_id;
+            if(isset($request->LeadId) && $request->LeadId !="")
+            {
+                $updatepaymet->LeadIDRef=$request->LeadId;
+            }
+            
+            $updatepaymet->SaleBy=getUserNameById($request->CreatedBy);
+            $updatepaymet->Amount=$request->amount;
+            $updatepaymet->BranchRef="HDQ";
+            $updatepaymet->FOP=getFOPNameById($request->payment_form);
+            if(isset($request->payment_detail))
+            {
+                $updatepaymet->FOPText=$request->payment_detail;
+            }
+             $updatepaymet->RecFrom=$request->receivedFrom;
+             $updatepaymet->PrintRemark=$request->printRemarks;
+            if(isset($request->confidentialRemarks))
+            {
+                 $updatepaymet->AccountingText=$request->confidentialRemarks;
+            }
+            $updatepaymet->PostedBy=getUserNameById($request->session()->get('userbranch')->id);
+            $updatepaymet->PostedOn=date('Y-m-d H:i:s');
+            $updatepaymet->AuthBy=getUserNameById($request->session()->get('userbranch')->id);
+            $updatepaymet->AuthOn=date('Y-m-d H:i:s');
+            $updatepaymet->StatusCode=$request->paymentStatus;
+            //new id based colums
+            $updatepaymet->user_branch_id=$request->session()->get('userbranch')->id;
+            $updatepaymet->user_id=$request->CreatedBy;
+            $updatepaymet->payment_form_id=$request->payment_form;
+            $updatepaymet->bank_id=$request->bank;
+            $updatepaymet->auth_by=$request->session()->get('userbranch')->id;
+            $updatepaymet->save();
+          return redirect()->back()->with('success','Updated Successfully!!!');
+     }
+          return redirect()->back()->with('error','Not Updated!!!');
+     
     }
-}
 
     public function userperformance()
     {
@@ -569,12 +587,7 @@ class CustomerController extends Controller
        
          return view('Reports.userPerformanceReport',['Userdata'=>$Userdata,'dateFrom'=>$dateFrom,'dateTo'=>$dateTo,'new_dateFrom'=>$new_dateFrom,'new_dateTo'=>$new_dateTo]);
     }
-    public static function username($id)
-    {
-        $username=User::where('id','=',$id)->first();
-        
-      return  $username->user_name;
-    }
+ 
     public function userPerformanceReportDouble(Request $request)
     {
         $dateFrom=$request->previous_dateFrom;
@@ -611,6 +624,8 @@ class CustomerController extends Controller
     }
     public function changePaymentStatus($id,$status)
     {
+    
+        //    dd('wait'); 
         $payment=Payment::where('PaymentID',$id)
                 ->first();
         if($status == 0)
@@ -621,11 +636,14 @@ class CustomerController extends Controller
         {
             $payment->StatusCode='Approved';
         }
-        $payment->auth_by=Session()->get('userbranch')->user_id;
-        // dd(date('M j Y g:iA'));
+         if($status == 2)
+        {
+            $payment->StatusCode='Deleted';
+        }
         $payment->AuthOn=date('Y-m-d H:i:s');
-        $payment->save();
-        return redirect('/Customer');
+        $payment->auth_by=Session()->get('userbranch')->user_id;
+        $payment->update();
+        return redirect()->back();
         // dd(Session()->get('userbranch')->user_id);
     }
 }

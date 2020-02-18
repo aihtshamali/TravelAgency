@@ -70,12 +70,21 @@
                                 </tr> 
                                 <tr>
                                     <td>Approval Status</td> 
-                                    <td>{{$payment->StatusCode}}</td>
+                                    @if($payment->StatusCode=="Approved")
+                                <td><span class="bg-success">{{$payment->StatusCode}}</span></td>
+                                    @elseif($payment->StatusCode=="Pending")
+                                <td><span class="bg-warning">{{$payment->StatusCode}}</span>
+                                </td>
+                                    @elseif($payment->StatusCode=="Rejected")
+                                <td><span class="bg-danger">{{$payment->StatusCode}}</span></td>
+                                      @elseif($payment->StatusCode=="Deleted")
+                                <td><span class="bg-danger muted">{{$payment->StatusCode}}</span></td>
+                                    @endif
                                 </tr>
                                 <tr>
                                     <td>Action By</td> 
                                     @if(isset($payment->auth_by))
-                                        <td>{{$payment->AuthBy->name}} on {{date('j-M-y (H:i)',strtotime($payment->AuthOn))}}</td>
+                                        <td>{{$payment->AuthByUser->name}} on {{date('j-M-y (H:i)',strtotime($payment->AuthOn))}}</td>
                                     @else
                                         <td></td>
                                     @endif
@@ -108,13 +117,16 @@
                                     <td>{{$payment->AccountingText}}</td>
                                 </tr>
                                 <tr>
-                                    
-                                    @if($payment->StatusCode == 'Rejected' || $payment->StatusCode == 'Deleted')
-                                        <td></td>
-                                    @elseif($payment->StatusCode == 'Approved')
-                                        <td align="center" colspan="2">Delete Entry</td>
-                                    @else
-                                        <td align="center" colspan="2"><a href="{{ route('changePaymentStatus',['sale' => $payment->PaymentID,'status'=>1]) }}">Approve</a>|<a href="{{ route('changePaymentStatus',['sale' => $payment->PaymentID,'status'=>0]) }}">Reject</a></td> 
+                                    @if($payment->StatusCode == 'Approved')
+                                        <td align="center" colspan="2">
+                                             <a href="{{ route('changePaymentStatus',['sale' => $payment->PaymentID,'status'=>2]) }}"><i class="fa fa-trash"></i>Delete Entry</a>
+                                        </td>
+                                    @elseif($payment->StatusCode == 'Pending')
+                                        <td align="center" colspan="2">
+                                             <a href="{{ route('changePaymentStatus',['sale' => $payment->PaymentID,'status'=>1]) }}"><i class="fa fa-check"></i>Approve</a>
+                                        
+                                            |<a href="{{ route('changePaymentStatus',['sale' => $payment->PaymentID,'status'=>0]) }}"><i class="fa fa-times"></i>Reject</a>
+                                        </td> 
                                     @endif
                                     
                                 </tr> 

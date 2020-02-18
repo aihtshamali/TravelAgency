@@ -6,6 +6,10 @@
         padding: 4px;
     }
     
+    .bg-warning {
+        padding: 2% !important;
+    }
+    
     table tbody td {
         font-weight: 400;
         text-align: center;
@@ -97,4 +101,32 @@
     .label1 {
         font-size: 17px;
         font-weight: 500 !important;
+    }
+    
+    @media print {
+        .table thead th {
+            font-weight: 400;
+            background-color: rgb(31, 38, 45);
+            color: black;
+            text-align: center;
+            padding: 4px;
+        }
+        thead {
+            display: table-header-group
+        }
+        tfoot {
+            display: table-row-group
+        }
+        tr {
+            page-break-inside: avoid
+        }
+        .cashbookclose {
+            display: none !important;
+        }
+        .cashIn_out {
+            display: none !important;
+        }
+        .printbtn {
+            display: none !important;
+        }
     }

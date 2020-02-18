@@ -36,6 +36,13 @@
                      <p>Search </p>
                     </a>
                 </li>
+                
+                  <li class="nav-item has-treeview">
+                    <a href="{{route("bank")}}" class="nav-link">
+                     <i class="nav-icon fas fa-bank"></i>
+                     <p>Add & View Bank </p>
+                    </a>
+                </li>
                
             </ul>
         </nav>

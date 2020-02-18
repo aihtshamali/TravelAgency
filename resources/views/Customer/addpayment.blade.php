@@ -66,11 +66,19 @@
                                 </select>
                             </div>
                         </div>
+                          <div class="form-group bank_select" style="display:none;">
+                                    <label for="" class="label"> Bank</label>
+                                    <select name="bank" class="form-control" id="">
+                                    <option value="" selected disabled>Choose One</option>
+                                        @foreach($banks as $bank)
+                                    <option value="{{$bank->id}}">{{$bank->bank_name}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
                         <div class="form-group">
                             <label for="FopText" id="FopLabel">Payment Details</label>
-                            <input type="text" readonly="readonly" id="Foptext" name="payment_detail" class="form-control" >
+                            <input type="text" readonly="readonly" id="Foptext" value="" name="payment_detail" class="form-control" >
                         </div>
-                        
                         </div>   
                     </div>
                 </div>
@@ -114,28 +122,36 @@
             $('select[name="payment_form"]').on('change',function(){
                 var type=$(this).children('option:selected').text()
                 console.log(type);
-                if(type == 'CASH ')
+                 if(type == 'CASH ')
                 {
+                    $(".bank_select").hide("fast");
+                
                     $('#FopLabel').text('Details Not Required');
                     $('#Foptext').attr("readonly",true);
                 }
                 if(type == 'CHEQUE ')
                 {
+                    $(".bank_select").hide("fast");
+                
                     $('#FopLabel').text('Cheque Number & Bank Name');
                     $('#Foptext').attr("readonly",false);
                 }
                 if(type == 'CREDIT CARD ')
                 {
+                    $(".bank_select").hide("fast");
+                
                     $('#FopLabel').text('Last 4 Digits of CC');
                     $('#Foptext').attr("readonly",false);
                 }
                 if(type == 'BANK TRANSFER ')
                 {
-                    $('#FopLabel').text('Bank Name & Transaction Info');
+                    $(".bank_select").show("fast");
+                    $('#FopLabel').text('Transaction Info');
                     $('#Foptext').attr("readonly",false);
                 }
                 if(type == 'OTHER ')
                 {
+                    $(".bank_select").hide("fast");
                     $('#FopLabel').text('Payment Details');
                     $('#Foptext').attr("readonly",false);
                 }

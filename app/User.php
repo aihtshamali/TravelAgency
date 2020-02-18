@@ -56,6 +56,7 @@ class User extends Authenticatable
     public function Payment(){
         return $this->hasOne('App\Payment','PaymentID');
     }
+    
     public function UserDetail(){
         return $this->hasOne('App\UserDetail');
     }
@@ -71,6 +72,13 @@ class User extends Authenticatable
     
     public function LoginAuditBy(){
         return $this->hasMany('App\LoginAudit','ActionBy');
+    }
+    public function CashbookData(){
+        return $this->hasMany('App\CashbookData','posted_by_id');
+    }
+    
+     public function CashbookIndex(){
+        return $this->hasMany('App\CashbookData','closed_by_id');
     }
     //  public function ModelHasRole(){
     //     return $this->hasMany('App\ModelHasRole','model_id');
