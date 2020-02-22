@@ -94,6 +94,29 @@ class CashbookController extends Controller
        $banks->delete();
        return redirect()->back()->with('error','Bank Deelted!!');
     }
+    
+    public function bankreport()
+    {
+      $reports=null;
+      $chosenbanks=null;
+      $banks=Bank::where('Status',TRUE)->get();
+      return view("Cashbook.bankreport",compact('banks','reports','chosenbanks'));
+    }
+    public function bankBasedreport(Request $request)
+    {
+      $banks=Bank::where('Status',TRUE)->get();
+      $reports=CashbookData::where('bank_id',$request->bank)->get();
+      $chosenbanks=Bank::find($request->bank);
+      if(isset($reports) && count($reports))
+      {
+        // dd($chosenbanks);
+       return view("Cashbook.bankreport",compact('reports','banks','chosenbanks'));
+      }
+      else{
+       $reports=null;
+       return view("Cashbook.bankreport")->with(compact('reports','banks','chosenbanks'));
+      }
+    }
     public function cashIn(Request $request)
     {
  

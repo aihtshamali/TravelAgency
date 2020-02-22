@@ -112,8 +112,11 @@ Route::post('/cashOut','CashbookController@cashOut')->name('cashOut');
 Route::post('/close_cashbook','CashbookController@close_cashbook')->name('close_cashbook');
 Route::get('/bank','CashbookController@bank')->name('bank');
 Route::post('/addbank','CashbookController@addbank')->name('addbank');
-
 Route::post('/delete_bank/{id}','CashbookController@delete_bank')->name('delete_bank');
+
+Route::get('/bankreport','CashbookController@bankreport')->name('bankreport');
+
+Route::post('/bankBasedreport','CashbookController@bankBasedreport')->name('bankBasedreport');
 
 Route::get('/viewPendingPayments','PaymentController@viewPendingPayments')->name('viewPendingPayments');
 Route::get('/AllLeads','LeadController@allLeads')->name('AllLeads');

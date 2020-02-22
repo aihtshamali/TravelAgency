@@ -67,7 +67,12 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
     <script>
    
-      
+       $('#bankreporttable').DataTable( {
+            dom: 'Bfrtip',
+            buttons: [
+                   'excel', 'pdf', 'print'
+                ]
+        } );
         $('#activitylogtable').DataTable( {
             dom: 'Bfrtip',
             buttons: [

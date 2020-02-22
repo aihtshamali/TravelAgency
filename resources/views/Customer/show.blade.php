@@ -36,7 +36,15 @@ table tbody td {
         .border_top{
       border-top: 3px solid white!important;
         }
+       @media print{
        
+       .butttonsofactions{
+       display: none;
+       }
+       .CustomerAttachments{
+         display: none;
+       }
+       }
     </style>
 @endsection
 @section('content')
@@ -67,13 +75,13 @@ table tbody td {
         </div>
         {{-- Header End --}}
         {{-- Button Section --}}
-        <div class="row">
+        <div class="row butttonsofactions">
             <div class="col-md-12">
                 <span><a href="{{route('leads.create',['account'=>$customer->CustomerID])}}" class="btn btn-primary header-btn"> Create New Lead</a></span>
                 <span><a href="{{route('addSale',$customer->CustomerID)}}" class="btn btn-primary header-btn">Add Sale</a></span>
                 <span><a href="{{route('addRefund',$customer->CustomerID)}}" class="btn btn-primary header-btn">Add Refund</a></span>
                 <span><a href="{{route('addPayment',$customer->CustomerID)}}" class="btn btn-success header-btn"> New Payment</a></span>  
-                <span><a href="#" class="btn btn-info header-btn"> Print Statement</a></span>
+                <span><a onclick="window.print()" class="btn btn-info header-btn"> Print Statement</a></span>
             </div>
         </div>
         <div class="row mt-3">
@@ -103,7 +111,19 @@ table tbody td {
                                     <td><i class="fa fa-envelope mr-2"></i>Email Address</td>
                                     <td>{{$customer->EmailAddress ?? "NA" }}</td>
                                 </tr>
-                               
+                                <tr>
+                                    <td><i class="fa fa-files mr-2"></i>Attachments</td>
+                                    <td>
+                                     @if($customer->CustomerAttachment->count())
+                                        @foreach($customer->CustomerAttachment as $attachment)
+                                        <a href="{{asset('/storage/customer_attachments/'.$customer->CustomerID.'-'.$customer->CustomerName.'/'.$attachment->customerDocs)}}" download='{{$attachment->customerDocName}}'>{{$attachment->customerDocName}}</a>
+                                        <br>
+                                        @endforeach
+                                     @else
+                                     Not Attached Yet
+                                    @endif
+                                    </td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>
@@ -139,7 +159,7 @@ table tbody td {
             </div>
             {{-- End --}}
         </div>
-          <div class="row mt-3">
+          <div class="row mt-3 CustomerAttachments">
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header"><h3 class="card-title">Customer Attachments </h3>
@@ -210,7 +230,7 @@ table tbody td {
                                     <th>Status</th>
                                 </thead>
                                 <tbody>
-                                    @foreach($leads as $lead)
+                                    @forelse($leads as $lead)
                                     <tr>
                                         <td> <a href="{{route('leads.show',$lead->LeadID)}}">{{$lead->LeadID}}</a></td>
                                         <td>{{$lead->LeadType->name}}</td>
@@ -220,7 +240,11 @@ table tbody td {
                                         <td>
                                         <span class="badge badge-{{$lead->LeadStatus == "Completed" ? 'success' : ($lead->LeadStatus == 'Closed' ? 'danger' : '')}}">{{$lead->LeadStatus}}</span></td>
                                     </tr>
-                                    @endforeach
+                                      @empty
+                            <tr>
+                                <td colspan="6" class="text-centered">No Data Found</td>
+                            </tr>
+                        @endforelse
                                 </tbody>
                             </table>
                         </div>

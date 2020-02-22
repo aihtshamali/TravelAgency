@@ -8,6 +8,7 @@ use App\Customer;
 use App\User;
 use App\Sale;
 use App\Payment;
+use App\Bank;
 use App\PaymentForm;
 use App\UserBranch;
 use App\LeadType;
@@ -105,7 +106,18 @@ class HomeController extends Controller
         }
         dump('User Updated');
     }
-
+// add first status zero valueof bank
+  private function statusZerovalueofbank()
+  {
+    $bankCheck= Bank::where("status",false)->first();
+    if($bankCheck == null)
+    {
+        $data=array('bank_name'=>NULL,"branch_name"=>NULL,"description"=>"Bank row not to be used","status"=>false);
+         DB::table('banks')->insert($data);
+         dump('Nullvaluefor bankUpdated');
+    }
+  
+  }
     // Update CreatedBy,TakenBy,ClosedBy in CRM_Leads
     private function UpdatedallUsersInLeads()
     {
@@ -144,7 +156,7 @@ class HomeController extends Controller
      
     public function index()
     {
-        
+        $this->statusZerovalueofbank();
         // $this->replaceLeadType();
         // $this->replaceCustomerType();
         // $this->UpdatedallUsersInLeads();

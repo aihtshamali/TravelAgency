@@ -1,5 +1,5 @@
-    table thead th {
-        font-weight: 400;
+    table>thead>tr>th {
+        font-weight: 350;
         background-color: rgb(31, 38, 45);
         color: #ffffff;
         text-align: center;
@@ -10,10 +10,22 @@
         padding: 2% !important;
     }
     
-    table tbody td {
+    table>tbody>tr>td {
         font-weight: 400;
         text-align: center;
         padding: 4px;
+    }
+    
+    button.dt-button {
+        color: #fff !important;
+        background: #212529 !important;
+        border-color: #32383e !important;
+    }
+    
+    .paginate_button {
+        color: #fff !important;
+        background: #212529 !important;
+        border-color: #32383e !important;
     }
     
     .cardwidth {

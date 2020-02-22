@@ -43,6 +43,12 @@
                      <p>Add & View Bank </p>
                     </a>
                 </li>
+                 <li class="nav-item has-treeview">
+                    <a href="{{route("bankreport")}}" class="nav-link">
+                     <i class="nav-icon fas fa-bank"></i>
+                     <p>Bank Based Report </p>
+                    </a>
+                </li>
                
             </ul>
         </nav>
