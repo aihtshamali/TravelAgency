@@ -98,24 +98,96 @@ class CashbookController extends Controller
     public function bankreport()
     {
       $reports=null;
-      $chosenbanks=null;
+      $type=null;
+      $payment_forms=PaymentForm::where('Status',TRUE)->where('name','!=','CASH')->get();
+    
       $banks=Bank::where('Status',TRUE)->get();
-      return view("Cashbook.bankreport",compact('banks','reports','chosenbanks'));
+      return view("Cashbook.bankreport",compact('banks','reports','type','payment_forms'));
     }
     public function bankBasedreport(Request $request)
     {
+      $payment_forms=PaymentForm::where('Status',TRUE)->where('name','!=','CASH')->get();
       $banks=Bank::where('Status',TRUE)->get();
-      $reports=CashbookData::where('bank_id',$request->bank)->get();
-      $chosenbanks=Bank::find($request->bank);
-      if(isset($reports) && count($reports))
+       if($request->fromDate == null && $request->ToDate == null && $request->cheque ==null && $request->creditcard==null && $request->paymentType == null)
+        {
+          $reports=null;
+          $type=null;
+          return view("Cashbook.bankreport",compact('banks','reports','type','payment_forms'));
+        }
+    if($request->fromDate != null && $request->ToDate != null)
+     { 
+     
+     if($request->paymentType == 4)
+     {
+      $reports=CashbookData::where('bank_id',$request->bank)
+      ->where('payment_form_id',$request->paymentType)
+       ->where('RecordTime','>=',$request->fromDate)
+       ->where('RecordTime','<=',$request->ToDate)
+      ->get();
+      $paymenttype=Bank::find($request->bank);
+      $type=$paymenttype->bank_name;
+      }
+      elseif($request->paymentType == 2)
       {
-        // dd($chosenbanks);
-       return view("Cashbook.bankreport",compact('reports','banks','chosenbanks'));
+        $reports=CashbookData::where('chequeOrcard',$request->cheque)
+        ->where('payment_form_id',$request->paymentType)
+          ->where('RecordTime','>=',$request->fromDate)
+       ->where('RecordTime','<=',$request->ToDate)
+        ->get();
+        $paymenttype=PaymentForm::find($request->paymentType);
+        $type=$paymenttype->name;
+      }
+       elseif($request->paymentType == 3)
+      {
+        $reports=CashbookData::where('chequeOrcard',$request->creditcard)
+        ->where('payment_form_id',$request->paymentType)
+          ->where('RecordTime','>=',$request->fromDate)
+       ->where('RecordTime','<=',$request->ToDate)
+        ->get();
+        $paymenttype=PaymentForm::find($request->paymentType);
+        $type=$paymenttype->name;
+       
       }
       else{
-       $reports=null;
-       return view("Cashbook.bankreport")->with(compact('reports','banks','chosenbanks'));
+       $reports=CashbookData::where('RecordTime','>=',$request->fromDate)
+       ->where('RecordTime','<=',$request->ToDate)
+        ->get();
+        $type="Date Range";
       }
+      
+        $dates=" Start Date:".$request->fromDate." | End Date".$request->ToDate;
+        return view("Cashbook.bankreport",compact('dates','reports','banks','type','payment_forms'));
+    }
+    else{
+     if($request->paymentType == 4)
+     {
+      $reports=CashbookData::where('bank_id',$request->bank)
+      ->where('payment_form_id',$request->paymentType)
+      ->get();
+      $paymenttype=Bank::find($request->bank);
+      $type=$paymenttype->bank_name;
+      }
+      elseif($request->paymentType == 2)
+      {
+        $reports=CashbookData::where('chequeOrcard',$request->cheque)
+        ->where('payment_form_id',$request->paymentType)
+        ->get();
+        $paymenttype=PaymentForm::find($request->paymentType);
+        $type=$paymenttype->name;
+      }
+       elseif($request->paymentType == 3)
+      {
+        $reports=CashbookData::where('chequeOrcard',$request->creditcard)
+        ->where('payment_form_id',$request->paymentType)
+        ->get();
+        $paymenttype=PaymentForm::find($request->paymentType);
+        $type=$paymenttype->name;
+       
+      }
+        $dates=null;
+         return view("Cashbook.bankreport",compact('dates','reports','banks','type','payment_forms'));
+    }
+       
     }
     public function cashIn(Request $request)
     {
@@ -136,14 +208,12 @@ class CashbookController extends Controller
       $FOP=PaymentForm::find($request->payment);
       if(isset($request->creditcard) && $request->creditcard!=null)
          {
-            dump("muj ma masla hai card");
             $creditcard_cheque=$request->creditcard;
              $bankID=1;
              $str ='EXEC CashBookOut '.$request->in_amount.','.$request->out_amount.','.$request->autopost.',"'.$request->out_detail.'","'.$FOP->name.'",'.$request->PageRef.',"'.$request->UserRef.'",'.$request->UserRefId.','.$bankID.','.$request->payment.',"'.$creditcard_cheque.'"';
           }
           elseif(isset($request->cheque) && $request->cheque!=null)
           {
-            dump("muj ma masla hai checq");
             $creditcard_cheque=$request->cheque;
             $bankID=1;
              $str ='EXEC CashBookOut '.$request->in_amount.','.$request->out_amount.','.$request->autopost.',"'.$request->out_detail.'","'.$FOP->name.'",'.$request->PageRef.',"'.$request->UserRef.'",'.$request->UserRefId.','.$bankID.','.$request->payment.',"'.$creditcard_cheque.'"';
@@ -151,13 +221,11 @@ class CashbookController extends Controller
           }
           elseif($request->bank !=null)
           {
-            dump("muj ma masla hai bank");
             $bankID=$request->bank;
              $str ='EXEC CashBookOut '.$request->in_amount.','.$request->out_amount.','.$request->autopost.',"'.$request->out_detail.'","'.$FOP->name.'",'.$request->PageRef.',"'.$request->UserRef.'",'.$request->UserRefId.','.$bankID.','.$request->payment.',NULL';
             
           }
           else{
-            dump("muj ma masla hai cash");
              $bankID=1;
              $str ='EXEC CashBookOut '.$request->in_amount.','.$request->out_amount.','.$request->autopost.',"'.$request->out_detail.'","'.$FOP->name.'",'.$request->PageRef.',"'.$request->UserRef.'",'.$request->UserRefId.','.$bankID.','.$request->payment.',NULL';
           

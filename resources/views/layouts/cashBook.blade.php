@@ -25,7 +25,7 @@
         <nav class="mt-2">
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                 <li class="nav-item has-treeview {!! classActivePath(1,'dashboard') !!}">
-                  <a href="{{route('cashbookIndex')}}" class="nav-link "><i class="nav-icon fas fa-file"></i>
+                  <a href="{{route('cashbookIndex')}}" class="nav-link "><i class="nav-icon fas fa-address-book"></i>
                         <p>Summary</p>
                   </a>
                 </li>
@@ -45,8 +45,8 @@
                 </li>
                  <li class="nav-item has-treeview">
                     <a href="{{route("bankreport")}}" class="nav-link">
-                     <i class="nav-icon fas fa-bank"></i>
-                     <p>Bank Based Report </p>
+                     <i class="nav-icon fas fa-file"></i>
+                     <p>Reporting </p>
                     </a>
                 </li>
                

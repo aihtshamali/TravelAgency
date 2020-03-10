@@ -383,38 +383,6 @@
         }
         
    });
-//    $(document).ready(function(){
-//             $('select[name="payment_form"]').on('change',function(){
-//                 var type=$(this).children('option:selected').text()
-//                 console.log(type);
-//                 if(type == 'CASH ')
-//                 {
-//                     $('#FopLabel').text('Details Not Required');
-//                     $('#Foptext').attr("readonly",true);
-//                 }
-//                 if(type == 'CHEQUE')
-//                 {
-//                     $('#FopLabel').text('Cheque Number & Bank Name');
-//                     $('#Foptext').attr("readonly",false);
-//                 }
-//                 if(type == 'CREDIT CARD')
-//                 {
-//                     $('#FopLabel').text('Last 4 Digits of CC');
-//                     $('#Foptext').attr("readonly",false);
-//                 }
-//                 if(type == 'BANK TRANSFER')
-//                 {
-//                     $('#FopLabel').text('Bank Name & Transaction Info');
-//                     $('#Foptext').attr("readonly",false);
-//                 }
-//                 if(type == 'OTHER ')
-//                 {
-//                     $('#FopLabel').text('Payment Details');
-//                     $('#Foptext').attr("readonly",false);
-//                 }
-               
-//             });
-            
-//         });
+
     </script>
     @endsection
