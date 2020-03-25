@@ -233,7 +233,7 @@ table tbody td {
                                     @forelse($leads as $lead)
                                     <tr>
                                         <td> <a href="{{route('leads.show',$lead->LeadID)}}">{{$lead->LeadID}}</a></td>
-                                        <td>{{$lead->LeadType->name}}</td>
+                                        <td> {{isset($lead->Leadtype->name) ? $lead->Leadtype->name : '-'}}</td>
                                         <td>{{$lead->LeadSubject}}</td>
                                         <td>{{date('d-M-y (h:i:s a)',strtotime($lead->CreatedOn))}}</td>
                                         <td>{{isset($lead->TakenOverByUser->name) ? $lead->TakenOverByUser->name : 'NA'}}</td>

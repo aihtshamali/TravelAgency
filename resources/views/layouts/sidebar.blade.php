@@ -3,7 +3,7 @@
     <!-- Brand Logo -->
     <a href="{{route('welcome')}}" class="brand-link">
         <img src="/img/logo.png" alt="{{env('APP_NAME')}}" class="brand-image img-circle elevation-3" style="opacity: .8">
-        <span class="brand-text font-weight-light">{{env('APP_NAME')}}</span>
+        <span class="brand-text font-weight-light">WAC PORTAL</span>
     </a>
 
     <!-- Sidebar -->

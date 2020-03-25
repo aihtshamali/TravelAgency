@@ -47,7 +47,7 @@
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>{{$lead->LeadType->name}}</td>
+                                    <td>{{$lead->Leadtype->name}}</td>
                                     <td>{{$lead->LeadSubject}}</td>
                                     <td> 
                                         <form action="{{route('leads.changeServiceDate')}}" method="post" id="ServiceDateForm">

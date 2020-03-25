@@ -11,11 +11,12 @@
 @section('content')
 <div class="login-box">
     <div class="login-logo">
-        {{env('APP_NAME')}}
+        
+    <img src="{{asset('img/logo.jpg')}}" alt="">
     </div>
     <div class="card">
         <div class="card-body login-card-body">
-            <p class="login-box-msg">{{ __('Login') }}</p>
+            <p class="login-box-msg text-center"><b>WEB PORTAL</b></p>
 
             <form action="{{ route('login') }}" method="post">
                 @csrf

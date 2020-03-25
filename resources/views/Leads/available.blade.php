@@ -31,7 +31,6 @@
         <div class="card-header"><h3 class="card-title font-weight-bold">Available Leads</h3></div>
             <div class="card-body">
                 <table class="table table-hover">
-                    <caption>List of Available Leads</caption>
                     <thead class="thead-dark">
                         <th>Lead ID</th>
                         <th>Customer</th>
@@ -40,7 +39,7 @@
                         <th>Service Date</th>
                         <th>Created By</th>
                         <th>Open Since</th>
-                            <th>Priority</th>
+                            {{-- <th>Priority</th> --}}
                     </thead>
                     <tbody>
                         @forelse ($leads as $lead)
@@ -48,7 +47,7 @@
                                 <td> <a href="{{route('leads.show',$lead->LeadID)}}">{{$lead->LeadID}}</a></td>
                                 <td>{{$lead->Customer->CustomerName}}</td>
                                 <td>
-                                    {{$lead->LeadType->name}}
+                                    {{$lead->Leadtype->name}}
                                 </td>
                                 <td>{{$lead->LeadSubject}}</td>
                                 <td>{{$lead->ServiceDate}}</td>
@@ -61,7 +60,7 @@
                                     echo $interval->format("%m Month %d Day %h Hours ");
                                  @endphp
                                  </td>
-                                 <td>
+                                 {{-- <td>
                                         @if($lead->priority_id =='1')
                                          <span class="badge badge-danger">{{$lead->Priority->name}}</span>
                                      @elseif($lead->priority_id=='2')
@@ -72,7 +71,7 @@
                                     <strong >Not Assigned</strong>
                                      @endif
                                          
-                                 </td>
+                                 </td> --}}
                             </tr>
                         @empty
                             <tr>

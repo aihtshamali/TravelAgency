@@ -314,7 +314,7 @@ class LeadController extends Controller
         $leadStatus=Lead::all();
         $Userdatanew=array();
         $Userdata = collect ( DB::select('exec CRM_LeadStatusReport "'.$createdby.'","'.$dateFrom.'","'.$dateTo.'","'.$status.'"'));
-         
+        //  dd($Userdata);
          return view('Leads.statusReportDouble',['status'=>$status,'createdby'=>$createdby,'Userdatanew'=> $Userdatanew,'Userdata'=> $Userdata,
          'leadStatus'=>$leadStatus,
          'users'=>$users,
@@ -353,9 +353,9 @@ class LeadController extends Controller
             if($request->branch == 1)
             {
                 // dd("Branches");
-                $createdLeads = $model->hydrate(DB::select('EXEC CRM_BranchLeadReport '.$request->user.',"'.$request->fromDate.'","'.$request->toDate.'",1'));
-                $completedLeads = $model->hydrate(DB::select('EXEC CRM_BranchLeadReport '.$request->user.',"'.$request->fromDate.'","'.$request->toDate.'",2'));
-                $closedLeads = $model->hydrate(DB::select('EXEC CRM_BranchLeadReport '.$request->user.',"'.$request->fromDate.'","'.$request->toDate.'",3'));
+                // $createdLeads = $model->hydrate(DB::select('EXEC CRM_BranchLeadReport '.$request->user.',"'.$request->fromDate.'","'.$request->toDate.'",1'));
+                // $completedLeads = $model->hydrate(DB::select('EXEC CRM_BranchLeadReport '.$request->user.',"'.$request->fromDate.'","'.$request->toDate.'",2'));
+                // $closedLeads = $model->hydrate(DB::select('EXEC CRM_BranchLeadReport '.$request->user.',"'.$request->fromDate.'","'.$request->toDate.'",3'));
                 // dd($createdLeads);
             }
             else

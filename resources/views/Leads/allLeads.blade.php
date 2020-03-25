@@ -23,7 +23,7 @@
     <div class="card">
         <div class="card-header"><h3 class="card-title font-weight-bold">Working Leads - User</h3></div>
             <div class="card-body">
-                <table class="table table-hover">
+                <table class="table table-bordered">
                     
                     <thead class="thead-dark">
                         <th>Branch</th>
@@ -41,7 +41,7 @@
                                 <td>{{$lead->branch}}</td>
                                 <td>{{$lead->name}}</td>
                                 <td>
-                                   <a href="{{route('userLeadsbyId',$lead->user_id)}}"> {{$lead->lead_count}}</a>
+                                   <a href="{{route('userLeadsbyId',$lead->user_id)}}" target="_blank"> {{$lead->lead_count}}</a>
                                 </td>
                                 
                             </tr>
@@ -52,7 +52,7 @@
                             </tr>
                         @endforelse
                             <tr>
-                                <td style="text-align:center;" colspan="2">Total Working</td>
+                                <th style="text-align:center;" colspan="2">Total Working</th>
                                 <td>{{$leadCount}}</td>
                             </tr>
                     </tbody>
@@ -86,11 +86,11 @@
                                 <td>{{$lead->Customer->CustomerName}}</td>
                                 <td>{{$lead->Customer->PhoneNumber}}</td>
                                 <td>
-                                    {{$lead->LeadType->name}}
+                                    {{$lead->Leadtype->name}}
                                 </td>
                                 <td>{{$lead->LeadSubject}}</td>
                               
-                                <td>@if(isset($lead->TakenOverByUser->user_name)){{$lead->TakenOverByUser->user_name}}@endif</td>
+                                <td>@if(isset($lead->TakenOverByUser->name)){{$lead->TakenOverByUser->name}}@endif</td>
                                 <td> @php
                                     $datetime1 = new DateTime($lead->CreatedOn);
                                     $datetime2 = new DateTime();

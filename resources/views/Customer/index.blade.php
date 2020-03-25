@@ -11,7 +11,7 @@
             <div class="container-fluid">
                 <div class="row mb-2">
                     <div class="col-sm-6">
-                        <h1 class="m-0 text-dark">Customers</h1>
+                        <h1 ><b>Search Customers</b></h1>
                     </div> 
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
@@ -29,7 +29,7 @@
         <form action="{{route('Customer.index')}}" method="GET">
             @csrf
             <div class="row">
-                <div class="col-md-5">
+                <div class="col-md-4">
                     <div class="card">
                         <div class="card-header"><h3 class="card-title">Search by Name</h3></div>
                         <div class="card-body">
@@ -53,7 +53,7 @@
                         </div> 
                     </div>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-4">
                     <div class="card">
                         <div class="card-header"><h3 class="card-title">Search by Account</h3></div>
                         <div class="card-body">
@@ -68,14 +68,14 @@
             </div>
         </form>
         {{-- Form END --}}
-        <div class="box">
-            <div class="box-header">
-              <h3 class="box-title">Customer's Details</h3>
+        <div class="card">
+            <div class="card-header">
+              <h3 class="card-title"><b>Customer's Details</b></h3>
             </div>
             <!-- /.box-header -->
-            <div class="box-body">
-                <table class="table-hover table" id="CustomerTable">
-                    <thead>
+            <div class="card-body">
+                <table class="table table-bordered" >
+                    <thead class="thead-dark">
                         <th>Customer ID</th>
                         <th>Customer Name</th>
                         <th>Phone</th>

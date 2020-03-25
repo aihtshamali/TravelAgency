@@ -119,7 +119,7 @@
                         <h3>Status</h3>
                     </div> 
                     <div class="card-body">
-                        <table class="table  table-hover  bordered ">
+                        <table class="table  table-bordered ">
                             <tbody>
                                 <tr>
                                     <td>Approval Status</td> 

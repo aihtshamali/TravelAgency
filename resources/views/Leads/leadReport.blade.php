@@ -44,13 +44,14 @@
                             {{ csrf_field() }}
                             @if(isset($users))
                             <div class="form-group">
-                                <label for="">Branch or User</label>
+                                <label for="">Search User</label>
                                 <select name="user" id="user" class="form-control">
-                                    <optgroup label="Branches">
-                                    @foreach ($branches as $branch)
+                                    {{-- <optgroup label="Branches"> --}}
+                                    {{-- @foreach ($branches as $branch)
                                         <option value="{{$branch->id}}">{{$branch->name}} </option>
-                                    @endforeach
-                                    <optgroup label="Users">
+                                    @endforeach --}}
+                                    {{-- <optgroup label="Users"> --}}
+                                  <option selected disabled>Select User </option>
                                     @foreach ($users as $user)
                                         <option value="{{$user->id}}">{{$user->user_name}} ({{$user->name}})</option>
                                     @endforeach
@@ -68,11 +69,11 @@
                             </div>
                             <div class="form-group">
                                 
-                                <input type="hidden" id="branch" name="branch" value="1">
+                                <input type="hidden" id="branch" name="branch" value="0">
                             </div>
                             <div class="form-group">
-                                <button type="button" class="btn btn-success" onClick="setStatus('Approved')">Show Approved Transactions</button>
-                                <button type="button" class="btn btn-danger" onClick="setStatus('Rejected')">Rejected/Pending Transactions</button>
+                                <button type="button" class="btn btn-success" onClick="setStatus('Approved')">Gnereate Leads Report</button>
+                                {{-- <button type="button" class="btn btn-danger" onClick="setStatus('Rejected')">Rejected/Pending Leads</button> --}}
                             </div>
                         </form>
                     </div> 
@@ -84,15 +85,15 @@
 @endsection
 
 @section('javascript')
-    <script>
+<script src="{{asset('dist/plugins/datepicker/bootstrap-datepicker.js')}}"></script>
+    {{-- <script>
         function setStatus(status) {
             $('#status').val(status);
             $('#SalesearchForm').submit();
             
         }
         
-    </script>
-    <script src="{{asset('dist/plugins/datepicker/bootstrap-datepicker.js')}}"></script>
+    </script> --}}
     <script>
         $(document).ready(function(){
             //Date picker
@@ -102,21 +103,21 @@
                 autoclose: true
             })
 
-            $('#user').change(function() {
-                var selected = $(':selected', this);
-                var group=selected.closest('optgroup').attr('label');
-                // alert(group);
-                if(group == 'Branches')
-                {
-                    $('#branch').val(1);    
-                }
-                else
-                {
-                    // alert('Yes');
-                    $('#branch').val(0);    
-                }
-            })
+        //     $('#user').change(function() {
+        //         var selected = $(':selected', this);
+        //         var group=selected.closest('optgroup').attr('label');
+        //         // alert(group);
+        //         if(group == 'Branches')
+        //         {
+        //             $('#branch').val(1);    
+        //         }
+        //         else
+        //         {
+        //             // alert('Yes');
+        //             $('#branch').val(0);    
+        //         }
+        //     })
             
-        });
+        // });
     </script>
 @endsection

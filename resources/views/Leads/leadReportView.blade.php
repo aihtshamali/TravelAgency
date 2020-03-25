@@ -21,9 +21,9 @@
         <div class="row mr-2">
     <div class="col-md-12">
     <div class="card">
-        <div class="card-header"><h3 class="card-title font-weight-bold">Leads Created </h3></div>
+        <div class="card-header"><h3 class="card-title font-weight-bold">Created Leads</h3></div>
             <div class="card-body">
-            <table class="table table-hover">
+            <table class="table table-bordered">
                     
                     <thead class="thead-dark">
                         <th>Lead ID</th>
@@ -40,7 +40,7 @@
                                 <td> <a href="{{route('leads.show',$lead->LeadID)}}">{{$lead->LeadID}}</a></td>
                                 <td>{{$lead->Customer->CustomerName}}</td>
                                 <td>
-                                    {{$lead->LeadType->name}}
+                                    {{$lead->Leadtype->name}}
                                 </td>
                                 <td>{{$lead->LeadSubject}}</td>
                                 <td>{{date(('d-M-y'),strtotime($lead->ServiceDate))}}</td>
@@ -84,7 +84,7 @@
                                 <td> <a href="{{route('leads.show',$lead->LeadID)}}">{{$lead->LeadID}}</a></td>
                                 <td>{{$lead->Customer->CustomerName}}</td>
                                 <td>
-                                    {{$lead->LeadType->name}}
+                                    {{$lead->Leadtype->name}}
                                 </td>
                                 <td>{{$lead->LeadSubject}}</td>
                                 <td>{{date(('d-M-y'),strtotime($lead->ServiceDate))}}</td>
@@ -131,7 +131,7 @@
                                 <td> <a href="{{route('leads.show',$lead->LeadID)}}">{{$lead->LeadID}}</a></td>
                                 <td>{{$lead->Customer->CustomerName}}</td>
                                 <td>
-                                    {{$lead->LeadType->name}}
+                                    {{$lead->Leadtype->name}}
                                 </td>
                                 <td>{{$lead->LeadSubject}}</td>
                                 <td>{{date(('d-M-y'),strtotime($lead->ServiceDate))}}</td>

@@ -125,7 +125,7 @@ class HomeController extends Controller
         foreach ($leads as $lead) 
         {
             $createdBy = \App\User::where('user_name',$lead->CreatedBy)->first();
-            $takenOverBy = \App\User::where('user_name',$lead->TakenOverByUser)->first();
+            $takenOverBy = \App\User::where('user_name',$lead->TakenOverBy)->first();
             $ClosedBy = \App\User::where('user_name',$lead->ClosedBy)->first();
             $LastUpdatedBy = \App\User::where('user_name',$lead->LastUpdateBy)->first();
 
@@ -156,21 +156,18 @@ class HomeController extends Controller
      
     public function index()
     {
-        $this->statusZerovalueofbank();
+        // $this->statusZerovalueofbank();
         // $this->replaceLeadType();
         // $this->replaceCustomerType();
         // $this->UpdatedallUsersInLeads();
-        // $this->AddCustomersToUsers();
         // $this->copyProductTypeToSale();
         // $this->CopySaleByPostedByActionByInSale();
         // $this->CopySaleByPostedByAuthByInPayment();
+        // $this->AddCustomersToUsers();
         
         $model = new Customer();
         $data =  $model->hydrate(DB::select('exec CRM_PendingPayments'));
-        // dd($data);
-        // return $data;
         return view('home',['payments'=>$data]);
-        // return view('home');
     }
     public function paymentForm()
     {
@@ -292,13 +289,15 @@ class HomeController extends Controller
             }
             else
                   $postedBy = UserBranch::where('user_id',$ok->id)->first();
-            // dd($postedBy);
             }
+            if($postedBy==null)
+                dd($ok);
             if($actionBy)
                 $sale->action_by = $actionBy->id; 
             if($saleBy)
                 $sale->posted_by_user = $saleBy->id; 
             $sale->user_branch_id = $postedBy->id;
+            // dd($sale->user_branch_id);
             $sale->save(); 
         }
         dump("Copy SaleBy PostedBy ActionBy In Sale Done");
@@ -311,7 +310,10 @@ class HomeController extends Controller
             $PostedBy = UserBranch::where('user_id',User::where("user_name",$payment->PostedBy)->first()->id)->first();
             $authBy = User::where("user_name",$payment->AuthBy)->first();
             $payment_form = PaymentForm::where('name',$payment->FOP)->first();
-            
+            if($payment_form ==null)
+            {
+                 dd($payment->FOP);
+            }
             $payment->user_branch_id = $PostedBy->id;
             $payment->user_id = $saleBy->id;
             $payment->payment_form_id = $payment_form->id;

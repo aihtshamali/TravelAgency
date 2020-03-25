@@ -11,7 +11,7 @@
             <div class="container-fluid">
                 <div class="row mb-2">
                     <div class="col-sm-6">
-                        <h1 class="m-0 text-dark">Leads</h1>
+                        <h1 class="m-0 text-dark">My Leads</h1>
                     </div> 
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
@@ -29,10 +29,8 @@
     <div class="row mr-2">
     <div class="col-md-12">
     <div class="card">
-        <div class="card-header"><h3 class="card-title font-weight-bold">My Leads</h3></div>
             <div class="card-body">
-                <table class="table table-hover">
-                    <caption>List of Pending Leads</caption>
+                <table class="table table-bordered">
                     <thead class="thead-dark">
                         <th>Lead ID</th>
                         <th>Customer</th>
@@ -41,7 +39,6 @@
                         <th>Subject</th>
                         <th>Service Date</th>
                         <th>Working Since</th>
-                        <th>Priority</th>
                     </thead>
                     <tbody>
                         @forelse ($leads as $lead)
@@ -50,7 +47,7 @@
                                 <td>{{$lead->Customer->CustomerName}}</td>
                                 <td>{{$lead->Customer->PhoneNumber}}</td>
                                 <td>
-                                    {{$lead->LeadType->name}}
+                                    {{$lead->Leadtype->name}}
                                 </td>
                                 <td>{{$lead->LeadSubject}}</td>
                                 <td>{{$lead->ServiceDate}}</td>
@@ -60,7 +57,7 @@
                                     $interval = $datetime1->diff($datetime2);
                                     echo $interval->format("%m Month %d Day %h Hours ");
                                 @endphp</td>
-                                <td>
+                                {{-- <td>
                                   @if($lead->priority_id =='1')
                                          <span class="badge badge-danger">{{$lead->Priority->name}}</span>
                                      @elseif($lead->priority_id=='2')
@@ -70,7 +67,7 @@
                                      @endif
                                          <span class="badge badge-default">Not Assigned</span>
                                      
-                                </td>
+                                </td> --}}
                             </tr>
                         @empty
                             <tr>
