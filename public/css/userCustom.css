@@ -11,6 +11,10 @@
     width: 32px;
 }
 
+.margindiv {
+    margin-top: 1%;
+}
+
 .greentick span {
     display: block;
     float: right;

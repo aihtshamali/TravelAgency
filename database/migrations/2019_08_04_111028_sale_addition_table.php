@@ -30,7 +30,7 @@ class SaleAdditionTable extends Migration
              $table->integer('action_by')->unsigned()->index()->nullable();
             $table->foreign('action_by')->references('id')->on('Login_Users')->onDelete('no action');
              
-             $table->integer('source_id')->unsigned()->index()->nullable();
+            $table->integer('source_id')->unsigned()->index()->nullable();
             $table->foreign('source_id')->references('id')->on('sectors')->onDelete('no action');
             
             $table->integer('destination_id')->unsigned()->index()->nullable();

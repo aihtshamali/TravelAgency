@@ -1,5 +1,6 @@
 <?php
 use App\Payment;
+use Spatie\Permission\Models\Permission;
 use App\Sale;
 if (!function_exists('classActivePath')) {
     function classActivePath($segment, $value)
@@ -19,6 +20,24 @@ if (!function_exists('getUserNameById')) {
         $username=App\User::find($id);
         
       return  $username->user_name;
+    }
+
+}
+if (!function_exists('getPermNames')) {
+     function getPermNames($id)
+    {
+        $perm=Spatie\Permission\Models\Permission::find($id);
+        
+      return  $perm->name;
+    }
+
+}
+if (!function_exists('getRoleNames')) {
+     function getRoleNames($id)
+    {
+        $role=Spatie\Permission\Models\Role::find($id);
+        
+      return  $role->name;
     }
 
 }

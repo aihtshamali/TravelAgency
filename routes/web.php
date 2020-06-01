@@ -75,13 +75,20 @@ Route::get('/getClosedLeads' ,'LeadController@getClosedLeads')->name('getClosedL
 Route::get('/getOpenLeads' ,'LeadController@getOpenLeads')->name('getOpenLeads');
 Route::get('/getCompletedLeads' ,'LeadController@getCompletedLeads')->name('getCompletedLeads');
 Route::get('/getWorkingLeads' ,'LeadController@getWorkingLeads')->name('getWorkingLeads');
-
 // 
 //Individual Reports
 Route::get('/myTransactions','IndividualReportController@transactions')->name('mytransactions');
 Route::get('/FinalizedLeads','IndividualReportController@FinalizedLeads')->name('FinalizedLeads');
 Route::get('/saleReport/{user?}','IndividualReportController@saleReport')->name('saleReport');
 Route::post('/saleReport','IndividualReportController@saleReportSearch')->name('saleReportSearch');
+//package
+
+Route::get('/createpackageview','PackageController@index')->name('createpackageview');
+
+Route::post('/createPackage','PackageController@create')->name('createPackage');
+
+Route::get('/viewPackage','PackageController@view')->name('viewPackage');
+Route::post('/deletePackage/{id}','PackageController@deletePackage')->name('deletePackage');
 
 //User Dashboard
 Route::resource('/User','UserController');
@@ -92,9 +99,13 @@ Route::get('/blockUser','UserController@blockUser')->name('blockUser');
 Route::get('/rolesAuthorityView','UserController@rolesAuthorityView')->name('rolesAuthorityView');
 Route::get('/userActivitylogView','UserController@userActivitylogView')->name('userActivitylogView');
 Route::get('/userDetails/{id}','UserController@userDetails')->name('userDetails');
-
+Route::get('/rolesPermissionView','UserController@rolesPermissionView')->name('rolesPermissionView');
+Route::post('/removePerm/{id}','UserController@removePerm')->name('removePerm');
+Route::post('/addPermission','UserController@addPermission')->name('addPermission');
+Route::get('/PermissionAssignView','UserController@PermissionAssignView')->name('PermissionAssignView');
+Route::post('/assignPermission','UserController@assignPermission')->name('assignPermission');
+Route::post('/removePermRole','UserController@removePermRole')->name('removePermRole');
 Route::get('/Details/{id}','UserController@Details')->name('Details');
-
 Route::post('/assignRole','UserController@assignRole')->name('assignRole');
 Route::post('/removerole','UserController@removerole')->name('removerole');
 Route::post('/updateDetails','UserController@updateDetails')->name('updateDetails');

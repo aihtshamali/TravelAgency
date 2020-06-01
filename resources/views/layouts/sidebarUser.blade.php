@@ -59,23 +59,72 @@
                     </a>
                 </li>
                  <li class="nav-item has-treeview">
-                 <a href="{{route('User.create')}}" class="nav-link">
+                     <a href="{{route('User.create')}}" class="nav-link">
                      <i class="nav-icon fas fa-user-plus"></i>
                      <p>Create New User </p>
                     </a>
                 </li>
+                
                  <li class="nav-item has-treeview">
-                    <a href="{{route("rolesAuthorityView")}}" class="nav-link">
-                     <i class="nav-icon fas fa-book"></i>
-                     <p>Roles & Authority </p>
+                    <a href="#" class="nav-link">
+                      <i class="nav-icon fas fa-book"></i>
+                      <p>
+                       Roles & Permissions
+                        <i class="right fa fa-angle-left"></i>
+                      </p>
                     </a>
+                    <ul class="nav nav-treeview">
+                      <li class="nav-item has-treeview">
+                         <a href="{{route("rolesAuthorityView")}}" class="nav-link">
+                         <p>Roles & Authority </p>
+                     </a>
+                     </li>
+                        <li class="nav-item has-treeview">
+                            <a href="{{route("rolesPermissionView")}}" class="nav-link">
+                            <p>Roles & Permission </p>
+                            </a>
+                        </li>
+                        
+                        <li class="nav-item has-treeview">
+                            <a href="{{route("PermissionAssignView")}}" class="nav-link">
+                            <p>Assign Permission to Role </p>
+                            </a>
+                        </li>
+                    </ul>
                 </li>
+                
+                  <li class="nav-item has-treeview">
+                    <a href="#" class="nav-link">
+                      <i class="nav-icon fas fa-book"></i>
+                      <p>
+                      Packages
+                        <i class="right fa fa-angle-left"></i>
+                      </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                      <li class="nav-item has-treeview">
+                         <a href="{{route("createpackageview")}}" class="nav-link">
+                         <p>Create Package</p>
+                     </a>
+                     </li>
+                        <li class="nav-item has-treeview">
+                            <a href="{{route("viewPackage")}}" class="nav-link">
+                            <p>View Package </p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
+
+                
+                 
                  <li class="nav-item has-treeview">
                     <a href="{{route("userActivitylogView")}}" class="nav-link">
                      <i class="nav-icon fas fa-history"></i>
                      <p>Activity Log </p>
                     </a>
                 </li>
+               
             </ul>
         </nav>
         <!-- /.sidebar-menu -->

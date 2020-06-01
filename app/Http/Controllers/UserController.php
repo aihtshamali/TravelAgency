@@ -10,6 +10,8 @@ use App\LoginLog;
 use App\LoginAudit;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Traits\HasRoles;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\RoleHasPermission;
 use DB;
 use Auth;
 class UserController extends Controller
@@ -43,6 +45,59 @@ class UserController extends Controller
        return redirect()->back()->with('success','Role has been removed.');
     }
     
+    public function rolesPermissionView()
+    {
+    
+      $permissions=Permission::all();
+      return view("User.RolePermission.createPermission",compact('permissions'));
+    }
+    
+    
+    public function addPermission(Request $request)
+    {
+      foreach($request->newP as $perm)
+      {
+        $newperm= new Permission();
+        $newperm->name=$perm;
+        $newperm->guard_name="web";
+        $newperm->save();
+       
+    }
+     return redirect()->back()->with('success','Permissions has been added.');
+    }
+    
+    public function removePerm($id)
+    {
+      $delPerm=Permission::find($id);
+      $delPerm->delete();
+      return redirect()->back()->with('error','Permission has been deleted.');
+    }
+    
+    public function PermissionAssignView()
+    {
+      $roles= Role::all();
+      $permissions=Permission::all();
+      $groupsWithPerms=DB::table("role_has_permissions")->get();
+   
+      return view("User.RolePermission.assignPtoR",compact('roles','permissions','groupsWithPerms'));
+    }
+    public function assignPermission(Request $request)
+    {
+    
+      $permission=Permission::find($request->perm);
+      $permission->assignRole($request->role);
+       return redirect()->back()->with('success','Permissions has been assigned.');
+    }
+     public function removePermRole(Request $request)
+    {
+      $groupsWithPerms=DB::table("role_has_permissions")
+      ->where('permission_id',$request->permID)
+      ->where('role_id',$request->roleID)
+      ->delete();
+       return redirect()->back()->with('error','Permissions has been deleted.');
+    }
+    
+   
     public function searchUserView()
     {
          return view("User.searchUserView");
