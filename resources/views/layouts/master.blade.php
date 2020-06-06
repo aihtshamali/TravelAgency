@@ -25,14 +25,14 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <!-- jvectormap -->
     <link rel="stylesheet" href="{{asset('/dist/plugins/jvectormap/jquery-jvectormap-1.2.2.css')}}">
     <!-- Date Picker -->
-    <link rel="stylesheet" href="{{asset('/dist/plugins/datepicker/datepicker3.css')}}">
+    <link rel="s.tylesheet" href="{{asset('/dist/plugins/datepicker/datepicker3.css')}}">
     <!-- Daterange picker -->
     <link rel="stylesheet" href="{{asset('/dist/plugins/daterangepicker/daterangepicker-bs3.css')}}">
     <!-- bootstrap wysihtml5 - text editor -->
     <link rel="stylesheet" href="{{asset('/dist/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css')}}">
-   <link rel="stylesheet" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css">
+   {{-- <link rel="stylesheet" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/autofill/2.3.4/css/autoFill.dataTables.min.css">
-    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.6.1/css/buttons.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.6.1/css/buttons.dataTables.min.css"> --}}
     
     <!-- Google Font: Source Sans Pro -->
     <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
@@ -54,7 +54,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <!-- ./wrapper -->
     @endguest 
     <script src="{{asset('js/app.js')}}"></script>
-     <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+    
+    {{-- <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/autofill/2.3.4/js/dataTables.autoFill.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.flash.min.js"></script>
@@ -62,7 +63,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script> --}}
+    
     @yield('javascript')
     <script>
     // $('.leadtable').DataTable({paging:false,searching:false});

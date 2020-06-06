@@ -4,7 +4,7 @@
 @endsection 
 @section('content')
     <div class="content-wrapper">
-        @include('inc/flashMessages')
+       <div class="msg"> @include('inc/flashMessages')</div>
         {{-- Header Start --}}
          <div class="content-header">
             <div class="container-fluid">
@@ -17,7 +17,7 @@
         </div>
         {{-- Header End --}} 
    
-            <div class="row">
+            <div class="row ">
                 <div class="col-md-6">
                     <div class="card">
                             <a href="{{route('activeUser')}}" class="activeshadow"> 
@@ -51,7 +51,7 @@
              <h3><strong>Pending Payments</strong></h3>
              </div>
              <div class="card-body">
-                <table class="table table-bordered">
+                <table class="table table-bordered printableBorder">
                  <thead>
                   <tr>
                     <th></th>
@@ -143,7 +143,21 @@
                      <tr>
                     <td>{{Date('F jS, Y',strtotime($In->RecordTime))}} | {{Date('h:i:s',strtotime($In->RecordTime))}}</td>
                      <td>{{$In->Detail}}</td>
-                     <td>{{$In->payment_form_id}}</td>
+                     <td> 
+                     {{$In->FOP}}
+                     {{$In->payment_form_id}}
+                     {{-- @if($In->payment_form_id == $In->PaymentForm->id && $In->payment_form_id!=null)
+                               @if($In->PaymentForm->name=="BANK TRANSFER")
+                                    <b>{{$In->PaymentForm->name}}: </b>{{$In->Bank->bank_name}}
+                                    {{dump('masla')}}
+                                @else
+                                <b>{{$In->PaymentForm->id}} {{$In->PaymentForm->name}}</b> 
+                                {{dump('masl2')}}
+                                @endif
+                     @else
+                     {{$In->FOP}}
+                     @endif --}}
+                             </td>
                      <td>{{$In->PostedBy}}</td>
                      <td>
                      PKR-{{$In->AmountIn}}

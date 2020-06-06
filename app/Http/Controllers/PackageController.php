@@ -41,9 +41,8 @@ class PackageController extends Controller
             if($request->hasFile('p_img'))
             {  
             // dd('1');
-                  $newpackage->attachment= $request->file('p_img')->store(
-                                'package_attachments', 'public'
-                                                          );
+                  $store= $request->file('p_img')->store('package_attachments', 'public');
+            $newpackage->attachment=  $request->file('p_img')->hashName();
             }
              $newpackage->save();
               return redirect()->back()->with('success','Package Saved!!!');

@@ -1,28 +1,6 @@
 @extends('layouts.userLayout')
 @section('styleTags')   
-   <style>
-   label{
-    font-weight: 500 !important;
-}
-.card-footer{
-    background: white !important;
-}
-table thead th{    
-    background-color: rgb(31,38,45);
-    color: #ffffff;
-    text-align: center;
-    padding:1px !important;
-}
-
-td img,th img{
-    height: 16px;
-    width:16px;
-}
-table.dataTable tbody th, table.dataTable tbody td {
-padding:2px !important;
-text-align: center;
-}
-   </style>
+    <link rel="stylesheet" href="{{asset('css/userCustom.css')}}">
 @endsection 
 @section('content')
     <div class="content-wrapper">

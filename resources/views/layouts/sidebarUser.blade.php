@@ -95,7 +95,7 @@
                 
                   <li class="nav-item has-treeview">
                     <a href="#" class="nav-link">
-                      <i class="nav-icon fas fa-book"></i>
+                      <i class="nav-icon  fa fa-globe" aria-hidden="true"></i>
                       <p>
                       Packages
                         <i class="right fa fa-angle-left"></i>

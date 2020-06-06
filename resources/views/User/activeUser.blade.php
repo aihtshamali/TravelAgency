@@ -1,30 +1,7 @@
 @extends('layouts.userLayout')
 @section('styleTags')   
-   <style>
-   label{
-    font-weight: 500 !important;
-}
-.card-footer{
-    background: white !important;
-}
-table thead th{    
-    background-color: rgb(31,38,45);
-    color: #ffffff;
-    text-align: center;
-    padding:1px !important;
-}
-
-td img,th img{
-    height: 16px;
-    width:16px;
-}
-table.dataTable tbody th, table.dataTable tbody td {
-padding:0px !important;
- font-size:14px !important;
-text-align: center;
-}
-   </style>
-@endsection 
+    <link rel="stylesheet" href="{{asset('css/userCustom.css')}}">
+@endsection
 @section('content')
     <div class="content-wrapper">
         @include('inc/flashMessages')
@@ -45,8 +22,8 @@ text-align: center;
                         <h4><b>User List</b></h4>
                     </div>
                     <div class="card-body ">
-                         <table class="table table-bordered " data-page-length="100" id="activeUsers">
-                            <thead>
+                         <table class="table table-bordered " data-page-length="50" id="activeUsers">
+                            <thead class="dark">
                                 <tr>
                                     <th>User ID</th>
                                     <th>Full Name</th>
@@ -102,14 +79,4 @@ text-align: center;
 
             <div class="clearfix"></div>
     </div>
-@endsection
-@section('javascript')
-<script>
-$('#activeUsers').DataTable( {
-     dom: 'Bfrtip',
-     buttons: [
-            'copy', 'csv', 'excel', 'pdf', 'print'
-        ]
-} );
-</script>
 @endsection

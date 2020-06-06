@@ -31,9 +31,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <!-- bootstrap wysihtml5 - text editor -->
     <link rel="stylesheet" href="{{asset('/dist/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css')}}">
       {{-- dataTable --}}
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css">
-    <link rel="stylesheet" href="https://cdn.datatables.net/autofill/2.3.4/css/autoFill.dataTables.min.css">
-    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.6.1/css/buttons.dataTables.min.css">
+         {{-- dataTable --}}
+      <link rel="stylesheet" href="{{asset('/dist/plugins/datatables/jquery.dataTables.min.css')}}">
+      <link rel="stylesheet" href="{{asset('/dist/plugins/datatables/buttons.dataTables.min.css')}}">
     
     <!-- Google Font: Source Sans Pro -->
     <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
@@ -56,15 +56,12 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <!-- ./wrapper -->
     @endguest 
     <script src="{{asset('js/app.js')}}"></script>
-    <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/autofill/2.3.4/js/dataTables.autoFill.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.flash.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+      <script src="{{asset('/dist/plugins/datatables/jquery.dataTables.js')}}"></script>
+      <script src="{{asset('/dist/plugins/datatables/dataTables.buttons.min.js')}}"></script>
+      <script src="{{asset('/dist/plugins/datatables/buttons.flash.min.js')}}"></script>
+      <script src="{{asset('/dist/plugins/datatables/buttons.html5.min.js')}}"></script>
+      <script src="{{asset('/dist/plugins/datatables/buttons.print.min.js')}}"></script>
+      <script src="{{asset('/dist/plugins/datatables/jszip.min.js')}}"></script>
     <script>
 $('#activitylogtable').DataTable( {
      dom: 'Bfrtip',
@@ -73,6 +70,12 @@ $('#activitylogtable').DataTable( {
         ]
 } );
 $('#loginRecordtable').DataTable( {
+     dom: 'Bfrtip',
+     buttons: [
+            'copy', 'csv', 'excel', 'pdf', 'print'
+        ]
+} );
+$('#activeUsers').DataTable( {
      dom: 'Bfrtip',
      buttons: [
             'copy', 'csv', 'excel', 'pdf', 'print'

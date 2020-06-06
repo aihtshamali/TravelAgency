@@ -9,7 +9,7 @@
     </ul>
 
     <!-- SEARCH FORM -->
-    <form class="form-inline ml-3">
+    {{-- <form class="form-inline ml-3">
         <div class="input-group input-group-sm">
             <input class="form-control form-control-navbar" type="search" placeholder="Search" aria-label="Search">
             <div class="input-group-append">
@@ -18,7 +18,7 @@
   </button>
             </div>
         </div>
-    </form>
+    </form> --}}
 
     <!-- Right navbar links -->
     <ul class="navbar-nav ml-auto">
@@ -28,18 +28,15 @@
             </a>
             <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
                 <div class="dropdown-divider"></div>
-                <a href="#" class="dropdown-item">
+                <a href="{{route('welcome')}}" class="dropdown-item">
                 <i class="fa fa-dashboard mr-2"></i> Go To Dashboard
                 {{-- <span class="float-right text-muted text-sm">3 mins</span> --}}
               </a>
-                <div class="dropdown-divider"></div>
-                <a href="#" class="dropdown-item">
-                    <i class="fa fa-sign-out mr-2"></i> Settings
-                    {{-- <span class="float-right text-muted text-sm">12 hours</span> --}}
-                </a>
+               
                                
                 <div class="dropdown-divider"></div>
-                <a href="#" class="dropdown-item dropdown-footer">Log Out</a>
+                <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Log Out</a>
+                {{-- <a href="#" class="dropdown-item dropdown-footer">Log Out</a> --}}
             </div>
         </li>
        

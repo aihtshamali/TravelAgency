@@ -167,7 +167,7 @@ padding: 4px;
             </div>
         </div>
         
-        <div class="card">
+        {{-- <div class="card">
             <div class="card-header">
              <h4><b>Login Record</b></h4>
            </div>
@@ -194,7 +194,7 @@ padding: 4px;
                 </tbody>
             </table>
          </div>
-        </div>
+        </div> --}}
         
            <div class="card">
            <div class="card-header">

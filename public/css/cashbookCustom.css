@@ -91,13 +91,12 @@
     .activeshadow span {
         color: black;
     }
-    
-    a:hover {
+    /* a:hover {
         color: black;
         -webkit-box-shadow: 0px -1px 28px -4px rgba(28, 34, 102, 0.46);
         -moz-box-shadow: 0px -1px 28px -4px rgba(28, 34, 102, 0.46);
         box-shadow: 0px -1px 28px -4px rgba(28, 34, 102, 0.46);
-    }
+    } */
     
     .margindiv {
         margin-top: 1%;
@@ -116,21 +115,75 @@
     }
     
     @media print {
-        .table thead th {
-            font-weight: 400;
-            background-color: rgb(31, 38, 45);
-            color: black;
-            text-align: center;
-            padding: 4px;
+        @page {
+            size: A4 !important;
+            margin-bottom: 50mm !important;
         }
-        thead {
-            display: table-header-group
+        a[href]:after {
+            content: none !important;
         }
-        tfoot {
-            display: table-row-group
+        /* .ok {
+            display: none !important;
+        } */
+        .msg {
+            display: none !important;
         }
-        tr {
-            page-break-inside: avoid
+        .printbtn,
+        .cashbookclose,
+        .cashIn_out {
+            display: none !important;
+        }
+        .col-md-6 {
+            width: 50% !important;
+        }
+        /* .table {
+                page-break-inside: auto;
+            }
+            .table thead th {
+                font-weight: 400;
+                background-color: rgb(31, 38, 45);
+                color: black;
+                text-align: center;
+                padding: 4px;
+            }
+            thead {
+                display: table-header-group
+            }
+            /* tfoot {
+                display: table-row-group
+            } */
+        /* tr {
+                page-break-inside: avoid;
+                page-break-after: auto;
+            }
+        */
+        .table,
+        .table>tr>td,
+        .table>tr>th,
+        .table>tbody>tr>td,
+        .table>thead>tr>th,
+        .table>thead>tr>td {
+            background: white;
+            border: 1px solid black !important;
+            padding: 3px 3px !important;
+            vertical-align: middle !important;
+            overflow: visible !important;
+            text-align: center !important;
+            color: black !important;
+            padding: 2px 2px !important;
+            font-weight: bold !important;
+        }
+        .table>thead {
+            display: table-header-group !important;
+        }
+        .table>tr {
+            page-break-inside: avoid !important;
+        }
+        .table>tbody>tr>th.heading {
+            text-align: left !important;
+        }
+        .table>tbody>tr>th.subHeading {
+            text-align: left !important;
         }
         .cashbookclose {
             display: none !important;

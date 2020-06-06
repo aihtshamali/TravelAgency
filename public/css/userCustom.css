@@ -37,6 +37,19 @@
     width: 32px;
 }
 
+a.activeshadow,
+a.blockshadow {
+    color: black;
+}
+
+a.activeshadow:hover,
+a.blockshadow:hover {
+    color: black;
+    -webkit-box-shadow: 0px -1px 28px -4px rgba(28, 34, 102, 0.46);
+    -moz-box-shadow: 0px -1px 28px -4px rgba(28, 34, 102, 0.46);
+    box-shadow: 0px -1px 28px -4px rgba(28, 34, 102, 0.46);
+}
+
 .redtick span {
     display: block;
     float: right;
@@ -46,24 +59,18 @@
     font-size: 1.2em;
 }
 
+.table td,
+.table th {
+    vertical-align: middle !important;
+    text-align: center !important;
+}
+
 table thead th {
     font-weight: 400;
     background-color: rgb(31, 38, 45);
     color: #ffffff;
     text-align: center;
-    padding: 4px;
-}
-
-table tbody td {
-    font-weight: 400;
-    text-align: center;
-    padding: 4px;
-}
-
-td img,
-th img {
-    height: 16px;
-    width: 16px;
+    padding: 3px;
 }
 
 .summarytable tbody td {
@@ -77,4 +84,22 @@ th img {
 
 .card-footer {
     background: white !important;
+}
+
+td img,
+th img {
+    height: 16px;
+    width: 16px;
+}
+
+button.dt-button {
+    color: #fff !important;
+    background: #212529 !important;
+    border-color: #32383e !important;
+}
+
+.dataTables_paginate .paginate_button {
+    color: #fff !important;
+    background: #212529 !important;
+    border-color: #32383e !important;
 }

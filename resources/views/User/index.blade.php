@@ -1,17 +1,6 @@
 @extends('layouts.userLayout')
 @section('styleTags')   
     <link rel="stylesheet" href="{{asset('css/userCustom.css')}}">
-    <style>
-    a{
-    color:black;
-    }
-    a:hover{ 
-    color:black;
-    -webkit-box-shadow: 0px -1px 28px -4px rgba(28,34,102,0.46);
--moz-box-shadow: 0px -1px 28px -4px rgba(28,34,102,0.46);
-box-shadow: 0px -1px 28px -4px rgba(28,34,102,0.46);
-    }
-    </style>
 @endsection 
 @section('content')
     <div class="content-wrapper">

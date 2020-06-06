@@ -21,7 +21,7 @@
             <div class="card">
              <div class="row">
                 <div class="col-md-12">
-                 <table class="table table-bordered">
+                 <table class="table table-bordered packagetable">
                     <thead>
                          <tr>
                           <th>Package Title</th>
@@ -63,7 +63,8 @@
                     
                     <td>
                     
-                      <a href="{{asset('/storage/app/public/'.$package->attachment)}}" target="_blank">Click to see</a>
+                      <img src="{{asset('/storage/package_attachments/'.$package->attachment)}}" style="width: 100px !important;
+    height: 100px !important;"/>
                       
                     
                     </td>

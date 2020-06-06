@@ -47,6 +47,7 @@ class CashbookController extends Controller
       ->where('AutoPost','=','1')
       ->orderBy('RecordTime', 'DESC')
       ->get();
+      // dd($AmountIn[0]->payment_form_id ==$AmountIn[0]->PaymentForm->id);
       $AmountOut=CashbookData::where('PageRef','=',$index->PageNumber)
       ->where('AutoPost','=','0')
        ->orderBy('RecordTime', 'DESC')
