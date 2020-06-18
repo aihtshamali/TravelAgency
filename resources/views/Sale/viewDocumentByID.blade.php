@@ -23,7 +23,7 @@
                         @csrf
                         <div class="form-group">
                             <label for="search-id">Document No</label>
-                            <input type="number" min="1" required id="saleId" name="id" placeholder="Enter Sale ID ..." id="search-id" class="form-control">
+                            <input type="number" min="1" required id="saleId" name="id" placeholder="Enter Document Number/ Product Number ..." id="search-id" class="form-control">
                         </div>
                         <input type="submit" id="submitBtn" value="Search" class="btn btn-primary pull-right">
                         </form>
@@ -55,13 +55,13 @@
                         
                         @forelse ($sales as $sale)
                             <tr>
-                                <td>Payment:{{getPayment($sale->CustomerID)}} Sale:{{getSale($sale->CustomerID)}} Refund:{{getRefund($sale->CustomerID)}}</td>
-                                <td> <a href="{{route('Customer.show',$sale->CustomerID)}}">{{$sale->SaleID}}</a></td>
+                                <td>Payment: {{getPayment($sale->CustomerID)}} <br> Sale: {{getSale($sale->CustomerID)}}<br> Refund: {{getRefund($sale->CustomerID)}}</td>
+                                <td> <a href="{{route('Customer.show',$sale->CustomerID)}}" target="_blank">{{$sale->SaleID}}</a></td>
                                 <td>{{$sale->LeadType}}</td>
                                 <td>{{$sale->ProductNum}}</td>
-                                <td><a href="{{route('Customer.show',$sale->CustomerID)}}">{{$sale->CustomerID}}</a></td>
+                                <td><a href="{{route('Customer.show',$sale->CustomerID)}}">{{$sale->CustomerName}}</a></td>
                                 <td>{{date('d-M-y',strtotime($sale->IssueDate))}}</td>
-                                <td>{{date('d-M-y',strtotime($sale->PostedOn))}} ({{date('H:i',strtotime($sale->PostedOn))}}</td>
+                                <td>{{date('d-M-y',strtotime($sale->PostedOn))}} ({{date('H:i:s',strtotime($sale->PostedOn))}})</td>
                                 <td>{{$sale->Uname}}</td>
                                 
                                 <td>

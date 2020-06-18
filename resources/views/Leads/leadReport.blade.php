@@ -72,7 +72,7 @@
                                 <input type="hidden" id="branch" name="branch" value="0">
                             </div>
                             <div class="form-group">
-                                <button type="button" class="btn btn-success" onClick="setStatus('Approved')">Gnereate Leads Report</button>
+                                <button type="button" class="btn btn-success" onClick="setStatus('Approved')">Genreate Leads Report</button>
                                 {{-- <button type="button" class="btn btn-danger" onClick="setStatus('Rejected')">Rejected/Pending Leads</button> --}}
                             </div>
                         </form>

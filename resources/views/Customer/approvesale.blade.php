@@ -67,7 +67,9 @@
                                 </tr> 
                                 <tr>
                                     <td>Document No</td> 
-                                    <td>{{$sale->ProductNum}} | <a href="{{$sale->ticket_attachment ? asset('storage/attachments/'.$sale->Customer->User->id.'/'.$sale->ticket_attachment) : '#'}}" download>{{isset($sale->ticket_attachment) ? 'Download' : 'No Attachment'}}</a></td>
+                                    <td>{{$sale->ProductNum}}
+                                    | <a href="{{$sale->ticket_attachment ? asset('storage/attachments/'.$sale->Customer->User->id.'/'.$sale->ticket_attachment) : '#'}}" download>{{isset($sale->ticket_attachment) ? 'Download' : 'No Attachment'}}</a>
+                                    </td>
                                 </tr> 
                                 <tr>
                                     <td>Passenger</td> 
@@ -75,7 +77,11 @@
                                 </tr>
                                 <tr>
                                     <td>Details</td> 
-                                    <td>{{$sale->ProductDetail}}</td>
+                                    <td>
+                                    @if(isset($sale->Source->name) && isset($sale->Destination->name) )
+                                    {{$sale->Source->name}}-{{$sale->Destination->name}}
+                                    @endif
+                                    ({{$sale->ProductDetail}})</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -123,15 +129,35 @@
                             <tbody>
                                 <tr>
                                     <td>Approval Status</td> 
-                                    <td>{{$sale->SaleStatus}}</td>
+                                        @if($sale->SaleStatus=="Approved")
+                                <td><span class="bg-success">{{$sale->SaleStatus}}</span></td>
+                                    @elseif($sale->SaleStatus=="Pending")
+                                <td><span class="bg-warning">{{$sale->SaleStatus}}</span>
+                                </td>
+                                    @elseif($sale->SaleStatus=="Rejected")
+                                <td><span class="bg-danger">{{$sale->SaleStatus}}</span></td>
+                                      @elseif($sale->SaleStatus=="Deleted")
+                                <td><span class="bg-danger muted">{{$sale->SaleStatus}}</span></td>
+                                    @endif
                                 </tr> 
                                 <tr>
                                     <td>Action By</td> 
-                                    @if(isset($sale->ActionBy->name))
-                                        <td>{{$sale->ActionBy->name}}</td>
+                                      @if(isset($sale->ActionByUser->name))
+                                      <td>{{$sale->ActionByUser->name}} </td>
                                     @else
                                         <td>None</td>
                                     @endif
+                                   
+                                </tr> 
+                                <tr>
+                                    <td>Sale By</td> 
+                                      @if(isset($sale->PostedByUser->name))
+                                       
+                                     <td> {{$sale->PostedByUser->name}}</td> 
+                                    @else
+                                        <td>None</td>
+                                    @endif
+                                   
                                 </tr> 
                                 <tr>
                                     <td>Action On</td>
@@ -143,11 +169,12 @@
                                 </tr> 
                                 <tr>
                                     @if($sale->SaleStatus == 'Rejected' || $sale->SaleStatus == 'Deleted')
-                                        <td></td>
+                                        <td> </td>
                                     @elseif($sale->SaleStatus == 'Approved')
-                                        <td align="center" colspan="2">Delete Entry</td>
+                                        <td  align="center" colspan="2"> <a href="{{ route('changeSaleStatus',['sale' =>  $sale->SaleID,'status'=>2]) }}"><i class="fa fa-trash"></i> Delete Entry</a></td>
                                     @else
-                                        <td align="center" colspan="2"><a href="{{ route('changeSaleStatus',['sale' => $sale->SaleID,'status'=>1]) }}">Approve</a>|<a href="{{ route('changeSaleStatus',['sale' => $sale->SaleID,'status'=>0]) }}">Reject</a></td>
+                                        <td colspan="2">
+                                        <a align="center" href="{{ route('changeSaleStatus',['sale' => $sale->SaleID,'status'=>1]) }}">Approve</a>|<a href="{{ route('changeSaleStatus',['sale' => $sale->SaleID,'status'=>0]) }}">Reject</a></td>
                                     @endif 
                                 </tr>
                                 

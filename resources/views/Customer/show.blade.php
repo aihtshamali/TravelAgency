@@ -1,51 +1,7 @@
 @extends('layouts.master')
 @section('styleTags')
-
-    <style>
-.uppertable tbody td, .uppertable  thead th {
-     text-align: left !important;
-    }
-
-table thead th {
-    font-weight: 400;
-    background-color: rgb(31, 38, 45);
-    color: #ffffff;
-    text-align: center;
-    padding: 0px;
-}
-table tbody td {
-    font-weight: 400;
-    text-align: center;
-    padding: 0px;
-}
-        .header-btn{
-            font-size: 25px;
-            color:white !important;
-        }
-        table{
-            width:100%;
-        }
-        td > span.badge{
-            padding:0.5rem 0.4rem;
-            min-width:80px;
-        }
-        td> ol{
-            padding-left: 25px !important;
-    margin-bottom: 0px !important;
-        }
-        .border_top{
-      border-top: 3px solid white!important;
-        }
-       @media print{
-       
-       .butttonsofactions{
-       display: none;
-       }
-       .CustomerAttachments{
-         display: none;
-       }
-       }
-    </style>
+    <link rel="stylesheet" href="{{asset('css/crmCustom.css')}}">
+    
 @endsection
 @section('content')
     <div class="content-wrapper">
@@ -88,8 +44,8 @@ table tbody td {
             <div class="col-md-6">
                 <div class="card">
                     <div class="card-header"><h3 class="card-title">Customer Details
-                    <span class="pull-right">
-                         <a href="{{route('Customer.edit',$customer->CustomerID)}}">Edit</a>
+                        <span class="pull-right edit">
+                           <a href="{{route('Customer.edit',$customer->CustomerID)}}">Edit</a>
                         </span>
                     </div>
                     <div class="card-body">
@@ -100,15 +56,15 @@ table tbody td {
                                     <td>{{$customer->CustomerID}}</td>
                                 </tr>
                                 <tr>
-                                    <td><i class="fa fa-info mr-2"></i>Customer Name</td>
+                                    <td><i class="fas fa-info mr-2"></i>Customer Name</td>
                                     <td>{{$customer->CustomerName}}</td>
                                 </tr>
                                 <tr>
-                                    <td><i class="fa fa-mobile mr-2"></i>Phone No</td>
+                                    <td><i class="fas fa-mobile mr-2"></i>Phone No</td>
                                     <td>{{$customer->PhoneNumber}}</td>
                                 </tr>
                                 <tr>
-                                    <td><i class="fa fa-envelope mr-2"></i>Email Address</td>
+                                    <td><i class="fas fa-envelope mr-2"></i>Email Address</td>
                                     <td>{{$customer->EmailAddress ?? "NA" }}</td>
                                 </tr>
                                 <tr>
@@ -138,19 +94,19 @@ table tbody td {
                             <tbody>
                                 <tr class="border_top">
                                     <td><i class="fas fa-coins mr-2"></i>Sales</td>
-                                    <td>PKR</td>
+                                    <td id="sales_d"> </td>
                                 </tr>
                                 <tr>
                                     <td><i class="fa fa-minus-circle mr-2"></i>Refunds</td>
-                                    <td>PKR</td>
+                                    <td id="refunds_d" > </td>
                                 </tr>
                                 <tr>
                                     <td><i class="fa fa-money mr-2"></i>Payments</td>
-                                    <td>PKR</td>
+                                    <td id="payments_d"> </td>
                                 </tr>
                                 <tr>
                                     <td> <i class="fa fa-book mr-2"></i>Balance</td>
-                                    <td>PKR</td>
+                                    <td id="balance_d"> </td>
                                 </tr>
                             </tbody>
                         </table>
@@ -219,7 +175,7 @@ table tbody td {
                 <div class="card">
                     <div class="card-header"><h3 class="card-title font-weight-bold">Leads</h3></div>
                         <div class="card-body">
-                            <table  id="" class="table leadtable table-responsive-md table-responsive-lg compact table-responsive-xs table-hover table-bordered">
+                            <table  id="leads" class="table leadtable table-hover table-bordered">
                                 <caption>List of Lead</caption>
                                 <thead class="thead-dark">
                                     <th>Lead ID</th>
@@ -255,7 +211,7 @@ table tbody td {
                           @php
                             $totalAmount=array();   
                             @endphp
-                            <table id="sales" class="table table-responsive-md table-responsive-lg compact table-responsive-xs table-hover table-bordered" >
+                            <table class="table  table-hover table-bordered" id="sales">
                                 <caption>List of Sales</caption>
                                 <thead class="thead-dark">
                                 <th>Action</th>
@@ -309,7 +265,7 @@ table tbody td {
                                     @endforeach
                                     <tr>
                                     <td class="text-center text-bold" colspan="10">Total Amount in PKR</td>
-                                    <td class="text-center text-bold" colspan="1">@php $totalSum=array_sum($totalAmount); 
+                                    <td class="text-center text-bold " id="t_sales" colspan="1">@php $totalSum=array_sum($totalAmount); 
                                                     echo number_format($totalSum,0) @endphp</td>
                                     </tr>
                                 </tbody>
@@ -323,7 +279,7 @@ table tbody td {
                          @php
                             $totalRefund=array();   
                             @endphp
-                            <table id="refund" class="table table-responsive-md table-responsive-lg compact table-responsive-xs table-hover table-bordered">
+                            <table id="refund" class="table table-hover table-bordered">
                                 <caption>List of Refunds</caption>
                                 <thead class="thead-dark">
                                   <tr>
@@ -369,7 +325,7 @@ table tbody td {
                                     @endforeach
                                      <tr>
                                     <td class="text-center text-bold" colspan="9">Total Refunds in PKR</td>
-                                    <td class="text-center text-bold" colspan="1">@php $totalrefundSum=array_sum($totalRefund); 
+                                    <td class="text-center text-bold "id="t_refund" colspan="1">@php $totalrefundSum=array_sum($totalRefund); 
                                                     echo number_format($totalrefundSum,0) @endphp</td>
                                     </tr>
                                 </tbody>
@@ -384,7 +340,7 @@ table tbody td {
                              @php
                             $totalPayment=array();   
                             @endphp
-                            <table id="payment" class=" table table-responsive-md table-responsive-lg compact table-responsive-xs table-hover table-bordered">
+                            <table id="payment" class=" table table-hover table-bordered">
                                 <caption>List of Payments</caption>
                                 <thead class="thead-dark">
                                    <tr>
@@ -425,7 +381,7 @@ table tbody td {
                                     @endforeach
                                      <tr>
                                     <td class="text-center text-bold" colspan="8">Total Payment in PKR</td>
-                                    <td class="text-center text-bold" colspan="1">@php $totalPaymentSum=array_sum($totalPayment); 
+                                    <td class="text-center text-bold " id="t_payment" colspan="1">@php $totalPaymentSum=array_sum($totalPayment); 
                                                     echo number_format($totalPaymentSum,0) @endphp</td>
                                     </tr>
                                 </tbody>
@@ -440,6 +396,28 @@ table tbody td {
 @endsection
 @section('javascript')
 <script>
+$(document).ready(function() {
 
+var sales= $("#t_sales").html();
+$('#sales_d').html(sales + " PKR");
+
+var refund= $("#t_refund").html();
+$('#refunds_d').html(refund + " PKR");
+
+var payment= $("#t_payment").html();
+$('#payments_d').html(payment + " PKR");
+
+
+var sales_b = sales.replace(/,/g, '');
+var refund_b = refund.replace(/,/g, '');
+var payment_b = payment.replace(/,/g, '');
+
+var sum = Number(sales_b) - Number(payment_b) + Number(refund_b);
+
+sum=Number((sum).toFixed(1)).toLocaleString();
+$('#balance_d').html(sum + " PKR");
+ 
+     } );
 </script>
+
 @endsection

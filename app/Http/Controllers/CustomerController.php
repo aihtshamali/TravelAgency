@@ -239,6 +239,7 @@ class CustomerController extends Controller
     }
     public function saveSale(Request $request)
     { 
+    
         if(Sale::where('SaleID',$request->saleId)->exists())
         {
             $update=Sale::where('SaleID',$request->saleId)->first();
@@ -290,25 +291,42 @@ class CustomerController extends Controller
         }
         else
         {    
+   
+        
                 $sale=new Sale();
                 $sale->CustomerIDRef = $request->customer_id;
+                
                 $sale->LeadIDRef = $request->LeadId;
                 //IT is SaleBy
+               
                 $sale->posted_by_user= $request->CreatedBy;
+                if(isset($request->amount))
                 $sale->Amount = $request->amount;
+                 if(isset($request->cost))
                 $sale->NetCost = $request->cost;
+                 if(isset($request->ProfitAmount))
                 $sale->ProfitAmount = $request->profit;
+                 if(isset($request->lead_type_id))
                 $sale->lead_type_id = $request->lead_type_id;
+                   if(isset($request->IssueDate))
                 $sale->IssueDate=$request->IssueDate;
+                   if(isset($request->ProductNum))
                 $sale->ProductNum = $request->ProductNum;
+                 if(isset( $request->ProductPax))
                 $sale->ProductPax = $request->ProductPax;
                 // $sale->sector_id = $request->sector_id;
+                 if(isset( $request->source_id))
                 $sale->source_id = $request->source_id;
+                 if(isset( $request->destination_id))
                 $sale->destination_id = $request->destination_id;
+                 if(isset( $request->ProductDetail))
                 $sale->ProductDetail = $request->ProductDetail;
+                 if(isset( $request->AccountigText))
                 $sale->AccountingText = $request->AccountigText;
                 $sale->user_branch_id=$request->session()->get('userbranch')->id;
                 $sale->SaleStatus='Approved';
+                //  dd($sale);
+                
                 $sale->save();
                 $customer = Customer::find($request->customer_id);
                 $user_id = 0;
@@ -341,7 +359,7 @@ class CustomerController extends Controller
                     }
                 
                 
-            
+            // dd($sale);
                  return redirect()->route('approveSale', array('id' => $sale->SaleID));
             
             }
@@ -349,18 +367,27 @@ class CustomerController extends Controller
     }
     public function approveSale($id)
     {
-        $sales = Sale::selectRaw('CRM_Sale.ticket_attachment,SaleID,branches.name as Branch,action_by,Login_users.name as Uname,CRM_Customers.CustomerName,
-        CRM_Sale.CustomerIDRef,LeadIDRef,CRM_Sale.created_at,Amount,NetCost,ProfitAmount,ActionOn,SaleStatus,
-        AccountingText,lead_types.name as Type,IssueDate,ProductPax,ProductNum,sectors.name as Sector')
+    
+        $sales = Sale::selectRaw('SaleID,
+        branches.name as Branch,
+        action_by, posted_by_user,
+        Login_users.name as Uname,
+        CRM_Customers.CustomerName,
+        CRM_Sale.CustomerIDRef,
+        LeadIDRef,
+        CRM_Sale.created_at,
+        Amount, NetCost, ProfitAmount, ProductDetail, ActionOn, SaleStatus, AccountingText,
+        lead_types.name as Type,
+        IssueDate,
+        ProductPax, ProductNum,CRM_Sale.source_id,CRM_Sale.destination_id')
         ->leftJoin('CRM_Customers','CRM_Sale.CustomerIDRef','CRM_Customers.CustomerID')
         ->leftJoin('CRM_Leads','CRM_Sale.LeadIDRef','CRM_Leads.LeadID')
         ->leftJoin('user_branches','CRM_Sale.user_branch_id','user_branches.id')
         ->leftJoin('Login_Users','Login_Users.id','user_branches.user_id')
         ->leftJoin('branches','branches.id','user_branches.branch_id')
         ->leftJoin('lead_types','CRM_Sale.lead_type_id','lead_types.id')
-        ->leftJoin('sectors','CRM_Sale.sector_id','sectors.id')
         ->where('SaleID',$id)->first();
-                // dd($sales);
+        // dd($sales);
         if($sales == null)
         {
             return redirect()->back()->with('error', 'No Sale found against this ID');
@@ -382,10 +409,13 @@ class CustomerController extends Controller
         {
             $sale->SaleStatus='Approved';
         }
+        if($status == 2)
+        {
+            $sale->SaleStatus='Deleted';
+        }
         $sale->action_by=Session()->get('userbranch')->user_id;
-        // dd(date('M j Y g:iA'));
         $sale->ActionOn=date('M j Y g:iA');
-        $sale->save();
+        $sale->update();
         return redirect('/Customer');
         // dd(Session()->get('userbranch')->user_id);
     }
@@ -602,6 +632,7 @@ class CustomerController extends Controller
     }
     public function approvePayment($id)
     {
+  
         $payments = Payment::selectRaw('PaymentID,branches.name as Branch,Login_users.name as Uname,CRM_Customers.CustomerName,
         CRM_Payments.CustomerIDRef,LeadIDRef,CRM_Payments.PostedOn,Amount,FOPText,AccountingText,
         payment_forms.name as FOP,PrintRemark,RecFrom,StatusCode,AuthOn,auth_by')

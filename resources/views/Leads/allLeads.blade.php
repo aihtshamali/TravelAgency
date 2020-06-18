@@ -76,7 +76,7 @@
                         <th>Phone Number</th>
                         <th>Type</th>
                         <th>Subject</th>
-                        <th>Taken Over By</th>
+                        <th>Created By</th>
                         <th>Working Since</th>
                     </thead>
                     <tbody>
@@ -90,7 +90,7 @@
                                 </td>
                                 <td>{{$lead->LeadSubject}}</td>
                               
-                                <td>@if(isset($lead->TakenOverByUser->name)){{$lead->TakenOverByUser->name}}@endif</td>
+                                <td>@if(isset($lead->user_id)){{$lead->User->name}}@endif</td>
                                 <td> @php
                                     $datetime1 = new DateTime($lead->CreatedOn);
                                     $datetime2 = new DateTime();

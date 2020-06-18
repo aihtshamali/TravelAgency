@@ -104,7 +104,7 @@
                     <a href="#" class="nav-link">
                         <i class="nav-icon fas fa-search"></i>
                         <p>
-                            Transaction Seach
+                            Transaction Search
                             <i class="fa fa-angle-left right"></i>
                         </p>
                     </a>
@@ -112,7 +112,7 @@
                         <li class="nav-item">
                             <a href="{{ route('viewSaleByID') }}" class="nav-link">
 
-                                <p>Posting ID</p>
+                                <p>Posting/Sale ID</p>
                             </a>
                         </li>
                         <li class="nav-item">
@@ -124,7 +124,7 @@
                         <li class="nav-item">
                             <a href="{{ route('viewDocumentByID') }}" class="nav-link">
 
-                                <p>Document Number</p>
+                                <p>Document/Product Number</p>
                             </a>
                         </li>
                     </ul>
@@ -189,16 +189,8 @@
                         </li>
                     </ul>
                 </li>
-                <li class="nav-item has-treeview">
-                    <a href="#" class="nav-link">
-                        <i class="nav-icon fas fa-coins"></i>
-                        <p>
-                            Authorize Transactions
-
-                        </p>
-                    </a>
-                </li>
-                <li class="nav-item has-treeview {!! classActivePath(1,'dashboard') !!}">
+           
+                {{-- <li class="nav-item has-treeview {!! classActivePath(1,'dashboard') !!}">
                     <a class="nav-link {!! classActiveSegment(1, 'dashboard') !!}">
                         <i class="nav-icon fas fa-cog"></i>
                         <p>
@@ -221,7 +213,7 @@
                         </li>
 
                     </ul>
-                </li>
+                </li> --}}
             </ul>
         </nav>
         <!-- /.sidebar-menu -->

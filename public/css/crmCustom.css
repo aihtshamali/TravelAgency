@@ -1,98 +1,165 @@
-.greentick div {
-    float: left;
-    background-color: rgb(116, 116, 116);
-    padding: 15px;
-    border-radius: 50%;
-    background-color: rgb(40, 183, 121);
-}
+        .greentick div {
+            float: left;
+            background-color: rgb(116, 116, 116);
+            padding: 15px;
+            border-radius: 50%;
+            background-color: rgb(40, 183, 121);
+        }
+        
+        .greentick div img {
+            height: 32px;
+            width: 32px;
+        }
+        
+        .greentick span {
+            display: block;
+            float: right;
+            margin-right: 10px;
+            margin-top: 10px;
+            text-align: right;
+            font-size: 1.2em;
+        }
+        
+        .redtick div {
+            float: left;
+            background-color: rgb(116, 116, 116);
+            padding: 12px;
+            border-radius: 50%;
+            background-color: rgb(199, 74, 72);
+        }
+        
+        .redtick div img {
+            height: 32px;
+            width: 32px;
+        }
+        
+        .redtick span {
+            display: block;
+            float: right;
+            margin-right: 10px;
+            margin-top: 10px;
+            text-align: right;
+            font-size: 1.2em;
+        }
+        
+        table thead th {
+            font-weight: 400;
+            background-color: rgb(31, 38, 45);
+            color: #ffffff;
+            text-align: center;
+            padding: 4px;
+        }
+        
+        table tbody td {
+            font-weight: 400;
+            text-align: center;
+            padding: 4px;
+        }
+        
+        td img,
+        th img {
+            height: 16px;
+            width: 16px;
+        }
+        
+        button.dt-button {
+            color: #fff !important;
+            background: #212529 !important;
+            border-color: #32383e !important;
+        }
+        
+        .paginate_button {
+            color: #fff !important;
+            background: #212529 !important;
+            border-color: #32383e !important;
+        }
+        
+        .current {
+            color: #fff !important;
+        }
+        
+        .greenpkr {
+            color: green;
+            font-size: 18px;
+            font-weight: 700;
+        }
+        
+        .summarytable tbody td {
+            padding: 5px !important;
+            vertical-align: -webkit-baseline-middle !important;
+        }
+        
+        .label {
+            font-weight: 500 !important;
+        }
+        
+        .card-footer {
+            background: white !important;
+        }
+        
+        .header-btn {
+            font-size: 25px;
+            color: white !important;
+        }
+        /*  */
+        
+        @media print {
+            @page {
+                size: A4 !important;
+                margin-bottom: 50mm !important;
+            }
+            a[href]:after {
+                content: none !important;
+            }
+            .butttonsofactions {
+                display: none !important;
+            }
+            .edit {
+                display: none !important;
+            }
+            .CustomerAttachments {
+                display: none !important;
+            }
+            .col-md-12 {
+                width: 100% !important;
+            }
+            table>tbody>tr>td>a[href]:after {
+                content: none !important;
+            }
+            .table,
+            .table>tr>td,
+            .table>tr>th,
+            .table>tbody>tr>td,
+            .table>thead>tr>th,
+            .table>thead>tr>td {
+                background: white;
+                border: 1px solid black !important;
+                padding: 3px 3px !important;
+                vertical-align: middle !important;
+                overflow: visible !important;
+                text-align: center !important;
+                color: black !important;
+                padding: 2px 2px !important;
+                font-weight: bold !important;
+            }
+            .table>thead {
+                display: table-header-group !important;
+            }
+            .table>tr {
+                page-break-inside: auto !important;
+            }
+            /* .table>tbody>tr>th.heading {
+        text-align: left !important;
+    }
+    .table>tbody>tr>th.subHeading {
+        text-align: left !important;
+    }
 
-.greentick div img {
-    height: 32px;
-    width: 32px;
-}
-
-.greentick span {
-    display: block;
-    float: right;
-    margin-right: 10px;
-    margin-top: 10px;
-    text-align: right;
-    font-size: 1.2em;
-}
-
-.redtick div {
-    float: left;
-    background-color: rgb(116, 116, 116);
-    padding: 12px;
-    border-radius: 50%;
-    background-color: rgb(199, 74, 72);
-}
-
-.redtick div img {
-    height: 32px;
-    width: 32px;
-}
-
-.redtick span {
-    display: block;
-    float: right;
-    margin-right: 10px;
-    margin-top: 10px;
-    text-align: right;
-    font-size: 1.2em;
-}
-
-table thead th {
-    font-weight: 400;
-    background-color: rgb(31, 38, 45);
-    color: #ffffff;
-    text-align: center;
-    padding: 4px;
-}
-
-table tbody td {
-    font-weight: 400;
-    text-align: center;
-    padding: 4px;
-}
-
-td img,
-th img {
-    height: 16px;
-    width: 16px;
-}
-
-button.dt-button {
-    color: #fff !important;
-    background: #212529 !important;
-    border-color: #32383e !important;
-}
-
-.paginate_button {
-    color: #fff !important;
-    background: #212529 !important;
-    border-color: #32383e !important;
-}
-
-.current {
-    color: #fff !important;
-}
-
-.greenpkr {
-    color: green;
-    font-size: 18px;
-    font-weight: 700;
-}
-
-.summarytable tbody td {
-    padding: 5px !important;
-    vertical-align: -webkit-baseline-middle !important;
-}
-
-.label {
-    font-weight: 500 !important;
-}
-
-.card-footer {
-    background: white !important;
-}
+    */
+            .badge {
+                background-color: white !important;
+                color: black !important;
+                font-size: 16px !important;
+                border: none !important;
+            }
+        }
